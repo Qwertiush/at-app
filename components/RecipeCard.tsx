@@ -1,21 +1,11 @@
 
 import { getUserProfile } from '@/app/firebase/firebaseDB';
 import { colors } from '@/app/Styles/global-styles';
+import { RecipeProps } from '@/models/Recipe';
 import { User } from '@/models/User';
 import { Timestamp } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-export type RecipeProps = {
-  id: string;
-  title: string;
-  description: string;
-  authorId: string;
-  createdAt: Timestamp;
-  ingredients: string[];
-  steps: string[];
-  pictures?: string[];
-};
 
 const formatDate = (ts?: Timestamp | null) => {
   if (ts && typeof (ts as any).seconds === 'number') {
