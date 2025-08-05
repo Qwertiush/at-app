@@ -1,45 +1,85 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Image, ImageSourcePropType, Text, View } from 'react-native';
+import globalStyles, { colors } from '../Styles/global-styles.js';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+type TabsIconProps = {
+  icon: ImageSourcePropType
+  name?: string,
+  focused?: boolean,
 }
+
+const TabsIcon: React.FC<TabsIconProps> = ({ icon, name, focused }) => {
+  return (
+    <View style={{ 
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      height: '100%',
+      paddingTop: 8,
+    }}>
+      <Image
+        source={icon}
+        resizeMode="contain"
+        style={focused ? { width: 30, height: 30 } : { width: 24, height: 24 }}
+        tintColor={focused ? colors.secondary : colors.text2}
+      />
+      <Text style={focused ?[globalStyles.textXS, { marginTop: 2, color: colors.secondary }]:[globalStyles.textS, { marginTop: 2, color: colors.text2, width: 50,textAlign: 'center' }]}>{name}</Text>
+    </View>
+  );
+};
+
+const TabsArray = [
+  {
+    name: 'home',
+    icon: require('../../assets/images/icons/home.png'),
+    title: 'Home',
+  },
+  {
+    name: 'create',
+    icon: require('../../assets/images/icons/create.png'),
+    title: 'Create',
+  },
+    {
+    name: 'profile',
+    icon: require('../../assets/images/icons/profile.png'),
+    title: 'Profile',
+  },
+    {
+    name: 'favourites',
+    icon: require('../../assets/images/icons/favs.png'),
+    title: 'Favourites',
+  },
+]
+
+const TabsLayout = () => {
+  return (
+    <>
+    <Tabs
+    screenOptions={{
+      tabBarShowLabel: false,
+      tabBarStyle: {
+        height: 70,
+        backgroundColor: colors.bc2,
+        borderTopWidth: 1,
+        borderTopColor: '#222',
+      },
+      }}>
+      {TabsArray.map((tab) => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: tab.title,
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <TabsIcon icon={tab.icon} name={tab.title} focused={focused} />
+            ),
+          }}
+        />
+      ))}
+    </Tabs>
+    </>
+  )
+}
+
+export default TabsLayout
