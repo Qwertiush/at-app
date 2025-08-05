@@ -64,4 +64,13 @@ export default StyleSheet.create({
     ...baseText,
     fontSize: 30
    },
+   input: {
+    ...baseText,
+    fontSize: 16,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.text2,
+    borderRadius: 5,
+    width: '100%',
+   }
 });

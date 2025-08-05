@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { AUTH } from "./FirebaseConfig";
 
@@ -10,5 +11,6 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const logoutUser = async () => {
+  router.replace('/sign-in');
   return signOut(AUTH);
 };

@@ -7,19 +7,22 @@ type FormFieldProps = {
     value: string;
     handleChangeText: (text: string) => void;
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'password';
+    multiline?: boolean;
+    style?: object;
 }
 
-const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keyboardType}) => {
+const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keyboardType, multiline, style}) => {
   return (
     <View style={FormFieldStyle.input}>
       <TextInput
-        style={[globalStyles.textM, {color: colors.text3}]}
+        style={[globalStyles.textM, {color: colors.text3}, style]}
         value={value}
         onChangeText={handleChangeText}
         secureTextEntry={keyboardType === 'password'}
         autoCapitalize="none"
         placeholder={`Enter your ${title.toLowerCase()}`}
         placeholderTextColor={colors.bc}
+        multiline={multiline}
       />
     </View>
   )
