@@ -1,15 +1,7 @@
-import { RecipeProps } from "@/components/RecipeCard";
-import { CreateRecipeInput } from "@/models/Recipe";
+import { CreateRecipeInput, RecipeProps } from "@/models/Recipe";
+import { User } from "@/models/User";
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
-
-export type User = {
-    uid: string;
-    username?: string;
-    email: string;
-    avatarUrl?: string;
-    createdAt?: Date;
-}
 
 export const createUserProfile = async (user: User) => {
   const userRef = doc(DB, "users", user.uid);

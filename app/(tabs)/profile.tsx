@@ -8,7 +8,7 @@ import globalStyles from '../Styles/global-styles'
 const Profile = () => {
   const {user, loading} = useAuth();
 
-  if (loading) return <Text>Ładowanie...</Text>;
+  if (loading) return <Text style={globalStyles.container}>Ładowanie...</Text>;
 
   return (
     <View style={globalStyles.container}>

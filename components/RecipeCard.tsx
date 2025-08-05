@@ -1,6 +1,9 @@
+
+import { getUserProfile } from '@/app/firebase/firebaseDB';
 import { colors } from '@/app/Styles/global-styles';
+import { User } from '@/models/User';
 import { Timestamp } from 'firebase/firestore';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export type RecipeProps = {
@@ -8,7 +11,7 @@ export type RecipeProps = {
   title: string;
   description: string;
   authorId: string;
-  createdAt: Timestamp | null;
+  createdAt: Timestamp;
   ingredients: string[];
   steps: string[];
   pictures?: string[];
@@ -22,11 +25,43 @@ const formatDate = (ts?: Timestamp | null) => {
   return 'Just now'; // fallback zanim serwer uzupełni
 };
 
-const RecipeCard: React.FC<{ recipe: RecipeProps }> = ({ recipe }) => {
+const RecipeCard: React.FC<{ recipe: RecipeProps}> = ({ recipe }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchUser = async () => {
+      try {
+        const fetched = await getUserProfile(recipe.authorId);
+        if (!mounted) return;
+        if (fetched) {
+          // Zakładamy, że fetched nie zawiera uid albo ma; ustalamy pewnie:
+          const userObj: User = {
+            uid: recipe.authorId,
+            ...(fetched as Omit<User, 'uid'>),
+          };
+          setUser(userObj);
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+        if (mounted) setUser(null);
+      }
+    };
+
+    fetchUser();
+
+    return () => {
+      mounted = false;
+    };
+  }, [recipe.authorId]);
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{recipe.title}</Text>
-      <Text style={styles.meta}>By: {recipe.authorId}</Text>
+      <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
       <Text style={styles.meta}>
         Created: {formatDate(recipe.createdAt)}
       </Text>
