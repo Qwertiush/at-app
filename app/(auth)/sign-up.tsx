@@ -1,11 +1,12 @@
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
+import { User } from '@/models/User';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
 import { registerUser } from '../firebase/firebaseAuth';
-import { createUserProfile, User } from '../firebase/firebaseDB';
+import { createUserProfile } from '../firebase/firebaseDB';
 
 const SignUp = () => {
   const [form, setForm] = useState({

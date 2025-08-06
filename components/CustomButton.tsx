@@ -6,12 +6,13 @@ type CustomButtonProps = {
     text: string;
     handlePress?: () => void;
     isLoading?: boolean;
+    style?: object;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({text, handlePress, isLoading}) => {
+const CustomButton: React.FC<CustomButtonProps> = ({text, handlePress, isLoading, style}) => {
   return (
     <TouchableOpacity 
-        style={[buttonStyle.button, {opacity: isLoading ? 0.5 : 1}]}
+        style={[buttonStyle.button, {opacity: isLoading ? 0.5 : 1}, style]}
         activeOpacity={0.7}
         onPress={handlePress}
         disabled={isLoading}

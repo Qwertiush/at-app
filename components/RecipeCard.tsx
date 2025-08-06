@@ -7,7 +7,7 @@ import { Timestamp } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const formatDate = (ts?: Timestamp | null) => {
+export const formatDate = (ts?: Timestamp | null) => {
   if (ts && typeof (ts as any).seconds === 'number') {
     // jeśli to Timestamp z Firestore
     return new Date((ts as any).seconds * 1000).toLocaleDateString();
@@ -26,7 +26,6 @@ const RecipeCard: React.FC<{ recipe: RecipeProps}> = ({ recipe }) => {
         const fetched = await getUserProfile(recipe.authorId);
         if (!mounted) return;
         if (fetched) {
-          // Zakładamy, że fetched nie zawiera uid albo ma; ustalamy pewnie:
           const userObj: User = {
             uid: recipe.authorId,
             ...(fetched as Omit<User, 'uid'>),

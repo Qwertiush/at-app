@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Image, ImageSourcePropType, Text, View } from 'react-native';
+import { Image, ImageSourcePropType, StatusBar, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles.js';
 
 type TabsIconProps = {
@@ -54,6 +54,7 @@ const TabsArray = [
 const TabsLayout = () => {
   return (
     <>
+    <StatusBar backgroundColor={colors.bc}/>
     <Tabs
     screenOptions={{
       tabBarShowLabel: false,

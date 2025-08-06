@@ -1,8 +1,8 @@
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
-import globalStyles from '../Styles/global-styles';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
+import globalStyles, { colors } from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
 import { addRecipe } from '../firebase/firebaseDB';
 
@@ -63,6 +63,10 @@ const Create = () => {
 
   return (
     <ScrollView contentContainerStyle={globalStyles.container}>
+      <Image
+        source={require('@/assets/images/icons/logo.png')}
+        style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 50 }}
+      />
       <Text style={globalStyles.textXL}>Create a New Recipe</Text>
 
       <View style={{ marginVertical: 10, width: '100%' }}>
@@ -71,7 +75,9 @@ const Create = () => {
           value={form.title}
           handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
           keyboardType="default"
-          style={{ width: '100%' }}
+          style={{backgroundColor: colors.highlight}}
+          styleText={{color: colors.text1}}
+          placeHolderColor={colors.text2}
         />
       </View>
 
@@ -82,6 +88,9 @@ const Create = () => {
           handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
           keyboardType="default"
           multiline={true}
+          style={{backgroundColor: colors.highlight}}
+          styleText={{color: colors.text1}}
+          placeHolderColor={colors.text2}
         />
       </View>
 
@@ -92,6 +101,9 @@ const Create = () => {
           handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
           keyboardType="default"
           multiline={true}
+          style={{backgroundColor: colors.highlight}}
+          styleText={{color: colors.text1}}
+          placeHolderColor={colors.text2}
         />
       </View>
 
@@ -102,6 +114,9 @@ const Create = () => {
           handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
           keyboardType="default"
           multiline={true}
+          style={{backgroundColor: colors.highlight}}
+          styleText={{color: colors.text1}}
+          placeHolderColor={colors.text2}
         />
       </View>
 

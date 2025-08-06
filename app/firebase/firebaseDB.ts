@@ -1,6 +1,6 @@
 import { CreateRecipeInput, RecipeProps } from "@/models/Recipe";
 import { User } from "@/models/User";
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
 export const createUserProfile = async (user: User) => {
@@ -42,4 +42,83 @@ export const addRecipe = async (recipe: CreateRecipeInput) => {
     console.error("Error adding document: ", e);
     throw e;
   }
+};
+
+export const subscribeToRecipes = (
+  onSuccess: (recipes: RecipeProps[]) => void,
+  limited: number,
+  onError?: (error: any) => void,
+
+) => {
+  const q = query(
+    collection(DB, "recipes"),
+    orderBy("createdAt", "desc"),
+    limit(limited)
+  );
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as RecipeProps[];
+
+      onSuccess(list);
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
+};
+
+export const subscribeToLikedRecipes = (
+  onSuccess: (recipes: RecipeProps[]) => void,
+  userId: string | undefined,
+  limited: number,
+  onError?: (error: any) => void,
+) => {
+  const q = query(
+    collection(DB, "reactions"),
+    where("userId", "==", userId),
+    where("type", "==", 1),
+    limit(limited)
+  );
+
+  return onSnapshot(
+    q,
+    async (snapshot) => {
+      try {
+        const reactionDocs = snapshot.docs.map(doc => doc.data());
+        const recipeIds = reactionDocs.map((reaction: any) => reaction.recipeId);
+
+        // max 10 elementów!
+        if (recipeIds.length === 0) {
+          onSuccess([]);
+          return;
+        }
+
+        const recipesQuery = query(
+          collection(DB, "recipes"),
+          where("__name__", "in", recipeIds.slice(0, 10)) // tylko max 10 ID na raz
+        );
+
+        const recipesSnapshot = await getDocs(recipesQuery);
+        const recipes = recipesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as RecipeProps[];
+
+        onSuccess(recipes);
+      } catch (error) {
+        if (onError) onError(error);
+        else console.error("🔥 Błąd podczas pobierania przepisów:", error);
+      }
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
 };
