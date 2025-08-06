@@ -1,6 +1,7 @@
+import { Reaction } from "@/models/Reaction";
 import { CreateRecipeInput, RecipeProps } from "@/models/Recipe";
 import { User } from "@/models/User";
-import { addDoc, collection, doc, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
 export const createUserProfile = async (user: User) => {
@@ -26,7 +27,7 @@ export const getAllRecipes = async (): Promise<RecipeProps[]> => {
   const recipes = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
-  })) as RecipeProps[];  // Rzutujemy, bo firestore nie daje pełnych typów
+  })) as RecipeProps[];
 
   return recipes;
 };
@@ -122,3 +123,78 @@ export const subscribeToLikedRecipes = (
     }
   );
 };
+
+export const GetNrOfReactionsByRecipeId = async (id: string): Promise<number> => {
+  const q = query(
+    collection(DB, "reactions"),
+    where("recipeId", "==", id),
+  );
+
+  const snapshot = await getCountFromServer(q);
+  const count = snapshot.data().count;
+
+  return typeof count == 'number' ? count : 0;
+}
+
+//returns 1 upvoted, 0 - no upvote but reaction exists, -1 - no reaction
+export const CheckIfAddedReactionToRecipe = async (recipeId: string, userId: string): Promise<number> => {
+  const q = query(
+    collection(DB, "reactions"),
+    where("recipeId", "==", recipeId),
+    where("userId", "==", userId)
+  );
+
+  const snapshot = await getDocs(q);
+  const reactions =snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Reaction[];
+
+  if(reactions.length <= 0){
+    return -1;
+  }
+
+  const value: number = reactions[0].type;
+
+  return typeof value == 'number' ? value : -1;
+}
+
+export const AddReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(DB, "reactions"), {
+      ...reaction
+    });
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding reaction: ", e);
+    throw e;
+  }
+}
+
+export const GetReactionIdByRecipeAndUserIds = async (recipeId: string, userId: string): Promise<string> =>{
+    const q = query(
+    collection(DB, "reactions"),
+    where("recipeId", "==", recipeId),
+    where("userId", "==", userId)
+  );
+
+  const snapshot = await getDocs(q);
+  const reactions =snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as Reaction[];
+
+  if(reactions.length <= 0){
+    return '-1';
+  }
+
+  const value: string = reactions[0].id;
+
+  return typeof value == 'string' ? value : '-1';
+}
+
+export const DeleteReactionById = async (reactionId: string): Promise<void> =>{
+  await deleteDoc(doc(DB,"reactions",reactionId));
+}
+
+export default createUserProfile;

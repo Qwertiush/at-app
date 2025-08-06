@@ -20,7 +20,7 @@ const Favourites = () => {
   return (
     <View style={globalStyles.container}>
       <FlatList
-      style={{width: '100%'}}
+      style={{width: '100%', marginTop: 40}}
       data={recipes}
       keyExtractor={(item)=>item.id}
       renderItem={({item}) => <RecipeCard recipe={item}/>}

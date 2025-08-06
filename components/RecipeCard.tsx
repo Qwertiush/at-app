@@ -1,11 +1,14 @@
 
 import { getUserProfile } from '@/app/firebase/firebaseDB';
-import { colors } from '@/app/Styles/global-styles';
+import globalStyles, { colors } from '@/app/Styles/global-styles';
+import { RecipeContext } from '@/contexts/RecipeContext';
 import { RecipeProps } from '@/models/Recipe';
 import { User } from '@/models/User';
+import { router } from 'expo-router';
 import { Timestamp } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Avatar from './Avatar';
 
 export const formatDate = (ts?: Timestamp | null) => {
   if (ts && typeof (ts as any).seconds === 'number') {
@@ -17,6 +20,8 @@ export const formatDate = (ts?: Timestamp | null) => {
 
 const RecipeCard: React.FC<{ recipe: RecipeProps}> = ({ recipe }) => {
   const [user, setUser] = useState<User | null>(null);
+  const {setRecipe} = useContext(RecipeContext);
+  const {setUserRecipecontext} = useContext(RecipeContext);
 
   useEffect(() => {
     let mounted = true;
@@ -47,26 +52,31 @@ const RecipeCard: React.FC<{ recipe: RecipeProps}> = ({ recipe }) => {
     };
   }, [recipe.authorId]);
 
+  const onPressRecipe = () => {
+    setRecipe(recipe);
+    setUserRecipecontext(user);
+    router.push('/(recipe)/content')
+  }
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPressRecipe}>
       <Text style={styles.title}>{recipe.title}</Text>
-      <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
-      <Text style={styles.meta}>
-        Created: {formatDate(recipe.createdAt)}
-      </Text>
-
-      <Text style={styles.description}>{recipe.description}</Text>
-
+      <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
+          <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
+          <Text style={styles.meta}>
+            Created: {formatDate(recipe.createdAt)}
+          </Text>
+        </View>
+        <View>
+          {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
+        </View>
+      </View>
       <Text style={styles.sectionTitle}>Ingredients:</Text>
       {recipe.ingredients.map((item, index) => (
         <Text key={index} style={styles.listItem}>• {item}</Text>
       ))}
-
-      <Text style={styles.sectionTitle}>Steps:</Text>
-      {recipe.steps.map((step, index) => (
-        <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
-      ))}
-    </View>
+    </TouchableOpacity>
   );
 };
 

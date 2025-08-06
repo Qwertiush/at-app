@@ -14,3 +14,5 @@ export const logoutUser = async () => {
   router.replace('/sign-in');
   return signOut(AUTH);
 };
+
+export default loginUser;
