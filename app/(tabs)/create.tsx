@@ -1,7 +1,7 @@
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
 import React, { useState } from 'react';
-import { Alert, Image, ScrollView, Text, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
 import { addRecipe } from '../firebase/firebaseDB';
@@ -62,13 +62,17 @@ const Create = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={globalStyles.container}>
-      <Image
-        source={require('@/assets/images/icons/logo.png')}
-        style={{ width: 100, height: 100, alignSelf: 'center', marginTop: 50 }}
-      />
-      <Text style={globalStyles.textXL}>Create a New Recipe</Text>
-
+    <View style={globalStyles.container}>
+    <KeyboardAvoidingView behavior='padding' style={{width: '100%'}}>
+    <ScrollView>
+      <View style={[{flexDirection: 'row'},globalStyles.centerElement]}>
+        <Text style={[globalStyles.textXL, globalStyles.centerElement]}>Create Something new with </Text>
+        <Image
+          source={require('@/assets/images/icons/logo.png')}
+          style={{ width: 40, height: 40, alignSelf: 'center'}}
+        />
+      <Text style={[globalStyles.textXL, globalStyles.centerElement]}> !</Text>
+      </View>
       <View style={{ marginVertical: 10, width: '100%' }}>
         <FormField
           title="Title"
@@ -105,7 +109,7 @@ const Create = () => {
           styleText={{color: colors.text1}}
           placeHolderColor={colors.text2}
         />
-      </View>
+      </View>      
 
       <View style={{ marginVertical: 10, width: '100%' }}>
         <FormField
@@ -122,6 +126,8 @@ const Create = () => {
 
       <CustomButton text='Add recipe' handlePress={SubmitForm}></CustomButton>
     </ScrollView>
+    </KeyboardAvoidingView>
+    </View>
   );
 };
 

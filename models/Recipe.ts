@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export type RecipeProps = {
+export type Recipe = {
   id: string;
   title: string;
   description: string;
@@ -11,4 +11,4 @@ export type RecipeProps = {
   pictures?: string[];
 };
 
-export type CreateRecipeInput = Omit<RecipeProps, "id" | "createdAt">;
+export type CreateRecipeInput = Omit<Recipe, "id" | "createdAt">;

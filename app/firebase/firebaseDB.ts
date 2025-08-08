@@ -1,9 +1,11 @@
+import { RecipeComment } from "@/models/Comment";
 import { Reaction } from "@/models/Reaction";
-import { CreateRecipeInput, RecipeProps } from "@/models/Recipe";
+import { CreateRecipeInput, Recipe } from "@/models/Recipe";
 import { User } from "@/models/User";
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
+//User
 export const createUserProfile = async (user: User) => {
   const userRef = doc(DB, "users", user.uid);
   await setDoc(userRef, {
@@ -20,14 +22,15 @@ export const getUserProfile = async (uid: string) => {
   return snapshot.exists() ? snapshot.data() : null;
 };
 
-export const getAllRecipes = async (): Promise<RecipeProps[]> => {
+//Recipe
+export const getAllRecipes = async (): Promise<Recipe[]> => {
   const recipesRef = collection(DB, "recipes");
   const snapshot = await getDocs(recipesRef);
 
   const recipes = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
-  })) as RecipeProps[];
+  })) as Recipe[];
 
   return recipes;
 };
@@ -40,13 +43,13 @@ export const addRecipe = async (recipe: CreateRecipeInput) => {
     });
     return docRef.id;
   } catch (e) {
-    console.error("Error adding document: ", e);
+    console.error("Error adding recipe: ", e);
     throw e;
   }
 };
 
 export const subscribeToRecipes = (
-  onSuccess: (recipes: RecipeProps[]) => void,
+  onSuccess: (recipes: Recipe[]) => void,
   limited: number,
   onError?: (error: any) => void,
 
@@ -63,7 +66,7 @@ export const subscribeToRecipes = (
       const list = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as RecipeProps[];
+      })) as Recipe[];
 
       onSuccess(list);
     },
@@ -74,8 +77,38 @@ export const subscribeToRecipes = (
   );
 };
 
+export const subscribeToUsersRecipes = (
+  onSuccess: (data: { recipes: Recipe[]; count: number }) => void,
+  limited: number,
+  userId: string,
+  onError?: (error: any) => void,
+
+) => {
+  const q = query(
+    collection(DB, "recipes"),
+    where("authorId","==",userId),
+    limit(limited)
+  );
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Recipe[];
+
+      onSuccess({recipes: list, count: snapshot.size});
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
+};
+
 export const subscribeToLikedRecipes = (
-  onSuccess: (recipes: RecipeProps[]) => void,
+  onSuccess: (recipes: Recipe[]) => void,
   userId: string | undefined,
   limited: number,
   onError?: (error: any) => void,
@@ -109,7 +142,7 @@ export const subscribeToLikedRecipes = (
         const recipes = recipesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-        })) as RecipeProps[];
+        })) as Recipe[];
 
         onSuccess(recipes);
       } catch (error) {
@@ -124,7 +157,12 @@ export const subscribeToLikedRecipes = (
   );
 };
 
-export const GetNrOfReactionsByRecipeId = async (id: string): Promise<number> => {
+export const deleteRecipeById = async (id: string): Promise<void> => {
+  await deleteDoc(doc(DB,"recipes",id));
+}
+
+//Reaction
+export const getNrOfReactionsByRecipeId = async (id: string): Promise<number> => {
   const q = query(
     collection(DB, "reactions"),
     where("recipeId", "==", id),
@@ -137,7 +175,7 @@ export const GetNrOfReactionsByRecipeId = async (id: string): Promise<number> =>
 }
 
 //returns 1 upvoted, 0 - no upvote but reaction exists, -1 - no reaction
-export const CheckIfAddedReactionToRecipe = async (recipeId: string, userId: string): Promise<number> => {
+export const checkIfAddedReactionToRecipe = async (recipeId: string, userId: string): Promise<number> => {
   const q = query(
     collection(DB, "reactions"),
     where("recipeId", "==", recipeId),
@@ -159,7 +197,7 @@ export const CheckIfAddedReactionToRecipe = async (recipeId: string, userId: str
   return typeof value == 'number' ? value : -1;
 }
 
-export const AddReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
+export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
   try {
     const docRef = await addDoc(collection(DB, "reactions"), {
       ...reaction
@@ -171,7 +209,7 @@ export const AddReaction = async (reaction: Omit<Reaction, 'id'>): Promise<strin
   }
 }
 
-export const GetReactionIdByRecipeAndUserIds = async (recipeId: string, userId: string): Promise<string> =>{
+export const getReactionIdByRecipeAndUserIds = async (recipeId: string, userId: string): Promise<string> =>{
     const q = query(
     collection(DB, "reactions"),
     where("recipeId", "==", recipeId),
@@ -193,8 +231,53 @@ export const GetReactionIdByRecipeAndUserIds = async (recipeId: string, userId: 
   return typeof value == 'string' ? value : '-1';
 }
 
-export const DeleteReactionById = async (reactionId: string): Promise<void> =>{
+export const deleteReactionById = async (reactionId: string): Promise<void> =>{
   await deleteDoc(doc(DB,"reactions",reactionId));
+}
+//Comment
+
+export const subscribeToCommentsByRecipeId = (
+  onSuccess: (recipes: RecipeComment[]) => void,
+  limited: number,
+  recipeId: string,
+  onError?: (error: any) => void,
+
+) => {
+  const q = query(
+    collection(DB, "comments"),
+    where("recipeId","==",recipeId),
+    orderBy("createdAt", "desc"),
+    limit(limited)
+  );
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as RecipeComment[];
+
+      onSuccess(list);
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
+};
+
+export const addComment = async (comment: Omit<RecipeComment, 'id' | 'createdAt'>): Promise<string> => {
+  try{
+    const docRef = await addDoc(collection(DB, "comments"), {
+      ...comment,
+      createdAt: serverTimestamp(),
+    });
+    return docRef.id;
+  }catch(e){
+    console.error("Error adding comment: ", e);
+    throw e;
+  }
 }
 
 export default createUserProfile;

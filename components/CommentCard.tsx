@@ -1,38 +1,25 @@
+import { getUserProfile } from '@/app/firebase/firebaseDB'
+import globalStyles, { colors } from '@/app/Styles/global-styles'
+import { RecipeComment } from '@/models/Comment'
+import { User } from '@/models/User'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import Avatar from './Avatar'
+import { formatDate } from './RecipeCard'
 
-import { getUserProfile } from '@/app/firebase/firebaseDB';
-import globalStyles, { colors } from '@/app/Styles/global-styles';
-import { RecipeContext } from '@/contexts/RecipeContext';
-import { Recipe } from '@/models/Recipe';
-import { User } from '@/models/User';
-import { router } from 'expo-router';
-import { Timestamp } from 'firebase/firestore';
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Avatar from './Avatar';
-
-export const formatDate = (ts?: Timestamp | null) => {
-  if (ts && typeof (ts as any).seconds === 'number') {
-    // jeśli to Timestamp z Firestore
-    return new Date((ts as any).seconds * 1000).toLocaleDateString();
-  }
-  return 'Just now'; // fallback zanim serwer uzupełni
-};
-
-const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
+const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
   const [user, setUser] = useState<User | null>(null);
-  const {setRecipe} = useContext(RecipeContext);
-  const {setUserRecipecontext} = useContext(RecipeContext);
 
   useEffect(() => {
     let mounted = true;
 
     const fetchUser = async () => {
       try {
-        const fetched = await getUserProfile(recipe.authorId);
+        const fetched = await getUserProfile(comment.authorId);
         if (!mounted) return;
         if (fetched) {
           const userObj: User = {
-            uid: recipe.authorId,
+            uid: comment.authorId,
             ...(fetched as Omit<User, 'uid'>),
           };
           setUser(userObj);
@@ -50,37 +37,27 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
     return () => {
       mounted = false;
     };
-  }, [recipe.authorId]);
-
-  const onPressRecipe = () => {
-    setRecipe(recipe);
-    setUserRecipecontext(user);
-    router.push('/(recipe)/content')
-  }
+  }, [comment.authorId]);
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPressRecipe}>
-      <Text style={styles.title}>{recipe.title}</Text>
+    <View style={styles.card}>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
           <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
           <Text style={styles.meta}>
-            Created: {formatDate(recipe.createdAt)}
+            Created: {formatDate(comment.createdAt)}
           </Text>
         </View>
         <View>
           {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
         </View>
       </View>
-      <Text style={styles.sectionTitle}>Ingredients:</Text>
-      {recipe.ingredients.map((item, index) => (
-        <Text key={index} style={styles.listItem}>• {item}</Text>
-      ))}
-    </TouchableOpacity>
-  );
-};
+      <Text style={globalStyles.textM}>{comment.description}</Text>
+    </View>
+  )
+}
 
-export default RecipeCard;
+export default CommentCard
 
 const styles = StyleSheet.create({
   card: {

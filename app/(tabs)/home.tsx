@@ -2,7 +2,7 @@ import FormField from '@/components/FormField';
 import LoadingComponent from '@/components/LoadingComponent';
 import RecipeCard from '@/components/RecipeCard';
 import { useAuth } from '@/hooks/useAuth';
-import { RecipeProps } from '@/models/Recipe';
+import { Recipe } from '@/models/Recipe';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import { subscribeToRecipes } from '../firebase/firebaseDB';
@@ -12,7 +12,7 @@ const Home = () => {
   const {user, loading} = useAuth();
 
   const [itemsLimit, setItemsLimit] = useState(4); 
-  const [recipes, setRecipes] = useState<RecipeProps[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -28,7 +28,7 @@ const Home = () => {
   if (loading) return <LoadingComponent/>;
 
   return (
-    <View style={[globalStyles.container, { paddingTop: 30 }]}>
+    <View style={[globalStyles.container]}>
       <FlatList 
         style={{width: '100%'}}
         data={recipes}

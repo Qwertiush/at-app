@@ -3,11 +3,12 @@ import CustomButton from '@/components/CustomButton';
 import { formatDate } from '@/components/RecipeCard';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { Reaction } from '@/models/Reaction';
+import { router } from 'expo-router';
 import { getAuth } from 'firebase/auth';
 import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
-import { AddReaction, CheckIfAddedReactionToRecipe, DeleteReactionById, GetNrOfReactionsByRecipeId, GetReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
+import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getNrOfReactionsByRecipeId, getReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
 
 const Content = () => {
   const { recipe, userRecipeContext } = useContext(RecipeContext);
@@ -16,11 +17,13 @@ const Content = () => {
   const [reacted, setReacted] = useState<number>();
 
   const [reload, setReload] = useState<boolean>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>();
 
   const auth = getAuth();
   const currentUser = auth.currentUser;
 
   const addUpVote = async () => {
+    setIsSubmitting(true);
     console.log("up voted " + recipe?.id);
     if(reacted != -1){
       console.log("You arleady added reaction to this.")
@@ -34,15 +37,16 @@ const Content = () => {
       type: 1
     }
 
-    const response = await AddReaction(newReaction);
+    const response = await addReaction(newReaction);
     console.log(response);
 
     setReload(!reload);
+    setIsSubmitting(false);
   }
 
   const addDownVote = async () => {
     if (!recipe?.id || !currentUser?.uid) return;
-    const response = await GetReactionIdByRecipeAndUserIds(recipe?.id,currentUser.uid);
+    const response = await getReactionIdByRecipeAndUserIds(recipe?.id,currentUser.uid);
 
     if(response == '-1'){
       console.log("Reaction doesn't exist");
@@ -50,21 +54,27 @@ const Content = () => {
     }
     console.log("Reaction's id: " + response);
 
-    await DeleteReactionById(response);
+    await deleteReactionById(response);
 
     setReload(!reload);
+  }
+
+  const deleteRecipe = async () => {
+    if(recipe?.id)
+    await deleteRecipeById(recipe?.id);
+    router.replace('/(tabs)/home');
   }
 
   useEffect(() => {
     const fetchUpvotes = async () => {
       if (recipe?.id) {
-        const upvotes = await GetNrOfReactionsByRecipeId(recipe.id);
+        const upvotes = await getNrOfReactionsByRecipeId(recipe.id);
         setupVotes(upvotes);
       }
     }
     const checkIfReacted = async () => {
       if(recipe?.id && currentUser?.uid){
-        const reacted = await CheckIfAddedReactionToRecipe(recipe.id, currentUser?.uid );
+        const reacted = await checkIfAddedReactionToRecipe(recipe.id, currentUser?.uid );
         console.log("Checking if reaction added 1 -upvote exists, 0 - reaction exists but no upvote, -1 - reaction doesn't exist: " + reacted);
         setReacted(reacted);
       }
@@ -78,8 +88,9 @@ const Content = () => {
 
   return (
     <View style={globalStyles.container}>
-      <ScrollView style={{width: '100%', marginTop: 20}}>
-      {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote}/>}
+      <ScrollView style={{width: '100%'}}>
+      {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete your recipe.' style={{backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
+      {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting}/>}
       {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} user likes this recipe so far!</Text>}
       <View style={styles.card}>
         <Text style={styles.title}>{recipe.title}</Text>

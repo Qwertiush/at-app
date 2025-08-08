@@ -1,10 +1,10 @@
-import { RecipeProps } from '@/models/Recipe';
+import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
 import React, { createContext, useState } from 'react';
 
 type RecipeContextType = {
-  recipe: RecipeProps | null;
-  setRecipe: React.Dispatch<React.SetStateAction<RecipeProps | null>>;
+  recipe: Recipe | null;
+  setRecipe: React.Dispatch<React.SetStateAction<Recipe | null>>;
   userRecipeContext: User | null,
   setUserRecipecontext: React.Dispatch<React.SetStateAction<User | null>>;
 };
@@ -17,7 +17,7 @@ export const RecipeContext = createContext<RecipeContextType>({
 });
 
 export const RecipeProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [recipe, setRecipe] = useState<RecipeProps | null>(null);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [userRecipeContext, setUserRecipecontext] = useState<User | null>(null);
 
   return (
