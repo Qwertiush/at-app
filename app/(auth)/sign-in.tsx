@@ -15,7 +15,6 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitForm = () => {
-    console.log('Form submitted:', form);
     signIn();
   }
 
@@ -23,7 +22,6 @@ const SignIn = () => {
     setIsSubmitting(true);
     try{
       const response = await loginUser(form.email, form.password);
-      console.log(response);
       router.push('/(tabs)/home');
     }catch(error) {
       console.error('Error signing in:', error);

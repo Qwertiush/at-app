@@ -6,9 +6,9 @@ export const colors = {
   base: '#6b8e23',
   secondary: '#d4a017',
   text1: '#333333',
-  text2: '#5a5a5a',
+  text2: '#adadadff',
   text3: '#c9e2d3ff',
-  highlight: '#e0e0e0',
+  highlight: '#e9e5dcff',
   succes: '#4caf50',
   error: '#f44336',
   warning: '#ff9800',
@@ -28,7 +28,6 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.bc,
   },
   contentContainer:{
     paddingTop: StatusBar.currentHeight,
@@ -51,6 +50,11 @@ export default StyleSheet.create({
   },
   centerElement:{
     alignSelf: 'center',
+  },
+  textContainer:{
+    backgroundColor: colors.highlight,
+    padding: 10,
+    borderRadius: 20
   },
   textXS: { 
     ...baseText,

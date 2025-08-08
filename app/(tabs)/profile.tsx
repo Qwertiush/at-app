@@ -1,8 +1,8 @@
+import ContentContainer from '@/components/ContentContainer'
 import LoadingComponent from '@/components/LoadingComponent'
 import UserProfile from '@/components/UserProfile'
 import { useAuth } from '@/hooks/useAuth'
 import React from 'react'
-import { View } from 'react-native'
 import globalStyles from '../Styles/global-styles'
 
 const Profile = () => {
@@ -13,9 +13,9 @@ const Profile = () => {
   if (loading) return <LoadingComponent/>;
 
   return (
-    <View style={globalStyles.container}>
+    <ContentContainer style={globalStyles.container}>
       <UserProfile user={user} loading={loading}/>
-    </View>
+    </ContentContainer>
   )
 }
 

@@ -1,4 +1,5 @@
 import CommentCard from '@/components/CommentCard'
+import ContentContainer from '@/components/ContentContainer'
 import CustomButton from '@/components/CustomButton'
 import FormField from '@/components/FormField'
 import { RecipeContext } from '@/contexts/RecipeContext'
@@ -62,12 +63,12 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
 
     const response = await addComment(comment2send);
 
-    console.log(response);
     setNewComment({content: ''});
     setIsSubmitting(false);
   }
 
   return (
+    <ContentContainer style={globalStyles.container}>
     <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.container]}>
       <FlatList
         style={{width: '100%'}}
@@ -79,7 +80,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
         inverted
       >
       </FlatList>
-      <View style={{width: '100%', backgroundColor: colors.base, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
+      <View style={{width: '100%', backgroundColor: colors.highlight, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
         <FormField
           title='Comment'
           value={newComment.content}
@@ -90,6 +91,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
         <CustomButton text='Add comment' handlePress={handleAddingComment} isLoading={isSubmitting}/>   
       </View>
     </KeyboardAvoidingView>
+    </ContentContainer>
 
   )
 }

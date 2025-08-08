@@ -1,3 +1,4 @@
+import ContentContainer from '@/components/ContentContainer';
 import RecipeCard from '@/components/RecipeCard';
 import { Recipe } from '@/models/Recipe';
 import { getAuth } from 'firebase/auth';
@@ -25,7 +26,7 @@ const Favourites = () => {
 
   return (
     <>
-    <View style={globalStyles.container}>
+    <ContentContainer style={globalStyles.container}>
       <FlatList
       style={[{width: '100%'},globalStyles.contentContainerFL]}
       data={recipes}
@@ -34,7 +35,7 @@ const Favourites = () => {
       onEndReached={loadMoreRecipes}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
-        <View style={[globalStyles.centerElement,{flexDirection: 'row'}]}>
+        <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row'}]}>
           <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>Your's favourite </Text>
           <Image
             source={require('@/assets/images/icons/logo.png')}
@@ -48,7 +49,7 @@ const Favourites = () => {
       }
       >
       </FlatList>
-    </View>
+    </ContentContainer>
     </>
   )
 }

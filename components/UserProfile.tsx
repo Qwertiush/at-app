@@ -1,8 +1,9 @@
 import { logoutUser } from '@/app/firebase/firebaseAuth'
 import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
-import globalStyles from '@/app/Styles/global-styles'
+import globalStyles, { colors } from '@/app/Styles/global-styles'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
+import { getAuth } from 'firebase/auth'
 import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import Avatar from './Avatar'
@@ -20,6 +21,9 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
 
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+
   useEffect(() => {
     if (!loading && user?.uid) {
       const unsubscribe = subscribeToUsersRecipes(({ recipes, count }) => {
@@ -35,8 +39,12 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   }
 
   const handlePictureChange = () => {
-    console.log("Changing profile picture");
+    alert("Settings not implemented yet.");
   }
+  const handleVoting = () => {
+    alert("Not implemented yet.");
+  }
+
   const handleLoggingOut = () => {
     logoutUser();
   }
@@ -46,8 +54,9 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
           <View
             style={[
               globalStyles.centerElement,
+              globalStyles.textContainer,
               {
-                width: '100%',
+                width: '95%',
                 flexDirection: 'column',
                 paddingVertical: 20,
               },
@@ -83,7 +92,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
               >
                 <Image
                   source={require('@/assets/images/icons/recipe.png')}
-                  style={{ width: 20, height: 20, marginRight: 6 }}
+                  style={{ width: 30, height: 30, marginRight: 6 }}
                 />
                 <Text style={[globalStyles.textM]}>Recipes:</Text>
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>{recipesCount}</Text>
@@ -96,25 +105,36 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
               >
                 <Image
                   source={require('@/assets/images/icons/favs.png')}
-                  style={{ width: 20, height: 20, marginRight: 6 }}
+                  style={{ width: 30, height: 30, marginRight: 6 }}
                 />
                 <Text style={[globalStyles.textM]}>Likes:</Text>
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>0</Text>
               </View>
             </View>
             <View style={[{width: '85%', flexDirection: 'row', justifyContent: 'space-between'}, globalStyles.centerElement]}>
-                <CustomButton text='Change Avatar' style={{width: '40%'}} handlePress={handlePictureChange}/>
-                <CustomButton text='Log Out' style={{width: '40%'}} handlePress={handleLoggingOut}/>
+                <CustomButton text='Settings' style={{width: '40%'}} handlePress={handlePictureChange}/>
+                {user?.uid == currentUser?.uid ? <CustomButton text='Log Out' style={{width: '40%', backgroundColor: colors.error}} handlePress={handleLoggingOut}/> : <CustomButton text=':) Up Vote?' style={{width: '40%', backgroundColor: colors.succes}} handlePress={handleVoting}/>}
             </View>
-            <Text
-              style={[
-                globalStyles.textXL,
-                { textAlign: 'center', marginTop: 20 },
-                globalStyles.centerElement,
-              ]}
-            >
+            {user?.uid == currentUser?.uid ? 
+              <Text
+                style={[
+                  globalStyles.textXL,
+                  { textAlign: 'center', marginTop: 20 },
+                  globalStyles.centerElement,
+                ]}
+              >
               Your's recipes:
-            </Text>
+              </Text> :
+              <Text
+                style={[
+                  globalStyles.textXL,
+                  { textAlign: 'center', marginTop: 20 },
+                  globalStyles.centerElement,
+                ]}
+              >
+              {user?.username}'s recipes:
+              </Text>
+            }
           </View>
         </View>
         <FlatList

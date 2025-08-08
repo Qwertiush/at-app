@@ -6,7 +6,7 @@ import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from '../components/CustomButton';
 import { AUTH } from './firebase/FirebaseConfig';
-import styles from './Styles/global-styles.js';
+import { default as styles } from './Styles/global-styles.js';
 
 export default function App() {
   useEffect(() => {
@@ -24,8 +24,9 @@ export default function App() {
   return (
     <>
     <StatusBar translucent backgroundColor="transparent" />
+
     <SafeAreaView style={styles.container}> 
-      <ScrollView contentContainerStyle={{height: '100%'}}>
+      <ScrollView contentContainerStyle={[{height: '100%'}]}>
         <View style={styles.centered}>
           <Image
             source={require('../assets/images/icons/logo.png')}

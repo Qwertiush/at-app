@@ -1,3 +1,4 @@
+import ContentContainer from '@/components/ContentContainer';
 import FormField from '@/components/FormField';
 import LoadingComponent from '@/components/LoadingComponent';
 import RecipeCard from '@/components/RecipeCard';
@@ -5,9 +6,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Text, View } from 'react-native';
-import { subscribeToRecipes, subscribeToRecipesWithQuery } from '../firebase/firebaseDB';
+import { subscribeToFilteredRecipes, subscribeToRecipes } from '../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-
+//TODO when user deleted - (change recipes/comments - to "user deleted")
 const Home = () => {
   const {user, loading} = useAuth();
 
@@ -18,7 +19,7 @@ const Home = () => {
 
   useEffect(() => {
     if(searchQuery != ''){
-      const unsubscribe = subscribeToRecipesWithQuery(setRecipes,searchQuery.toLowerCase(),itemsLimit);
+      const unsubscribe = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
       return () => unsubscribe(); 
     }
     const unsubscribe = subscribeToRecipes(setRecipes,itemsLimit);
@@ -29,13 +30,11 @@ const Home = () => {
     setItemsLimit((prev) => prev + 10);
   }
 
-  console.log(searchQuery);
-
   if (loading) return <LoadingComponent/>;
 
   return (
-    <>
-    <View style={globalStyles.container}>
+    
+    <ContentContainer style={globalStyles.container}>
       <FlatList
         style={[{width: '100%'}, globalStyles.contentContainerFL]}
         data={recipes}
@@ -44,7 +43,7 @@ const Home = () => {
         onEndReached={loadMoreRecipes}
         onEndReachedThreshold={0.1}
         ListHeaderComponent={
-          <View style={[globalStyles.centerElement,{flexDirection: 'row'}]}>
+          <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row'}]}>
             <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>What's new in </Text>
             <Image
               source={require('@/assets/images/icons/logo.png')}
@@ -59,10 +58,9 @@ const Home = () => {
         >
       </FlatList>
       <KeyboardAvoidingView behavior='padding' style={{width: '100%'}}>
-        <FormField title='query...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%'}}></FormField>
+        <FormField title='query...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 10}}></FormField>
       </KeyboardAvoidingView>
-    </View>
-    </>
+    </ContentContainer>
   )
 }
 

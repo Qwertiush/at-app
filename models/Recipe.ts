@@ -4,7 +4,7 @@ export type Recipe = {
   id: string;
   title: string;
   title2lower?: string
-  partialTitle?: string[]
+  searchIndex: string[]
   description: string;
   authorId: string;
   createdAt: Timestamp;

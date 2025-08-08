@@ -18,7 +18,6 @@ const SignUp = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitForm = () => {
-    console.log('Form submitted for signing up:', form);
     signUp();
   }
 
@@ -40,7 +39,6 @@ const SignUp = () => {
       alert('Sign up successful');
       router.push('/sign-in');
     }catch(error) {
-      console.error('Error signing up:', error);
       alert('Sign up failed: ' + error);
     }finally{
       setIsSubmitting(false);

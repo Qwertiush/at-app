@@ -1,4 +1,5 @@
 import Avatar from '@/components/Avatar';
+import ContentContainer from '@/components/ContentContainer';
 import CustomButton from '@/components/CustomButton';
 import { formatDate } from '@/components/RecipeCard';
 import { RecipeContext } from '@/contexts/RecipeContext';
@@ -24,9 +25,8 @@ const Content = () => {
 
   const addUpVote = async () => {
     setIsSubmitting(true);
-    console.log("up voted " + recipe?.id);
     if(reacted != -1){
-      console.log("You arleady added reaction to this.")
+      alert("You arleady added reaction to this.")
       return;
     }
 
@@ -38,7 +38,6 @@ const Content = () => {
     }
 
     const response = await addReaction(newReaction);
-    console.log(response);
 
     setReload(!reload);
     setIsSubmitting(false);
@@ -49,10 +48,8 @@ const Content = () => {
     const response = await getReactionIdByRecipeAndUserIds(recipe?.id,currentUser.uid);
 
     if(response == '-1'){
-      console.log("Reaction doesn't exist");
       return;
     }
-    console.log("Reaction's id: " + response);
 
     await deleteReactionById(response);
 
@@ -75,7 +72,6 @@ const Content = () => {
     const checkIfReacted = async () => {
       if(recipe?.id && currentUser?.uid){
         const reacted = await checkIfAddedReactionToRecipe(recipe.id, currentUser?.uid );
-        console.log("Checking if reaction added 1 -upvote exists, 0 - reaction exists but no upvote, -1 - reaction doesn't exist: " + reacted);
         setReacted(reacted);
       }
     }
@@ -87,13 +83,13 @@ const Content = () => {
   if (!recipe) return <Text>Loading recipe...</Text>;
 
   return (
-    <View style={globalStyles.container}>
+    <ContentContainer style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
           {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete' style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
-          {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting}/>}
+          {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
         </View>
-        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} user likes this recipe so far!</Text>}
+        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer]}>{upvotes} user likes this recipe so far!</Text>}
         <View style={styles.card}>
           <Text style={styles.title}>{recipe.title}</Text>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -120,7 +116,7 @@ const Content = () => {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </ContentContainer>
   )
 }
 

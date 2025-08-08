@@ -11,6 +11,11 @@ const TabsArray = [
     name: 'comments',
     icon: require('@/assets/images/icons/comments.png'),
     title: 'Comments',
+  },
+  {
+    name: 'author',
+    icon: require('@/assets/images/icons/profile.png'),
+    title: 'Author',
   }
 ]
 

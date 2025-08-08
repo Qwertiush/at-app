@@ -2,7 +2,7 @@ import { RecipeComment } from "@/models/Comment";
 import { Reaction } from "@/models/Reaction";
 import { CreateRecipeInput, Recipe } from "@/models/Recipe";
 import { User } from "@/models/User";
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
 //User
@@ -35,44 +35,32 @@ export const getAllRecipes = async (): Promise<Recipe[]> => {
   return recipes;
 };
 
-export const subscribeToRecipesWithQuery = (
+export const subscribeToFilteredRecipes = (
   onSuccess: (recipes: Recipe[]) => void,
   searchQuery: string,
-  limited: number,
-  onError?: (error: any) => void,
-
+  limitCount: number
 ) => {
-  if (!searchQuery.trim()) {
-    onSuccess([]);
-    return () => {};
-  }
-
-  const query2parts = searchQuery.toLowerCase().split(' ').slice(0, 10);
+  const queryParts = searchQuery.toLowerCase().split(" ").filter(Boolean);
 
   const q = query(
     collection(DB, "recipes"),
-    or(
-      where('title2lower','==',searchQuery),
-      where('partialTitle','array-contains-any',query2parts),
-      where('ingredients','array-contains-any',query2parts)
-    ),
-    limit(limited)
+    where("searchIndex", "array-contains-any", queryParts),
+    limit(limitCount)
   );
-  return onSnapshot(
-    q,
-    (snapshot) => {
-      const list = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Recipe[];
 
-      onSuccess(list);
-    },
-    (error) => {
-      if (onError) onError(error);
-      else console.error("Snapshot error:", error);
-    }
-  );
+  return onSnapshot(q, (snapshot) => {
+    const rawList = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Recipe[];
+
+    // Client side filtering
+    const filteredList = rawList.filter((item) =>
+      queryParts.every((word) => item.searchIndex.includes(word))
+    );
+
+    onSuccess(filteredList);
+  });
 };
 
 export const addRecipe = async (recipe: CreateRecipeInput) => {
@@ -198,8 +186,22 @@ export const subscribeToLikedRecipes = (
 };
 
 export const deleteRecipeById = async (id: string): Promise<void> => {
-  await deleteDoc(doc(DB,"recipes",id));
-}
+  // 1. Usuń komentarze związane z tym przepisem
+  const commentsQuery = query(collection(DB, "comments"), where("recipeId", "==", id));
+  const commentsSnapshot = await getDocs(commentsQuery);
+  const commentDeletions = commentsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "comments", docu.id)));
+
+  // 2. Usuń reakcje związane z tym przepisem
+  const reactionsQuery = query(collection(DB, "reactions"), where("recipeId", "==", id));
+  const reactionsSnapshot = await getDocs(reactionsQuery);
+  const reactionDeletions = reactionsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "reactions", docu.id)));
+
+  // 3. Usuń sam przepis
+  const recipeDeletion = deleteDoc(doc(DB, "recipes", id));
+
+  // 4. Poczekaj na wszystkie operacje
+  await Promise.all([...commentDeletions, ...reactionDeletions, recipeDeletion]);
+};
 
 //Reaction
 export const getNrOfReactionsByRecipeId = async (id: string): Promise<number> => {
