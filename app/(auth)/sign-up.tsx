@@ -3,7 +3,7 @@ import FormField from '@/components/FormField';
 import { User } from '@/models/User';
 import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
-import { Image, KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
 import { registerUser } from '../firebase/firebaseAuth';
 import { createUserProfile } from '../firebase/firebaseDB';
@@ -32,8 +32,7 @@ const SignUp = () => {
         uid: firebaseuser.uid,
         username: form.username,
         email: form.email,
-        avatarUrl: '',
-        createdAt: new Date(),
+        avatarUrl: ''
       }
 
       createUserProfile(user);
@@ -49,8 +48,7 @@ const SignUp = () => {
   }
 
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <KeyboardAvoidingView behavior='padding'>
+    <KeyboardAvoidingView behavior='padding' style={globalStyles.container}>
       <ScrollView>
         <View style={globalStyles.centeredV}>
           <Image
@@ -67,8 +65,7 @@ const SignUp = () => {
           </View>
         </View>
       </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 

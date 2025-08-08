@@ -2,7 +2,7 @@ import { RecipeComment } from "@/models/Comment";
 import { Reaction } from "@/models/Reaction";
 import { CreateRecipeInput, Recipe } from "@/models/Recipe";
 import { User } from "@/models/User";
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, or, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
 //User
@@ -12,7 +12,7 @@ export const createUserProfile = async (user: User) => {
     username: user.username || "Nowy użytkownik",
     email: user.email,
     avatarUrl: user.avatarUrl || "",
-    createdAt: user.createdAt || new Date()
+    createdAt: serverTimestamp()
   });
 };
 
@@ -33,6 +33,46 @@ export const getAllRecipes = async (): Promise<Recipe[]> => {
   })) as Recipe[];
 
   return recipes;
+};
+
+export const subscribeToRecipesWithQuery = (
+  onSuccess: (recipes: Recipe[]) => void,
+  searchQuery: string,
+  limited: number,
+  onError?: (error: any) => void,
+
+) => {
+  if (!searchQuery.trim()) {
+    onSuccess([]);
+    return () => {};
+  }
+
+  const query2parts = searchQuery.toLowerCase().split(' ').slice(0, 10);
+
+  const q = query(
+    collection(DB, "recipes"),
+    or(
+      where('title2lower','==',searchQuery),
+      where('partialTitle','array-contains-any',query2parts),
+      where('ingredients','array-contains-any',query2parts)
+    ),
+    limit(limited)
+  );
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Recipe[];
+
+      onSuccess(list);
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
 };
 
 export const addRecipe = async (recipe: CreateRecipeInput) => {

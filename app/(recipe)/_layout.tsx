@@ -16,7 +16,9 @@ const TabsArray = [
 
 const RecipeLayout = () => {
   return (
+    <>
     <TabsLayout tabs={TabsArray}/>
+    </>
   )
 }
 

@@ -20,6 +20,19 @@ const Create = () => {
     ingredientsInput: '',
     stepsInput: '',
   });
+//Function creates structure to imporve searching expirience "pasta" - [p,pa,pas,past,past]
+const generatePartialTitle = (title: string): string[] => {
+  const words = title.toLowerCase().split(/\s+/);
+  const partials = new Set<string>();
+
+  words.forEach(word => {
+    for (let i = 1; i <= word.length; i++) {
+      partials.add(word.slice(0, i));
+    }
+  });
+
+  return Array.from(partials);
+};
 
   const SubmitForm = async () => {
     try {
@@ -38,9 +51,12 @@ const Create = () => {
 
       const newRecipe = {
         title: title.trim(),
+        title2lower: title.trim().toLowerCase(),
+        partialTitle: generatePartialTitle(title),
         description: description.trim(),
         authorId: user.uid,
         ingredients: ingredientsInput
+          .toLowerCase()
           .split(',')
           .map(i => i.trim())
           .filter(i => i.length > 0),

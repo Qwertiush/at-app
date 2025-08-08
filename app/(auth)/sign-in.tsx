@@ -2,7 +2,6 @@ import CustomButton from '@/components/CustomButton'
 import { Link, router } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import globalStyles, { colors } from '../Styles/global-styles'
 import { loginUser } from '../firebase/firebaseAuth'
@@ -35,7 +34,7 @@ const SignIn = () => {
   }
 
   return (
-    <SafeAreaView style={globalStyles.container}>
+    <View style={globalStyles.container}>
       <KeyboardAvoidingView behavior='padding'>
       <ScrollView>
         <View style={globalStyles.centeredV}>
@@ -53,7 +52,7 @@ const SignIn = () => {
         </View>
       </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   )
 }
 

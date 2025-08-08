@@ -89,34 +89,36 @@ const Content = () => {
   return (
     <View style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
-      {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete your recipe.' style={{backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
-      {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting}/>}
-      {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} user likes this recipe so far!</Text>}
-      <View style={styles.card}>
-        <Text style={styles.title}>{recipe.title}</Text>
-        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-            <Text style={styles.meta}> By: {userRecipeContext?.username ?? 'Unknown'}</Text>
-            <Text style={styles.meta}>
-              Created: {formatDate(recipe.createdAt)}
-            </Text>
-          </View>
-          <View>
-            {userRecipeContext?.avatarUrl ? <Avatar source={{uri: userRecipeContext?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
-          </View>
+        <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
+          {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete' style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
+          {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting}/>}
         </View>
-        <Text style={styles.description}>{recipe.description}</Text>
+        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement]}>{upvotes} user likes this recipe so far!</Text>}
+        <View style={styles.card}>
+          <Text style={styles.title}>{recipe.title}</Text>
+          <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
+              <Text style={styles.meta}> By: {userRecipeContext?.username ?? 'Unknown'}</Text>
+              <Text style={styles.meta}>
+                Created: {formatDate(recipe.createdAt)}
+              </Text>
+            </View>
+            <View>
+              {userRecipeContext?.avatarUrl ? <Avatar source={{uri: userRecipeContext?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
+            </View>
+          </View>
+          <Text style={styles.description}>{recipe.description}</Text>
 
-        <Text style={styles.sectionTitle}>Ingredients:</Text>
-        {recipe.ingredients.map((item, index) => (
-          <Text key={index} style={styles.listItem}>• {item}</Text>
-        ))}
+          <Text style={styles.sectionTitle}>Ingredients:</Text>
+          {recipe.ingredients.map((item, index) => (
+            <Text key={index} style={styles.listItem}>• {item}</Text>
+          ))}
 
-        <Text style={styles.sectionTitle}>Steps:</Text>
-        {recipe.steps.map((step, index) => (
-          <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
-        ))}
-      </View>
+          <Text style={styles.sectionTitle}>Steps:</Text>
+          {recipe.steps.map((step, index) => (
+            <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
+          ))}
+        </View>
       </ScrollView>
     </View>
   )

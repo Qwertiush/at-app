@@ -1,7 +1,7 @@
 import TabsIcon from '@/components/TabsIcon';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { ImageSourcePropType, StatusBar } from 'react-native';
+import { ImageSourcePropType } from 'react-native';
 import { colors } from '../app/Styles/global-styles';
 
 type Tab = {
@@ -17,7 +17,6 @@ type TabsLayoutProps = {
 const TabsLayout: React.FC<TabsLayoutProps> = ({tabs}) => {
   return (
     <>
-    <StatusBar backgroundColor={colors.bc}/>
     <Tabs
     screenOptions={{
       tabBarShowLabel: false,

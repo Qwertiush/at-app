@@ -1,11 +1,12 @@
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
-import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from '../components/CustomButton';
 import { AUTH } from './firebase/FirebaseConfig';
-import styles, { colors } from './Styles/global-styles.js';
+import styles from './Styles/global-styles.js';
 
 export default function App() {
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function App() {
 
   return (
     <>
-    <StatusBar backgroundColor={colors.bc}/>
+    <StatusBar translucent backgroundColor="transparent" />
     <SafeAreaView style={styles.container}> 
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View style={styles.centered}>

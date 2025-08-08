@@ -1,5 +1,5 @@
 import RecipeCard from '@/components/RecipeCard';
-import { RecipeProps } from '@/models/Recipe';
+import { Recipe } from '@/models/Recipe';
 import { getAuth } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
@@ -7,24 +7,31 @@ import globalStyles from '../Styles/global-styles';
 import { subscribeToLikedRecipes } from '../firebase/firebaseDB';
 
 const Favourites = () => {
-  const [recipes, setRecipes] = useState<RecipeProps[]>([]);
+
+  const [itemsLimit, setItemsLimit] = useState(10); 
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   const auth = getAuth();
   const user = auth.currentUser;
 
   useEffect(() => {
-    const unsubscribe = subscribeToLikedRecipes(setRecipes,user?.uid,10);
+    const unsubscribe = subscribeToLikedRecipes(setRecipes,user?.uid,itemsLimit);
     return () => unsubscribe(); 
   }, []);
 
+    const loadMoreRecipes = () => {
+    setItemsLimit((prev) => prev + 10);
+  }
+
   return (
+    <>
     <View style={globalStyles.container}>
       <FlatList
-      style={{width: '100%', marginTop: 40}}
+      style={[{width: '100%'},globalStyles.contentContainerFL]}
       data={recipes}
       keyExtractor={(item)=>item.id}
       renderItem={({item}) => <RecipeCard recipe={item}/>}
-      onEndReached={()=>{}}
+      onEndReached={loadMoreRecipes}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
         <View style={[globalStyles.centerElement,{flexDirection: 'row'}]}>
@@ -36,9 +43,13 @@ const Favourites = () => {
           <Text style={[globalStyles.textXXL, globalStyles.centerElement]}> recipes.</Text>
         </View>
         }
+      ListFooterComponent={
+        <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>You have reached the end.</Text>
+      }
       >
       </FlatList>
     </View>
+    </>
   )
 }
 

@@ -5,8 +5,8 @@ import { RecipeContext } from '@/contexts/RecipeContext'
 import { RecipeComment } from '@/models/Comment'
 import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, FlatList, View } from 'react-native'
-import globalStyles from '../Styles/global-styles'
+import { Alert, FlatList, KeyboardAvoidingView, View } from 'react-native'
+import globalStyles, { colors } from '../Styles/global-styles'
 import { addComment, subscribeToCommentsByRecipeId } from '../firebase/firebaseDB'
 
 type CommentState = {
@@ -20,7 +20,7 @@ type CommentsProps ={
 const Comments: React.FC<CommentsProps> = ({recipeId}) => {
   const { recipe } = useContext(RecipeContext);
 
-  const [itemsLimit, setItemsLimit] = useState(4); 
+  const [itemsLimit, setItemsLimit] = useState(10); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
 
   const [newComment, setNewComment] = useState<CommentState>({
@@ -40,7 +40,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
   }, [itemsLimit]);
 
   const loadMoreRecipes = () => {
-    setItemsLimit((prev) => prev + 5);
+    setItemsLimit((prev) => prev + 10);
   }
 
   const handleAddingComment = async () => {
@@ -49,6 +49,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
     
     if (!content.trimEnd()) {
       Alert.alert("comment can't be mt!");
+      setIsSubmitting(false);
       return;
     }
 
@@ -67,17 +68,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
   }
 
   return (
-    <View style={globalStyles.container}>
-      <View style={{width: '100%'}}>
-        <FormField
-          title='Comment'
-          value={newComment.content}
-          handleChangeText = {e => setNewComment(prev => ({...prev, content: e}))}
-          multiline = {true}
-          style={{width: '90%'}}
-        />
-        <CustomButton text='Add comment' handlePress={handleAddingComment} isLoading={isSubmitting}/>
-      </View>
+    <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.container]}>
       <FlatList
         style={{width: '100%'}}
         data={comments}
@@ -85,9 +76,21 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
         renderItem={({ item }) => <CommentCard comment={item} />}
         onEndReached={loadMoreRecipes}
         onEndReachedThreshold={0.1}
+        inverted
       >
       </FlatList>
-    </View>
+      <View style={{width: '100%', backgroundColor: colors.base, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
+        <FormField
+          title='Comment'
+          value={newComment.content}
+          handleChangeText = {e => setNewComment(prev => ({...prev, content: e}))}
+          multiline = {true}
+          style={{width: '90%'}}
+        />
+        <CustomButton text='Add comment' handlePress={handleAddingComment} isLoading={isSubmitting}/>   
+      </View>
+    </KeyboardAvoidingView>
+
   )
 }
 

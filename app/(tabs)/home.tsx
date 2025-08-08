@@ -4,33 +4,40 @@ import RecipeCard from '@/components/RecipeCard';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
-import { subscribeToRecipes } from '../firebase/firebaseDB';
+import { FlatList, Image, KeyboardAvoidingView, Text, View } from 'react-native';
+import { subscribeToRecipes, subscribeToRecipesWithQuery } from '../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 
 const Home = () => {
   const {user, loading} = useAuth();
 
-  const [itemsLimit, setItemsLimit] = useState(4); 
+  const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
+    if(searchQuery != ''){
+      const unsubscribe = subscribeToRecipesWithQuery(setRecipes,searchQuery.toLowerCase(),itemsLimit);
+      return () => unsubscribe(); 
+    }
     const unsubscribe = subscribeToRecipes(setRecipes,itemsLimit);
-    return () => unsubscribe(); 
-  }, [itemsLimit]);
+      return () => unsubscribe(); 
+  }, [itemsLimit, searchQuery]);
 
   const loadMoreRecipes = () => {
-    setItemsLimit((prev) => prev + 5);
+    setItemsLimit((prev) => prev + 10);
   }
+
+  console.log(searchQuery);
 
   if (loading) return <LoadingComponent/>;
 
   return (
-    <View style={[globalStyles.container]}>
-      <FlatList 
-        style={{width: '100%'}}
+    <>
+    <View style={globalStyles.container}>
+      <FlatList
+        style={[{width: '100%'}, globalStyles.contentContainerFL]}
         data={recipes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <RecipeCard recipe={item} />}
@@ -47,12 +54,15 @@ const Home = () => {
           </View>
         }
         ListFooterComponent={
-          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 100}]}>You have reached the end.</Text>
+          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>You have reached the end.</Text>
         }
         >
       </FlatList>
-      <FormField title='query...' value={searchQuery} handleChangeText={setSearchQuery} style={{position: 'absolute', bottom: 10}}></FormField>
+      <KeyboardAvoidingView behavior='padding' style={{width: '100%'}}>
+        <FormField title='query...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%'}}></FormField>
+      </KeyboardAvoidingView>
     </View>
+    </>
   )
 }
 

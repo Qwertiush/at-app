@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import globalStyles, { colors } from '../app/Styles/global-styles.js';
 
 type CustomButtonProps = {
     text: string;
     handlePress?: () => void;
     isLoading?: boolean;
-    style?: object;
+    style?: ViewStyle;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({text, handlePress, isLoading, style}) => {
@@ -27,7 +27,7 @@ const buttonStyle = StyleSheet.create({
     backgroundColor: colors.secondary,
     padding: 20,
     textAlign: 'center',
-    width: '80%',
+    width: '40%',
     alignSelf: 'center',
     borderRadius: 15,
     marginBottom: 20,

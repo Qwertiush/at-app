@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 
 export const colors = {
   bc: '#ada',
@@ -29,6 +29,14 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.bc,
+  },
+  contentContainer:{
+    paddingTop: StatusBar.currentHeight,
+    alignItems: 'center',
+    width: '100%'
+  },
+  contentContainerFL:{
+    paddingTop: StatusBar.currentHeight,
   },
   centered: {
     flex: 1,
