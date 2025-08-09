@@ -22,9 +22,7 @@ const TabsLayout: React.FC<TabsLayoutProps> = ({tabs}) => {
       tabBarShowLabel: false,
       tabBarStyle: {
         height: 70,
-        backgroundColor: colors.bc2,
-        borderTopWidth: 1,
-        borderTopColor: '#222',
+        backgroundColor: colors.secondary,
       },
       }}>
       {tabs.map((tab) => (

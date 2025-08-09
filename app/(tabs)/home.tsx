@@ -35,15 +35,9 @@ const Home = () => {
   return (
     
     <ContentContainer style={globalStyles.container}>
-      <FlatList
-        style={[{width: '100%'}, globalStyles.contentContainerFL]}
-        data={recipes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
-        onEndReached={loadMoreRecipes}
-        onEndReachedThreshold={0.1}
-        ListHeaderComponent={
-          <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row'}]}>
+      <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.contentContainer]}>
+        <View style={[globalStyles.textContainer,{width: '90%'}]}>
+        <View style={[{flexDirection: 'row', width: '100%',borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent:'center'}]}>
             <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>What's new in </Text>
             <Image
               source={require('@/assets/images/icons/logo.png')}
@@ -51,15 +45,21 @@ const Home = () => {
             />
             <Text style={[globalStyles.textXXL, globalStyles.centerElement]}> ?</Text>
           </View>
-        }
+        <FormField title='Search...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 0}}></FormField>
+        </View>
+      </KeyboardAvoidingView>
+      <FlatList
+        style={[{width: '100%'}]}
+        data={recipes}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <RecipeCard recipe={item} />}
+        onEndReached={loadMoreRecipes}
+        onEndReachedThreshold={0.1}
         ListFooterComponent={
           <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>You have reached the end.</Text>
         }
         >
       </FlatList>
-      <KeyboardAvoidingView behavior='padding' style={{width: '100%'}}>
-        <FormField title='query...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 10}}></FormField>
-      </KeyboardAvoidingView>
     </ContentContainer>
   )
 }

@@ -61,7 +61,7 @@ export default CommentCard
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.bc2,
     padding: 16,
     borderRadius: 10,
     margin: 12,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 12,
-    color: '#888'
+    color: colors.text2
   },
   description: {
     marginVertical: 12,

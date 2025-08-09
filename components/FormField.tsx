@@ -22,7 +22,7 @@ const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keybo
         onChangeText={handleChangeText}
         secureTextEntry={keyboardType === 'password'}
         autoCapitalize="none"
-        placeholder={`Enter your ${title.toLowerCase()}`}
+        placeholder={title}
         placeholderTextColor={placeHolderColor ? placeHolderColor : colors.text2}
         multiline={multiline}
       />
@@ -32,12 +32,12 @@ const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keybo
 
 const FormFieldStyle = StyleSheet.create({
   input:{
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.bc2,
     padding: 10,
     textAlign: 'center',
     width: '90%',
     alignSelf: 'center',
-    borderRadius: 15,
+    borderRadius: 20,
     marginTop: 20
   }
 });

@@ -80,7 +80,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
         inverted
       >
       </FlatList>
-      <View style={{width: '100%', backgroundColor: colors.highlight, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
+      <View style={{width: '100%', backgroundColor: colors.bc2, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
         <FormField
           title='Comment'
           value={newComment.content}

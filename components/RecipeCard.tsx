@@ -84,7 +84,7 @@ export default RecipeCard;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.bc2,
     padding: 16,
     borderRadius: 10,
     margin: 12,

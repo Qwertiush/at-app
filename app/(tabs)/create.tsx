@@ -101,7 +101,6 @@ function generateSearchIndex(title: string, ingredients: string[]) {
             value={form.title}
             handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
             keyboardType="default"
-            style={{backgroundColor: colors.highlight}}
             styleText={{color: colors.text1}}
             placeHolderColor={colors.text2}
           />
@@ -114,7 +113,6 @@ function generateSearchIndex(title: string, ingredients: string[]) {
             handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
             keyboardType="default"
             multiline={true}
-            style={{backgroundColor: colors.highlight}}
             styleText={{color: colors.text1}}
             placeHolderColor={colors.text2}
           />
@@ -127,7 +125,6 @@ function generateSearchIndex(title: string, ingredients: string[]) {
             handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
             keyboardType="default"
             multiline={true}
-            style={{backgroundColor: colors.highlight}}
             styleText={{color: colors.text1}}
             placeHolderColor={colors.text2}
           />
@@ -140,7 +137,6 @@ function generateSearchIndex(title: string, ingredients: string[]) {
             handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
             keyboardType="default"
             multiline={true}
-            style={{backgroundColor: colors.highlight}}
             styleText={{color: colors.text1}}
             placeHolderColor={colors.text2}
           />

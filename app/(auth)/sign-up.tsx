@@ -46,7 +46,7 @@ const SignUp = () => {
   }
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={globalStyles.container}>
+    <KeyboardAvoidingView behavior='padding' style={[globalStyles.container, {backgroundColor: colors.bc}]}>
       <ScrollView>
         <View style={globalStyles.centeredV}>
           <Image

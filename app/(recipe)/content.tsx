@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   card: {
     alignSelf: 'center',
     width:'90%',
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.bc2,
     padding: 16,
     borderRadius: 10,
     margin: 12,

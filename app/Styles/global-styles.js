@@ -1,14 +1,13 @@
 import { StatusBar, StyleSheet } from 'react-native';
 
 export const colors = {
-  bc: '#ada',
-  bc2: '#2e3a1f',
-  base: '#6b8e23',
-  secondary: '#d4a017',
+  bc: '#E9C579',
+  bc2: '#EBE0D4',
+  secondary: '#eb9239ff',
   text1: '#333333',
-  text2: '#adadadff',
-  text3: '#c9e2d3ff',
-  highlight: '#e9e5dcff',
+  text2: '#918686',
+  text3: '#EBE0D4',
+  highlight: '#eec055ff',
   succes: '#4caf50',
   error: '#f44336',
   warning: '#ff9800',
@@ -52,7 +51,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   textContainer:{
-    backgroundColor: colors.highlight,
+    backgroundColor: colors.bc2,
     padding: 10,
     borderRadius: 20
   },

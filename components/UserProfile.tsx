@@ -59,6 +59,8 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 width: '95%',
                 flexDirection: 'column',
                 paddingVertical: 20,
+                borderWidth: 5,
+                borderBlockColor: colors.secondary
               },
             ]}
           >

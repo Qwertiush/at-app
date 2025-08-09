@@ -32,8 +32,7 @@ const SignIn = () => {
   }
 
   return (
-    <View style={globalStyles.container}>
-      <KeyboardAvoidingView behavior='padding'>
+    <KeyboardAvoidingView behavior='padding' style={[globalStyles.container, {backgroundColor: colors.bc}]}>
       <ScrollView>
         <View style={globalStyles.centeredV}>
           <Image
@@ -49,8 +48,7 @@ const SignIn = () => {
           </View>
         </View>
       </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
