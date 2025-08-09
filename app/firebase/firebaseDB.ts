@@ -2,7 +2,7 @@ import { RecipeComment } from "@/models/Comment";
 import { Reaction } from "@/models/Reaction";
 import { CreateRecipeInput, Recipe } from "@/models/Recipe";
 import { User } from "@/models/User";
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, increment, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
 //User
@@ -97,6 +97,30 @@ export const subscribeToRecipes = (
       })) as Recipe[];
 
       onSuccess(list);
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
+};
+
+export const subscribeToRecipeById = (
+  onSuccess: (recipe: Recipe) => void,
+  recipeId: string,
+  onError?: (error: any) => void,
+) => {
+  const recipeDocRef = doc(DB, "recipes", recipeId);
+
+  return onSnapshot(
+    recipeDocRef,
+    (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const recipeData = docSnapshot.data() as Recipe;
+        onSuccess(recipeData);
+      } else {
+        console.warn(`Recipe with id ${recipeId} does not exist.`);
+      }
     },
     (error) => {
       if (onError) onError(error);
@@ -244,12 +268,18 @@ export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<strin
     const docRef = await addDoc(collection(DB, "reactions"), {
       ...reaction
     });
+    const recipeRef = doc(DB, "recipes", reaction.recipeId);
+    await updateDoc(recipeRef, {
+      upVotes: increment(1)
+    });
+
     return docRef.id;
   } catch (e) {
     console.error("Error adding reaction: ", e);
     throw e;
   }
 }
+
 
 export const getReactionIdByRecipeAndUserIds = async (recipeId: string, userId: string): Promise<string> =>{
     const q = query(
@@ -274,7 +304,31 @@ export const getReactionIdByRecipeAndUserIds = async (recipeId: string, userId: 
 }
 
 export const deleteReactionById = async (reactionId: string): Promise<void> =>{
-  await deleteDoc(doc(DB,"reactions",reactionId));
+  try{
+    const reactionRef = doc(DB, "reactions", reactionId);
+    const snapshot = await getDoc(reactionRef);
+
+    if (!snapshot.exists()) {
+      throw new Error("Reaction not found");
+    }
+
+    const recipeId = snapshot.data().recipeId;
+
+    if (!recipeId) {
+      throw new Error("Recipe ID not found in reaction data");
+    }
+
+    const recipeRef = doc(DB, "recipes", recipeId);
+    await updateDoc(recipeRef, {
+      upVotes: increment(-1)
+    });
+
+    await deleteDoc(doc(DB,"reactions",reactionId));
+
+  } catch (e) {
+    console.error("Error while deleting reaction: ", e);
+    throw e;
+  }
 }
 //Comment
 

@@ -130,8 +130,8 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>0</Text>
               </View>
             </View>
-            <View style={[{width: '85%', flexDirection: 'row', justifyContent: 'space-between'}, globalStyles.centerElement]}>
-                <CustomButton text={textData.profileScreen.buttonSettings} style={{width: '40%'}} handlePress={handlePictureChange}/>
+            <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
+                {user?.uid == currentUser?.uid ?<CustomButton text={textData.profileScreen.buttonSettings} style={{width: '40%'}} handlePress={handlePictureChange}/>:<></>}
                 {user?.uid == currentUser?.uid ? <CustomButton text={textData.profileScreen.buttonLogOut} style={{width: '40%', backgroundColor: colors.error}} handlePress={handleLoggingOut}/> : <CustomButton text={textData.profileScreen.buttonUpvote} style={{width: '40%', backgroundColor: colors.succes}} handlePress={handleVoting}/>}
             </View>
             {user?.uid == currentUser?.uid ? 

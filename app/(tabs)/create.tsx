@@ -3,6 +3,7 @@ import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { router } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
@@ -47,6 +48,7 @@ const Create = () => {
       onConfirm: (decison) => {
         if(decison){
           SubmitForm();
+          router.replace('/(tabs)/home');
         }
       }
     });
@@ -75,7 +77,6 @@ const Create = () => {
 
       const newRecipe = {
         title: title.trim(),
-        title2lower: title.trim().toLowerCase(),
         searchIndex: generateSearchIndex(
           title,
           ingredientsInput
@@ -94,6 +95,7 @@ const Create = () => {
           .split(',')
           .map(s => s.trim())
           .filter(s => s.length > 0),
+        upVotes: 0,
         pictures: [] as string[],
       };
 

@@ -124,5 +124,18 @@ export default {
     loggingOutPopup:{
         title: 'Confirm action.',
         content: 'Do you really want to log out?',
+    },
+    //popups (recipe)contentScreen
+    deleterecipePopup:{
+        title: "Confirm action.",
+        content: 'Do you really want to delete this recipe?',
+    },
+    deleteRecipeSuccess:{
+        title: "Success!",
+        content: "Your's recipe has been deleted.",
+    },
+    deleteRecipeError:{
+        title: "Error!",
+        content: "There was an error while removing your recipe.",
     }
 }

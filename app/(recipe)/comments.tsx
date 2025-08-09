@@ -15,12 +15,8 @@ type CommentState = {
   content: string
 }
 
-type CommentsProps ={
-  recipeId: string
-}
-
-const Comments: React.FC<CommentsProps> = ({recipeId}) => {
-  const { recipe } = useContext(RecipeContext);
+const Comments = () => {
+  const { recipe, recipeId } = useContext(RecipeContext);
   const {textData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
@@ -36,8 +32,8 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    if(recipe?.id){
-      const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipe?.id);
+    if(recipeId){
+      const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipeId);
       return () => unsubscribe(); 
     }
   }, [itemsLimit]);
@@ -56,11 +52,14 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
       return;
     }
 
-    if(!currentUser?.uid || !recipe?.id) return;
+    if(!currentUser?.uid || !recipeId){
+      setIsSubmitting(false);
+      return;
+    } 
     const comment2send: Omit<RecipeComment, 'id' | 'createdAt'> = {
       description: content.trim(),
       authorId: currentUser?.uid,
-      recipeId: recipe?.id
+      recipeId: recipeId
     }
 
     const response = await addComment(comment2send);
@@ -82,7 +81,7 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
         inverted
       >
       </FlatList>
-      <View style={{width: '100%', backgroundColor: colors.bc2, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
+      <View style={{width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`}}>
         <FormField
           title={textData.commentsScreen.commentPlaceholderText}
           value={newComment.content}

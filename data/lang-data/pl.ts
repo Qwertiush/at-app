@@ -124,6 +124,18 @@ export default {
     loggingOutPopup:{
         title: "Zatwierdź akcję.",
         content: 'Na pewno chcesz się wylogować?',
+    },
+    //popups (recipe)contentScreen
+    deleterecipePopup:{
+        title: "Zatwierdź akcję.",
+        content: 'Na pewno chcesz usunąć przepis?',
+    },
+    deleteRecipeSuccess:{
+        title: "Sukces!",
+        content: 'Twój przepis został usunięty.',
+    },
+    deleteRecipeError:{
+        title: "Error!",
+        content: "Nastąpił problem podczas usuwaia przepisu.",
     }
-
 }

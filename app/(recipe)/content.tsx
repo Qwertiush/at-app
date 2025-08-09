@@ -2,21 +2,22 @@ import Avatar from '@/components/Avatar';
 import ContentContainer from '@/components/ContentContainer';
 import CustomButton from '@/components/CustomButton';
 import { formatDate } from '@/components/RecipeCard';
+import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
 import { getAuth } from 'firebase/auth';
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
-import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getNrOfReactionsByRecipeId, getReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
+import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
 
 const Content = () => {
-  const { recipe, userRecipeContext } = useContext(RecipeContext);
+  const { recipe, userRecipeContext, recipeId } = useContext(RecipeContext);
   const {textData} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
 
-  const [upvotes, setupVotes] = useState<number>();
   const [reacted, setReacted] = useState<number>();
 
   const [reload, setReload] = useState<boolean>();
@@ -29,12 +30,16 @@ const Content = () => {
     setIsSubmitting(true);
     if(reacted != -1){
       alert("You arleady added reaction to this.")
+      setIsSubmitting(false);
       return;
     }
 
-    if (!recipe?.id || !currentUser?.uid) return;
+    if (!recipeId || !currentUser?.uid){
+      setIsSubmitting(false);
+      return;
+    } 
     const newReaction: Omit<Reaction, 'id'> = {
-      recipeId: recipe?.id,
+      recipeId: recipeId,
       userId: currentUser?.uid,
       type: 1
     }
@@ -46,41 +51,65 @@ const Content = () => {
   }
 
   const addDownVote = async () => {
-    if (!recipe?.id || !currentUser?.uid) return;
-    const response = await getReactionIdByRecipeAndUserIds(recipe?.id,currentUser.uid);
+    setIsSubmitting(true);
+    if (!recipeId || !currentUser?.uid){
+      setIsSubmitting(false);
+      return;
+    }
+    const response = await getReactionIdByRecipeAndUserIds(recipeId,currentUser.uid);
 
     if(response == '-1'){
+      setIsSubmitting(false);
       return;
     }
 
     await deleteReactionById(response);
 
     setReload(!reload);
+    setIsSubmitting(false);
+  }
+
+  const handledeleteRecipe = () => {
+    showPopup({
+      title: textData.deleterecipePopup.title,
+      content: textData.deleterecipePopup.content,
+      onConfirm: (decison) => {
+        if(decison){
+          deleteRecipe();
+        }
+      }
+    });
   }
 
   const deleteRecipe = async () => {
-    if(recipe?.id)
-    await deleteRecipeById(recipe?.id);
-    router.replace('/(tabs)/home');
+    try{
+      if(recipeId){
+        await deleteRecipeById(recipeId);
+        showPopup({
+          title: textData.deleteRecipeSuccess.title,
+          content: textData.deleteRecipeSuccess.content,
+        });
+        router.replace('/(tabs)/home');
+      }
+    }catch(e){
+      showPopup({
+        title: textData.deleteRecipeError.title,
+        content: textData.deleteRecipeError.content + ": " + e,
+      });
+    }
   }
 
   useEffect(() => {
-    const fetchUpvotes = async () => {
-      if (recipe?.id) {
-        const upvotes = await getNrOfReactionsByRecipeId(recipe.id);
-        setupVotes(upvotes);
-      }
-    }
     const checkIfReacted = async () => {
-      if(recipe?.id && currentUser?.uid){
-        const reacted = await checkIfAddedReactionToRecipe(recipe.id, currentUser?.uid );
-        setReacted(reacted);
+      if(recipeId && currentUser?.uid){
+        const reactedVal = await checkIfAddedReactionToRecipe(recipeId, currentUser?.uid );
+        setReacted(reactedVal);
+        console.log(reactedVal);
       }
     }
 
-    fetchUpvotes();
     checkIfReacted();
-  },[reload]);
+  }, [reload, recipeId, currentUser?.uid]);
 
   if (!recipe) return <Text>Loading recipe...</Text>;
 
@@ -88,10 +117,10 @@ const Content = () => {
     <ContentContainer style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
-          {recipe.authorId == currentUser?.uid ? <CustomButton text={textData.recipeScreen.buttonDelete} style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
+          {recipe.authorId == currentUser?.uid ? <CustomButton text={textData.recipeScreen.buttonDelete} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
           {reacted == 1 ? <CustomButton text={textData.recipeScreen.buttonDownVote} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text={textData.recipeScreen.buttonUpVote} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
         </View>
-        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes}{textData.recipeScreen.header1}</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes}{textData.recipeScreen.header2}</Text>}
+        {recipe.upVotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header1}</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>}
         <View style={styles.card}>
           <Text style={styles.title}>{recipe.title}</Text>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -116,6 +145,10 @@ const Content = () => {
           {recipe.steps.map((step, index) => (
             <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
           ))}
+          <Image
+            source={require('@/assets/images/icons/logo.png')}
+            style={{ width: 30, height: 30, alignSelf: 'flex-end' }}
+          />
         </View>
       </ScrollView>
     </ContentContainer>
