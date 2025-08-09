@@ -1,6 +1,7 @@
 import { logoutUser } from '@/app/firebase/firebaseAuth'
 import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
 import globalStyles, { colors } from '@/app/Styles/global-styles'
+import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
@@ -22,6 +23,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
   const {textData} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
 
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -41,14 +43,28 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   }
 
   const handlePictureChange = () => {
-    alert("Settings not implemented yet.");
+    showPopup({
+      title: "Error",
+      content: "Not implemented yet",
+    });
   }
   const handleVoting = () => {
-    alert("Not implemented yet.");
+    showPopup({
+      title: "Error",
+      content: "Not implemented yet",
+    });
   }
 
   const handleLoggingOut = () => {
-    logoutUser();
+    showPopup({
+      title: textData.loggingOutPopup.title,
+      content: textData.loggingOutPopup.content,
+      onConfirm: (decison) => {
+        if(decison){
+          logoutUser();
+        }
+      }
+    });
   }
     return (
     <>

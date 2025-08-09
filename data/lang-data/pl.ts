@@ -93,5 +93,37 @@ export default {
     },
     loadingComponent:{
         text1: 'Ładowanie...'
+    },
+    //popups crateScreen
+    popupDefault:{
+        buttonConfirm: "Tak",
+        buttonNotConfirm: "Nie",
+        buttonInfo: "Zrozumiano"
+    },
+    addingRecipePopup:{
+        title: 'Zatwierdź akcję.',
+        content: 'Czy na pewno chcesz dodać ten przepis?'
+    },
+    notLoggedInPopup:{
+        title: 'Upsss...',
+        content: 'Nie jesteś zalogowany XD.'
+    },
+    addingRecipeError1Popup:{
+        title: "Upss...!!!",
+        content: 'Pole "tytuł" i "opis" sa wymagane.',
+    },
+    addinngRecipeSuccessPopup:{
+        title: "Sukces!",
+        content: 'Przepis został dodany.',
+    },
+    errorWhileSavingRecipePopup:{
+        title: "Błąd!",
+        content: 'B ł    ąąą d podzzz zapsswniaaa.',
+    },
+    //popups ProfileScreen
+    loggingOutPopup:{
+        title: "Zatwierdź akcję.",
+        content: 'Na pewno chcesz się wylogować?',
     }
+
 }

@@ -93,5 +93,36 @@ export default {
     },
     loadingComponent:{
         text1: 'Loading...'
+    },
+    //popups crate screen
+    popupDefault:{
+        buttonConfirm: "Yes",
+        buttonNotConfirm: "No",
+        buttonInfo: "Affirmative"
+    },
+    addingRecipePopup:{
+        title: 'Confirm action.',
+        content: 'Do You really want to add this recipe?'
+    },
+    notLoggedInPopup:{
+        title: 'Upsss...',
+        content: 'You are not logged in XD.'
+    },
+    addingRecipeError1Popup:{
+        title: "Upss...!!!",
+        content: 'Title and description is necessary.',
+    },
+    addinngRecipeSuccessPopup:{
+        title: "Success!",
+        content: 'Recipe has been added.',
+    },
+    errorWhileSavingRecipePopup:{
+        title: "Error!",
+        content: 'Err r ooooor whl  ee sav i nn gg',
+    },
+    //popups ProfileScreen
+    loggingOutPopup:{
+        title: 'Confirm action.',
+        content: 'Do you really want to log out?',
     }
 }

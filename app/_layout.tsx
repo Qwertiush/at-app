@@ -1,10 +1,13 @@
+import { PopupProvider } from "@/contexts/PopUpContext";
 import { RecipeProvider } from "@/contexts/RecipeContext";
 import { UserPrefsProvider } from "@/contexts/UserPrefsContext";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
+    
     <UserPrefsProvider>
+    <PopupProvider>
     <RecipeProvider>
       <Stack>
         <Stack.Screen name="index" options={{ title: "Home",headerShown: false  }} />
@@ -14,6 +17,7 @@ export default function RootLayout() {
         <Stack.Screen name="(recipe)" options={{ title: "Recipe",headerShown: false  }} />
       </Stack>
     </RecipeProvider>
+    </PopupProvider>
     </UserPrefsProvider>
   );
 }

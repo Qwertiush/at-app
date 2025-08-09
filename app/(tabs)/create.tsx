@@ -1,9 +1,10 @@
 import ContentContainer from '@/components/ContentContainer';
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
+import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext, useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
 import { addRecipe } from '../firebase/firebaseDB';
@@ -17,6 +18,7 @@ type FormState = {
 
 const Create = () => {
   const {textData} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
 
   const [form, setForm] = useState<FormState>({
     title: '',
@@ -25,31 +27,49 @@ const Create = () => {
     stepsInput: '',
   });
 //Function creates structure to imporve searching expirience "pasta" - [p,pa,pas,past,past]
-function generateSearchIndex(title: string, ingredients: string[]) {
-  const allWords = (title + " " + ingredients.join(" ")).toLowerCase().split(" ");
-  const uniqueWords = new Set<string>();
+  function generateSearchIndex(title: string, ingredients: string[]) {
+    const allWords = (title + " " + ingredients.join(" ")).toLowerCase().split(" ");
+    const uniqueWords = new Set<string>();
 
-  for (const word of allWords) {
-    for (let i = 1; i <= word.length; i++) {
-      uniqueWords.add(word.substring(0, i));
+    for (const word of allWords) {
+      for (let i = 1; i <= word.length; i++) {
+        uniqueWords.add(word.substring(0, i));
+      }
     }
-  }
 
   return Array.from(uniqueWords);
-}
+  }
+
+  const handleAddingRecipe = () => {
+    showPopup({
+      title: textData.addingRecipePopup.title,
+      content: textData.addingRecipePopup.content,
+      onConfirm: (decison) => {
+        if(decison){
+          SubmitForm();
+        }
+      }
+    });
+  }
 
   const SubmitForm = async () => {
     try {
       const user = AUTH.currentUser;
       if (!user) {
-        Alert.alert('Błąd', 'Nie jesteś zalogowany.');
+        showPopup({
+          title: textData.notLoggedInPopup.title,
+          content: textData.notLoggedInPopup.content,
+        });
         return;
       }
 
       const { title, description, ingredientsInput, stepsInput } = form;
 
       if (!title.trim() || !description.trim()) {
-        Alert.alert('Błąd', 'Tytuł i opis są wymagane.');
+        showPopup({
+          title: textData.addingRecipeError1Popup.title,
+          content: textData.addingRecipeError1Popup.content,
+        });
         return;
       }
 
@@ -78,12 +98,18 @@ function generateSearchIndex(title: string, ingredients: string[]) {
       };
 
       const id = await addRecipe(newRecipe);
-      Alert.alert('Sukces', `Przepis zapisany. ID: ${id}`);
+      showPopup({
+          title: textData.addinngRecipeSuccessPopup.title,
+          content: textData.addinngRecipeSuccessPopup.content,
+      });
       
       setForm({ title: '', description: '', ingredientsInput: '', stepsInput: '' });
     } catch (error: any) {
-      console.error('Failed to save recipe:', error);
-      Alert.alert('Błąd', 'Nie udało się zapisać przepisu: ' + (error?.message || error));
+      console.error('Error while saving recipe:', error);
+      showPopup({
+          title: textData.addinngRecipeSuccessPopup.title,
+          content: textData.addinngRecipeSuccessPopup.content,
+      });
     }
   };
 
@@ -145,7 +171,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
           />
         </View>
 
-        <CustomButton text={textData.createScreen.buttonText} handlePress={SubmitForm}></CustomButton>
+        <CustomButton text={textData.createScreen.buttonText} handlePress={handleAddingRecipe}></CustomButton>
       </ScrollView>
       </KeyboardAvoidingView>
     </ContentContainer>
