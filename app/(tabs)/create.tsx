@@ -86,7 +86,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
 
   return (
     <ContentContainer>
-      <KeyboardAvoidingView behavior='padding' style={[{width: '95%'}, globalStyles.textContainer]}>
+      <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${colors.secondary}`}, globalStyles.textContainer]}>
       <ScrollView>
         <View style={[{flexDirection: 'column'},globalStyles.centerElement]}>
           <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>Create Something new with </Text>

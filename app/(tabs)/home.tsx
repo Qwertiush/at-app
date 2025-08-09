@@ -7,7 +7,7 @@ import { Recipe } from '@/models/Recipe';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Text, View } from 'react-native';
 import { subscribeToFilteredRecipes, subscribeToRecipes } from '../firebase/firebaseDB';
-import globalStyles from '../Styles/global-styles';
+import globalStyles, { colors } from '../Styles/global-styles';
 //TODO when user deleted - (change recipes/comments - to "user deleted")
 const Home = () => {
   const {user, loading} = useAuth();
@@ -35,8 +35,8 @@ const Home = () => {
   return (
     
     <ContentContainer style={globalStyles.container}>
-      <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.contentContainer]}>
-        <View style={[globalStyles.textContainer,{width: '90%'}]}>
+      <KeyboardAvoidingView behavior='padding' style={[{width: '100%',position: 'absolute', left: 0, top: 0, zIndex: 10},globalStyles.contentContainer]}>
+        <View style={[globalStyles.textContainer,{width: '90%', boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>
         <View style={[{flexDirection: 'row', width: '100%',borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent:'center'}]}>
             <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>What's new in </Text>
             <Image
@@ -49,14 +49,14 @@ const Home = () => {
         </View>
       </KeyboardAvoidingView>
       <FlatList
-        style={[{width: '100%'}]}
+        style={[{width: '100%', paddingTop: 180}]}
         data={recipes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <RecipeCard recipe={item} />}
         onEndReached={loadMoreRecipes}
         onEndReachedThreshold={0.1}
         ListFooterComponent={
-          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>You have reached the end.</Text>
+          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 200}]}>You have reached the end.</Text>
         }
         >
       </FlatList>

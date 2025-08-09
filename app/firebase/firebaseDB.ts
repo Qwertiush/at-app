@@ -238,7 +238,7 @@ export const checkIfAddedReactionToRecipe = async (recipeId: string, userId: str
 
   return typeof value == 'number' ? value : -1;
 }
-
+//TODO add field to receipe - upvotes ad update when reacted (+1/-1)
 export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
   try {
     const docRef = await addDoc(collection(DB, "reactions"), {

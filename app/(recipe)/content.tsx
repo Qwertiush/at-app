@@ -89,7 +89,7 @@ const Content = () => {
           {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete' style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
           {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
         </View>
-        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer]}>{upvotes} user likes this recipe so far!</Text>}
+        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes} user likes this recipe so far!</Text>}
         <View style={styles.card}>
           <Text style={styles.title}>{recipe.title}</Text>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
