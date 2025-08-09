@@ -1,13 +1,16 @@
 import { getUserProfile } from '@/app/firebase/firebaseDB'
 import globalStyles, { colors } from '@/app/Styles/global-styles'
+import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { RecipeComment } from '@/models/Comment'
 import { User } from '@/models/User'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Avatar from './Avatar'
 import { formatDate } from './RecipeCard'
 
 const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
+  const {textData} = useContext(UserPrefsContext);
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -43,9 +46,9 @@ const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
     <View style={styles.card}>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-          <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
+          <Text style={styles.meta}>{textData.commentCard.text1}{user?.username ?? 'Unknown'}</Text>
           <Text style={styles.meta}>
-            Created: {formatDate(comment.createdAt)}
+            {textData.commentCard.text2}{formatDate(comment.createdAt)}
           </Text>
         </View>
         <View>

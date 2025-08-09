@@ -1,10 +1,11 @@
 import { logoutUser } from '@/app/firebase/firebaseAuth'
 import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
 import globalStyles, { colors } from '@/app/Styles/global-styles'
+import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
 import { getAuth } from 'firebase/auth'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import Avatar from './Avatar'
 import CustomButton from './CustomButton'
@@ -20,6 +21,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
+  const {textData} = useContext(UserPrefsContext);
 
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -74,7 +76,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
               {user?.username}!
             </Text>
             <Text style={[globalStyles.textXL, { textAlign: 'center', marginBottom: 20 }]}>
-              Joined {user?.createdAt?.toDate().toLocaleDateString()}!
+              {textData.profileScreen.text1} {user?.createdAt?.toDate().toLocaleDateString()}!
             </Text>
             <View
               style={{
@@ -95,7 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                   source={require('@/assets/images/icons/recipe.png')}
                   style={{ width: 30, height: 30, marginRight: 6 }}
                 />
-                <Text style={[globalStyles.textM]}>Recipes:</Text>
+                <Text style={[globalStyles.textM]}>{textData.profileScreen.text2}</Text>
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>{recipesCount}</Text>
               </View>
               <View
@@ -108,13 +110,13 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                   source={require('@/assets/images/icons/favs.png')}
                   style={{ width: 30, height: 30, marginRight: 6 }}
                 />
-                <Text style={[globalStyles.textM]}>Likes:</Text>
+                <Text style={[globalStyles.textM]}>{textData.profileScreen.text3}</Text>
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>0</Text>
               </View>
             </View>
             <View style={[{width: '85%', flexDirection: 'row', justifyContent: 'space-between'}, globalStyles.centerElement]}>
-                <CustomButton text='Settings' style={{width: '40%'}} handlePress={handlePictureChange}/>
-                {user?.uid == currentUser?.uid ? <CustomButton text='Log Out' style={{width: '40%', backgroundColor: colors.error}} handlePress={handleLoggingOut}/> : <CustomButton text=':) Up Vote?' style={{width: '40%', backgroundColor: colors.succes}} handlePress={handleVoting}/>}
+                <CustomButton text={textData.profileScreen.buttonSettings} style={{width: '40%'}} handlePress={handlePictureChange}/>
+                {user?.uid == currentUser?.uid ? <CustomButton text={textData.profileScreen.buttonLogOut} style={{width: '40%', backgroundColor: colors.error}} handlePress={handleLoggingOut}/> : <CustomButton text={textData.profileScreen.buttonUpvote} style={{width: '40%', backgroundColor: colors.succes}} handlePress={handleVoting}/>}
             </View>
             {user?.uid == currentUser?.uid ? 
               <Text
@@ -124,7 +126,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                   globalStyles.centerElement,
                 ]}
               >
-              Your's recipes:
+              {textData.profileScreen.text4}
               </Text> :
               <Text
                 style={[
@@ -133,7 +135,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                   globalStyles.centerElement,
                 ]}
               >
-              {user?.username}'s recipes:
+              {user?.username}{textData.profileScreen.text5}
               </Text>
             }
           </View>

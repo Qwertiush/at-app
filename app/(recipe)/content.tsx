@@ -3,6 +3,7 @@ import ContentContainer from '@/components/ContentContainer';
 import CustomButton from '@/components/CustomButton';
 import { formatDate } from '@/components/RecipeCard';
 import { RecipeContext } from '@/contexts/RecipeContext';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
 import { getAuth } from 'firebase/auth';
@@ -13,6 +14,7 @@ import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRe
 
 const Content = () => {
   const { recipe, userRecipeContext } = useContext(RecipeContext);
+  const {textData} = useContext(UserPrefsContext);
 
   const [upvotes, setupVotes] = useState<number>();
   const [reacted, setReacted] = useState<number>();
@@ -86,17 +88,17 @@ const Content = () => {
     <ContentContainer style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
-          {recipe.authorId == currentUser?.uid ? <CustomButton text='X( Delete' style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
-          {reacted == 1 ? <CustomButton text=':( Down vote?' handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text=':) Up vote?' handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
+          {recipe.authorId == currentUser?.uid ? <CustomButton text={textData.recipeScreen.buttonDelete} style={{ backgroundColor: colors.error}} handlePress={deleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
+          {reacted == 1 ? <CustomButton text={textData.recipeScreen.buttonDownVote} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text={textData.recipeScreen.buttonUpVote} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
         </View>
-        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes} users like this recipe so far!</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes} user likes this recipe so far!</Text>}
+        {upvotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes}{textData.recipeScreen.header1}</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{upvotes}{textData.recipeScreen.header2}</Text>}
         <View style={styles.card}>
           <Text style={styles.title}>{recipe.title}</Text>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-              <Text style={styles.meta}> By: {userRecipeContext?.username ?? 'Unknown'}</Text>
+              <Text style={styles.meta}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</Text>
               <Text style={styles.meta}>
-                Created: {formatDate(recipe.createdAt)}
+                {textData.recipeScreen.text2}{formatDate(recipe.createdAt)}
               </Text>
             </View>
             <View>
@@ -105,12 +107,12 @@ const Content = () => {
           </View>
           <Text style={styles.description}>{recipe.description}</Text>
 
-          <Text style={styles.sectionTitle}>Ingredients:</Text>
+          <Text style={styles.sectionTitle}>{textData.recipeScreen.text3}</Text>
           {recipe.ingredients.map((item, index) => (
             <Text key={index} style={styles.listItem}>• {item}</Text>
           ))}
 
-          <Text style={styles.sectionTitle}>Steps:</Text>
+          <Text style={styles.sectionTitle}>{textData.recipeScreen.text4}</Text>
           {recipe.steps.map((step, index) => (
             <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
           ))}

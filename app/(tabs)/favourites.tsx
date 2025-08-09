@@ -1,13 +1,15 @@
 import ContentContainer from '@/components/ContentContainer';
 import RecipeCard from '@/components/RecipeCard';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Recipe } from '@/models/Recipe';
 import { getAuth } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import globalStyles from '../Styles/global-styles';
 import { subscribeToLikedRecipes } from '../firebase/firebaseDB';
 
 const Favourites = () => {
+  const {textData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -36,16 +38,16 @@ const Favourites = () => {
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
         <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row'}]}>
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>Your's favourite </Text>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.favouritesScreen.header1}</Text>
           <Image
             source={require('@/assets/images/icons/logo.png')}
             style={{ width: 50, height: 50, alignSelf: 'center' }}
           />
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}> recipes.</Text>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.favouritesScreen.header2}</Text>
         </View>
         }
       ListFooterComponent={
-        <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>You have reached the end.</Text>
+        <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>{textData.favouritesScreen.text1}</Text>
       }
       >
       </FlatList>

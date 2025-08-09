@@ -3,6 +3,7 @@ import ContentContainer from '@/components/ContentContainer'
 import CustomButton from '@/components/CustomButton'
 import FormField from '@/components/FormField'
 import { RecipeContext } from '@/contexts/RecipeContext'
+import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { RecipeComment } from '@/models/Comment'
 import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
@@ -20,6 +21,7 @@ type CommentsProps ={
 
 const Comments: React.FC<CommentsProps> = ({recipeId}) => {
   const { recipe } = useContext(RecipeContext);
+  const {textData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
@@ -82,13 +84,13 @@ const Comments: React.FC<CommentsProps> = ({recipeId}) => {
       </FlatList>
       <View style={{width: '100%', backgroundColor: colors.bc2, borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
         <FormField
-          title='Comment'
+          title={textData.commentsScreen.commentPlaceholderText}
           value={newComment.content}
           handleChangeText = {e => setNewComment(prev => ({...prev, content: e}))}
           multiline = {true}
           style={{width: '90%'}}
         />
-        <CustomButton text='Add comment' handlePress={handleAddingComment} isLoading={isSubmitting}/>   
+        <CustomButton text={textData.commentsScreen.buttonText} handlePress={handleAddingComment} isLoading={isSubmitting}/>   
       </View>
     </KeyboardAvoidingView>
     </ContentContainer>

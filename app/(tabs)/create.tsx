@@ -1,7 +1,8 @@
 import ContentContainer from '@/components/ContentContainer';
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/FormField';
-import React, { useState } from 'react';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import React, { useContext, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
@@ -15,6 +16,8 @@ type FormState = {
 };
 
 const Create = () => {
+  const {textData} = useContext(UserPrefsContext);
+
   const [form, setForm] = useState<FormState>({
     title: '',
     description: '',
@@ -89,7 +92,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
       <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${colors.secondary}`}, globalStyles.textContainer]}>
       <ScrollView>
         <View style={[{flexDirection: 'column'},globalStyles.centerElement]}>
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>Create Something new with </Text>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.createScreen.header}</Text>
           <Image
             source={require('@/assets/images/icons/logo.png')}
             style={{ width: 40, height: 40, alignSelf: 'center'}}
@@ -97,7 +100,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
         </View>
         <View style={{ marginVertical: 10, width: '100%' }}>
           <FormField
-            title="Title"
+            title={textData.createScreen.titlePlaceholderText}
             value={form.title}
             handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
             keyboardType="default"
@@ -108,7 +111,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
 
         <View style={{ marginVertical: 10, width: '100%' }}>
           <FormField
-            title="Description"
+            title={textData.createScreen.descriptionPlaceholderText}
             value={form.description}
             handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
             keyboardType="default"
@@ -120,7 +123,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
 
         <View style={{ marginVertical: 10, width: '100%' }}>
           <FormField
-            title="Ingredients (comma-separated)"
+            title={textData.createScreen.ingredientsPlaceholderText}
             value={form.ingredientsInput}
             handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
             keyboardType="default"
@@ -132,7 +135,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
 
         <View style={{ marginVertical: 10, width: '100%' }}>
           <FormField
-            title="Steps (comma-separated)"
+            title={textData.createScreen.stepsPlaceholderText}
             value={form.stepsInput}
             handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
             keyboardType="default"
@@ -142,7 +145,7 @@ function generateSearchIndex(title: string, ingredients: string[]) {
           />
         </View>
 
-        <CustomButton text='Add recipe' handlePress={SubmitForm}></CustomButton>
+        <CustomButton text={textData.createScreen.buttonText} handlePress={SubmitForm}></CustomButton>
       </ScrollView>
       </KeyboardAvoidingView>
     </ContentContainer>

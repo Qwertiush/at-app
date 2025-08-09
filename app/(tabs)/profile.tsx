@@ -8,8 +8,6 @@ import globalStyles from '../Styles/global-styles'
 const Profile = () => {
   const {user, loading} = useAuth();
 
-  
-
   if (loading) return <LoadingComponent/>;
 
   return (

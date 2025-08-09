@@ -1,7 +1,8 @@
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from '../components/CustomButton';
@@ -9,6 +10,8 @@ import { AUTH } from './firebase/FirebaseConfig';
 import globalStyles, { colors, default as styles } from './Styles/global-styles.js';
 
 export default function App() {
+  const {textData} = useContext(UserPrefsContext);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, (user) => {
     if (user) {
@@ -37,13 +40,13 @@ export default function App() {
             style={{ width: 400, height: 400, alignSelf: 'center' }}
           />
           <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={styles.textXL}>Discover endles possibilities with </Text>
+            <Text style={styles.textXL}>{textData.indexScreen.paragraph}</Text>
             <Image
             source={require('../assets/images/icons/logo.png')}
             style={{ width: 40, height: 40, alignSelf: 'center' }}
           />
           </View>
-          <CustomButton text='Dive In' handlePress={()=>router.push('/sign-in')}/>
+          <CustomButton text={textData.indexScreen.button} handlePress={()=>router.push('/sign-in')}/>
         </View>      
       </ScrollView>
     </SafeAreaView>

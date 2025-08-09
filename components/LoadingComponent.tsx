@@ -1,11 +1,14 @@
-import globalStyles from '@/app/Styles/global-styles'
-import React from 'react'
-import { Text, View } from 'react-native'
+import globalStyles from '@/app/Styles/global-styles';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import React, { useContext } from 'react';
+import { Text, View } from 'react-native';
 
 const LoadingComponent = () => {
+  const {textData} = useContext(UserPrefsContext);
+
   return (
     <View style={globalStyles.container}>
-      <Text>Loading...</Text>
+      <Text>{textData.loadingComponent.text1}</Text>
     </View>
   )
 }

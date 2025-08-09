@@ -2,15 +2,17 @@ import ContentContainer from '@/components/ContentContainer';
 import FormField from '@/components/FormField';
 import LoadingComponent from '@/components/LoadingComponent';
 import RecipeCard from '@/components/RecipeCard';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Text, View } from 'react-native';
 import { subscribeToFilteredRecipes, subscribeToRecipes } from '../firebase/firebaseDB';
 import globalStyles, { colors } from '../Styles/global-styles';
 //TODO when user deleted - (change recipes/comments - to "user deleted")
 const Home = () => {
   const {user, loading} = useAuth();
+  const {textData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -38,14 +40,14 @@ const Home = () => {
       <KeyboardAvoidingView behavior='padding' style={[{width: '100%',position: 'absolute', left: 0, top: 0, zIndex: 10},globalStyles.contentContainer]}>
         <View style={[globalStyles.textContainer,{width: '90%', boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>
         <View style={[{flexDirection: 'row', width: '100%',borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent:'center'}]}>
-            <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>What's new in </Text>
+            <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.homeScreen.header}</Text>
             <Image
               source={require('@/assets/images/icons/logo.png')}
               style={{ width: 50, height: 50, alignSelf: 'center' }}
             />
             <Text style={[globalStyles.textXXL, globalStyles.centerElement]}> ?</Text>
           </View>
-        <FormField title='Search...' value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 0}}></FormField>
+        <FormField title={textData.homeScreen.searchBarPlaceholderText} value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 0}}></FormField>
         </View>
       </KeyboardAvoidingView>
       <FlatList
@@ -56,7 +58,7 @@ const Home = () => {
         onEndReached={loadMoreRecipes}
         onEndReachedThreshold={0.1}
         ListFooterComponent={
-          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 200}]}>You have reached the end.</Text>
+          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 200}]}>{textData.homeScreen.text1}</Text>
         }
         >
       </FlatList>

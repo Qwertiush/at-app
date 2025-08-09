@@ -2,6 +2,7 @@
 import { getUserProfile } from '@/app/firebase/firebaseDB';
 import globalStyles, { colors } from '@/app/Styles/global-styles';
 import { RecipeContext } from '@/contexts/RecipeContext';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
 import { router } from 'expo-router';
@@ -15,13 +16,14 @@ export const formatDate = (ts?: Timestamp | null) => {
     // jeśli to Timestamp z Firestore
     return new Date((ts as any).seconds * 1000).toLocaleDateString();
   }
-  return 'Just now'; // fallback zanim serwer uzupełni
+  return 'Just now'; // fallback before server respond
 };
 
 const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
   const [user, setUser] = useState<User | null>(null);
   const {setRecipe} = useContext(RecipeContext);
   const {setUserRecipecontext} = useContext(RecipeContext);
+  const {textData} = useContext(UserPrefsContext);
 
   useEffect(() => {
     let mounted = true;
@@ -63,16 +65,16 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
       <Text style={styles.title}>{recipe.title}</Text>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-          <Text style={styles.meta}> By: {user?.username ?? 'Unknown'}</Text>
+          <Text style={styles.meta}>{textData.recipeCard.text1}{user?.username ?? 'Unknown'}</Text>
           <Text style={styles.meta}>
-            Created: {formatDate(recipe.createdAt)}
+            {textData.recipeCard.text2}{formatDate(recipe.createdAt)}
           </Text>
         </View>
         <View>
           {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
         </View>
       </View>
-      <Text style={styles.sectionTitle}>Ingredients:</Text>
+      <Text style={styles.sectionTitle}>{textData.recipeCard.text3}</Text>
       {recipe.ingredients.map((item, index) => (
         <Text key={index} style={styles.listItem}>• {item}</Text>
       ))}
