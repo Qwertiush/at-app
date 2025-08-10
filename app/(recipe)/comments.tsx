@@ -1,6 +1,6 @@
 import CommentCard from '@/components/CommentCard'
 import ContentContainer from '@/components/ContentContainer'
-import CustomButton from '@/components/CustomButton'
+import CustomIconButton from '@/components/CustomIconButton'
 import FormField from '@/components/FormField'
 import { RecipeContext } from '@/contexts/RecipeContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
@@ -81,15 +81,15 @@ const Comments = () => {
         inverted
       >
       </FlatList>
-      <View style={{width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`}}>
+      <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`}}>
         <FormField
           title={textData.commentsScreen.commentPlaceholderText}
           value={newComment.content}
           handleChangeText = {e => setNewComment(prev => ({...prev, content: e}))}
           multiline = {true}
-          style={{width: '90%'}}
+          style={{width: '70%', marginTop: 0}}
         />
-        <CustomButton text={textData.commentsScreen.buttonText} handlePress={handleAddingComment} isLoading={isSubmitting}/>   
+        <CustomIconButton iconSource={require('@/assets/images/icons/create.png')} handlePress={handleAddingComment} isLoading={isSubmitting}/>   
       </View>
     </KeyboardAvoidingView>
     </ContentContainer>

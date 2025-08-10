@@ -1,9 +1,9 @@
+import globalStyles from '@/app/Styles/global-styles'
 import ContentContainer from '@/components/ContentContainer'
 import LoadingComponent from '@/components/LoadingComponent'
 import UserProfile from '@/components/UserProfile'
 import { useAuth } from '@/hooks/useAuth'
 import React from 'react'
-import globalStyles from '../Styles/global-styles'
 
 const Profile = () => {
   const {user, loading} = useAuth();

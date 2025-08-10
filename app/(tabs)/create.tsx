@@ -1,5 +1,5 @@
 import ContentContainer from '@/components/ContentContainer';
-import CustomButton from '@/components/CustomButton';
+import CustomIconButton from '@/components/CustomIconButton';
 import FormField from '@/components/FormField';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
@@ -173,7 +173,7 @@ const Create = () => {
           />
         </View>
 
-        <CustomButton text={textData.createScreen.buttonText} handlePress={handleAddingRecipe}></CustomButton>
+        <CustomIconButton iconSource={require('@/assets/images/icons/create.png')} handlePress={handleAddingRecipe}></CustomIconButton>
       </ScrollView>
       </KeyboardAvoidingView>
     </ContentContainer>

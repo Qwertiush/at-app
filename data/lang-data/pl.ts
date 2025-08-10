@@ -41,8 +41,6 @@ export default {
         descriptionPlaceholderText: 'Opis...',
         ingredientsPlaceholderText: 'Składniki (oddzielone przecinkami)...',
         stepsPlaceholderText: 'Kroki (oddzielone przecinkami) ...',
-
-        buttonText: 'Dodaj'
     },
     profileScreen: {
         text1: 'Dołączył ',
@@ -50,13 +48,12 @@ export default {
         text3: 'Polubienia: ',
         text4: 'Twoje przepisy:',
         text5: '  przepisy:',
-
-        buttonSettings: 'Ustawienia',
-        buttonLogOut: 'Wyloguj',
-        buttonUpvote: '+1',
-        buttonDownVote: '-1',
         
         bottomText: 'To już jest koniec :('
+    },
+    settingsScreen: {
+        changePicText: 'Zmień zdjęcie profilowe',
+        changeLanguageTxt: 'Zmień język',
     },
     favouritesScreen: {
         header1: 'Twoje ulubione ',
@@ -72,15 +69,9 @@ export default {
         text2: 'Dodano: ',
         text3: 'Składniki:',
         text4: 'Kroki:',
-
-        buttonDelete: 'X( Usuń',
-        buttonUpVote: ':) +1',
-        buttonDownVote: ':( -1'
     },
     commentsScreen: {
-        commentPlaceholderText: 'Tytuł...',
-
-        buttonText: 'Dodaj'
+        commentPlaceholderText: 'Napisz komentarz...',
     },
     commentCard:{
         text1: 'Napisał ',

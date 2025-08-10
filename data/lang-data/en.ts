@@ -41,8 +41,6 @@ export default {
         descriptionPlaceholderText: 'Description...',
         ingredientsPlaceholderText: 'Ingredients (comma seperated)...',
         stepsPlaceholderText: 'Steps (comma seperated)...',
-
-        buttonText: 'Add'
     },
     profileScreen: {
         text1: 'Joined ',
@@ -51,12 +49,11 @@ export default {
         text4: 'Your recipes:',
         text5: '  recipes:',
 
-        buttonSettings: 'Settings',
-        buttonLogOut: 'Log Out',
-        buttonUpvote: '+1',
-        buttonDownVote: '-1',
-
         bottomText: 'This is the end :('
+    },
+    settingsScreen: {
+        changePicText: 'Change profile pic',
+        changeLanguageTxt: 'Change language',
     },
     favouritesScreen: {
         header1: 'Your favourite ',
@@ -72,15 +69,9 @@ export default {
         text2: 'Created:',
         text3: 'Ingredients:',
         text4: 'Steps:',
-
-        buttonDelete: 'X( Delete',
-        buttonUpVote: ':) +1',
-        buttonDownVote: ':( -1'
     },
     commentsScreen: {
-        commentPlaceholderText: 'Title...',
-
-        buttonText: 'Add'
+        commentPlaceholderText: 'Comment...',
     },
     commentCard:{
         text1: 'By ',

@@ -1,15 +1,15 @@
-import { logoutUser } from '@/app/firebase/firebaseAuth'
 import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
 import globalStyles, { colors } from '@/app/Styles/global-styles'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
+import { router } from 'expo-router'
 import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
 import Avatar from './Avatar'
-import CustomButton from './CustomButton'
+import CustomIconButton from './CustomIconButton'
 import RecipeCard from './RecipeCard'
 
 type UserProfileProps = {
@@ -42,11 +42,8 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
     setItemsLimit((prev) => prev + 10);
   }
 
-  const handlePictureChange = () => {
-    showPopup({
-      title: "Error",
-      content: "Not implemented yet",
-    });
+  const handleSettingsPress = () => {
+    router.push('/settings');
   }
   const handleVoting = () => {
     showPopup({
@@ -54,18 +51,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
       content: "Not implemented yet",
     });
   }
-
-  const handleLoggingOut = () => {
-    showPopup({
-      title: textData.loggingOutPopup.title,
-      content: textData.loggingOutPopup.content,
-      onConfirm: (decison) => {
-        if(decison){
-          logoutUser();
-        }
-      }
-    });
-  }
+  
     return (
     <>
         <View style={globalStyles.contentContainer}>
@@ -81,6 +67,9 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
               },
             ]}
           >
+            <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
+              {user?.uid == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: colors.succes}} handlePress={handleVoting}/>}
+            </View>
             <View style={[globalStyles.centerElement, { marginBottom: 12 }]}>
               {user?.avatarUrl ? (
                 <Avatar source={{ uri: user.avatarUrl }} />
@@ -130,10 +119,6 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <Text style={[globalStyles.textM, { marginLeft: 4 }]}>0</Text>
               </View>
             </View>
-            <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
-                {user?.uid == currentUser?.uid ?<CustomButton text={textData.profileScreen.buttonSettings} style={{width: '40%'}} handlePress={handlePictureChange}/>:<></>}
-                {user?.uid == currentUser?.uid ? <CustomButton text={textData.profileScreen.buttonLogOut} style={{width: '40%', backgroundColor: colors.error}} handlePress={handleLoggingOut}/> : <CustomButton text={textData.profileScreen.buttonUpvote} style={{width: '40%', backgroundColor: colors.succes}} handlePress={handleVoting}/>}
-            </View>
             {user?.uid == currentUser?.uid ? 
               <Text
                 style={[
@@ -157,7 +142,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
           </View>
         </View>
         <FlatList
-          style={{width: '100%', flex: 1}}
+          style={{width: '100%', flex: 1, marginTop: 10}}
           data={recipes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <RecipeCard recipe={item} />}

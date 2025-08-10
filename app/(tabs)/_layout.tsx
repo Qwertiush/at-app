@@ -13,7 +13,7 @@ const TabsArray = [
     title: 'Create',
   },
     {
-    name: 'profile',
+    name: '(profile)',
     icon: require('../../assets/images/icons/profile.png'),
     title: 'Profile',
   },

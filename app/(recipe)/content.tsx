@@ -1,6 +1,6 @@
 import Avatar from '@/components/Avatar';
 import ContentContainer from '@/components/ContentContainer';
-import CustomButton from '@/components/CustomButton';
+import CustomIconButton from '@/components/CustomIconButton';
 import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
@@ -117,8 +117,8 @@ const Content = () => {
     <ContentContainer style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
-          {recipe.authorId == currentUser?.uid ? <CustomButton text={textData.recipeScreen.buttonDelete} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}></CustomButton> : <></>}
-          {reacted == 1 ? <CustomButton text={textData.recipeScreen.buttonDownVote} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomButton text={textData.recipeScreen.buttonUpVote} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
+          {recipe.authorId == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> : <></>}
+          {reacted == 1 ? <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
         </View>
         {recipe.upVotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header1}</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>}
         <View style={styles.card}>
