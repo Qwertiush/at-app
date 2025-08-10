@@ -82,9 +82,6 @@ export default {
         text2: 'Created: ',
         text3: 'Ingredients:',
     },
-    loadingComponent:{
-        text1: 'Loading...'
-    },
     //popups crate screen
     popupDefault:{
         buttonConfirm: "Yes",
