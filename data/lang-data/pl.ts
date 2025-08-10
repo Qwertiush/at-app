@@ -145,5 +145,6 @@ export default {
     themesText:[
         {name: 'Jasny', value: 'light'},
         {name: 'Ciemny', value: 'dark'},
+        {name: 'Zieleń', value: 'green'},
     ]
 }

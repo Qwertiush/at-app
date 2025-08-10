@@ -5,7 +5,7 @@ import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext, useState } from 'react';
 import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
-import globalStyles, { colors } from '../Styles/global-styles';
+import globalStyles from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
 import { addRecipe } from '../firebase/firebaseDB';
 
@@ -115,7 +115,7 @@ const Create = () => {
 
   return (
     <ContentContainer>
-      <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${colors.secondary}`,backgroundColor: themeData.bc2}, globalStyles.textContainer]}>
+      <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${themeData.secondary}`,backgroundColor: themeData.bc2}, globalStyles.textContainer]}>
       <ScrollView>
         <View style={[{flexDirection: 'column'},globalStyles.centerElement]}>
           <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.createScreen.header}</Text>
@@ -131,8 +131,6 @@ const Create = () => {
             value={form.title}
             handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
             keyboardType="default"
-            styleText={{color: colors.text1}}
-            placeHolderColor={colors.text2}
           />
         </View>
 
@@ -143,8 +141,6 @@ const Create = () => {
             handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
             keyboardType="default"
             multiline={true}
-            styleText={{color: colors.text1}}
-            placeHolderColor={colors.text2}
           />
         </View>
 
@@ -155,8 +151,6 @@ const Create = () => {
             handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
             keyboardType="default"
             multiline={true}
-            styleText={{color: colors.text1}}
-            placeHolderColor={colors.text2}
           />
         </View>      
 
@@ -167,8 +161,6 @@ const Create = () => {
             handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
             keyboardType="default"
             multiline={true}
-            styleText={{color: colors.text1}}
-            placeHolderColor={colors.text2}
           />
         </View>
 

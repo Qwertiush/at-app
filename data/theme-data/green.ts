@@ -1,0 +1,16 @@
+export default {
+  bc: '#2c460eff',
+  bc2: '#537a26ff',
+  overlay:'rgba(39, 46, 40, 0.7)',
+  popupoverlay: 'rgba(0,0,0,0.5)',
+  tabsBar: '#093a0bff',
+  secondary: '#8fa820ff',
+  buttontxt: '#F5F5F5',
+  text1: '#e6f0e4ff',
+  text2: '#caddaaff',
+  text3: '#e1e9ddff',
+  highlight: '#eec055',
+  succes: '#4caf50',
+  error: '#f44336',
+  warning: '#ff9800',
+}
