@@ -16,7 +16,7 @@ type CommentState = {
 }
 
 const Comments = () => {
-  const { recipe, recipeId } = useContext(RecipeContext);
+  const { recipeId } = useContext(RecipeContext);
   const {textData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
@@ -36,7 +36,7 @@ const Comments = () => {
       const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipeId);
       return () => unsubscribe(); 
     }
-  }, [itemsLimit]);
+  }, [itemsLimit, recipeId]);
 
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);
