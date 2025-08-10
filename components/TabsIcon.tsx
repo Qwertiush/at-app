@@ -1,4 +1,5 @@
-import { colors } from "@/app/Styles/global-styles";
+import { UserPrefsContext } from "@/contexts/UserPrefsContext";
+import { useContext } from "react";
 import { Image, ImageSourcePropType, View } from "react-native";
 
 type TabsIconProps = {
@@ -8,6 +9,8 @@ type TabsIconProps = {
 }
 
 const TabsIcon: React.FC<TabsIconProps> = ({ icon, name, focused }) => {
+  const {themeData} = useContext(UserPrefsContext);
+
   return (
     <View style={{ 
       alignItems: 'center',
@@ -19,7 +22,7 @@ const TabsIcon: React.FC<TabsIconProps> = ({ icon, name, focused }) => {
         source={icon}
         resizeMode="contain"
         style={focused ? { width: 40, height: 40 } : { width: 30, height: 30 }}
-        tintColor={focused ? colors.highlight: colors.text3}
+        tintColor={focused ? themeData.highlight: themeData.text2}
       />
       {/*<Text style={focused ?[globalStyles.textXS, { marginTop: 2, color: colors.secondary }]:[globalStyles.textS, { marginTop: 2, color: colors.text2, width: 50,textAlign: 'center' }]}>{name}</Text>*/}
     </View>

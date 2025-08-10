@@ -17,7 +17,7 @@ type CommentState = {
 
 const Comments = () => {
   const { recipeId } = useContext(RecipeContext);
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
@@ -81,7 +81,7 @@ const Comments = () => {
         inverted
       >
       </FlatList>
-      <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`}}>
+      <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`, backgroundColor: themeData.bc2}}>
         <FormField
           title={textData.commentsScreen.commentPlaceholderText}
           value={newComment.content}

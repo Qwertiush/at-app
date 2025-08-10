@@ -1,5 +1,5 @@
 import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
-import globalStyles, { colors } from '@/app/Styles/global-styles'
+import globalStyles from '@/app/Styles/global-styles'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Recipe } from '@/models/Recipe'
@@ -22,7 +22,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
   const auth = getAuth();
@@ -63,12 +63,13 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 width: '95%',
                 flexDirection: 'column',
                 paddingVertical: 20,
-                boxShadow: `0 0 10px 5px ${colors.secondary}`,
+                boxShadow: `0 0 10px 5px ${themeData.secondary}`,
+                backgroundColor: themeData.bc2,
               },
             ]}
           >
             <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
-              {user?.uid == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: colors.succes}} handlePress={handleVoting}/>}
+              {user?.uid == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting}/>}
             </View>
             <View style={[globalStyles.centerElement, { marginBottom: 12 }]}>
               {user?.avatarUrl ? (
@@ -77,10 +78,10 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <Avatar source={require('@/assets/images/icons/def_avatar.png')} />
               )}
             </View>
-            <Text style={[globalStyles.textXXL, { textAlign: 'center', marginBottom: 8 }]}>
+            <Text style={[globalStyles.textXXL, { textAlign: 'center', marginBottom: 8, color: themeData.text1 }]}>
               {user?.username}!
             </Text>
-            <Text style={[globalStyles.textXL, { textAlign: 'center', marginBottom: 20 }]}>
+            <Text style={[globalStyles.textXL, { textAlign: 'center', marginBottom: 20, color: themeData.text1 }]}>
               {textData.profileScreen.text1} {user?.createdAt?.toDate().toLocaleDateString()}!
             </Text>
             <View
@@ -101,9 +102,10 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <Image
                   source={require('@/assets/images/icons/recipe.png')}
                   style={{ width: 30, height: 30, marginRight: 6 }}
+                  tintColor={themeData.text1}
                 />
-                <Text style={[globalStyles.textM]}>{textData.profileScreen.text2}</Text>
-                <Text style={[globalStyles.textM, { marginLeft: 4 }]}>{recipesCount}</Text>
+                <Text style={[globalStyles.textM, {color: themeData.text1}]}>{textData.profileScreen.text2}</Text>
+                <Text style={[globalStyles.textM, { marginLeft: 4, color: themeData.text1 }]}>{recipesCount}</Text>
               </View>
               <View
                 style={{
@@ -114,16 +116,17 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <Image
                   source={require('@/assets/images/icons/favs.png')}
                   style={{ width: 30, height: 30, marginRight: 6 }}
+                  tintColor={themeData.text1}
                 />
-                <Text style={[globalStyles.textM]}>{textData.profileScreen.text3}</Text>
-                <Text style={[globalStyles.textM, { marginLeft: 4 }]}>0</Text>
+                <Text style={[globalStyles.textM,{color: themeData.text1}]}>{textData.profileScreen.text3}</Text>
+                <Text style={[globalStyles.textM, { marginLeft: 4, color: themeData.text1 }]}>0</Text>
               </View>
             </View>
             {user?.uid == currentUser?.uid ? 
               <Text
                 style={[
                   globalStyles.textXL,
-                  { textAlign: 'center', marginTop: 20 },
+                  { textAlign: 'center', marginTop: 20, color: themeData.text1 },
                   globalStyles.centerElement,
                 ]}
               >

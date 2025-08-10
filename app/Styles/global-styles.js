@@ -1,5 +1,6 @@
 import { StatusBar, StyleSheet } from 'react-native';
 
+
 export const colors = {
   bc: '#E9C579',
   bc2: '#EBE0D4',
@@ -15,7 +16,6 @@ export const colors = {
 
 const baseText = {
   fontFamily: 'Helvetica',
-  color:  colors.text1,
 }
 const baseTextSecondary = {
   ...baseText,
@@ -51,7 +51,6 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   textContainer:{
-    backgroundColor: colors.bc2,
     padding: 10,
     borderRadius: 20
   },
@@ -80,7 +79,6 @@ export default StyleSheet.create({
     fontSize: 16,
     padding: 10,
     borderWidth: 1,
-    borderColor: colors.text2,
     borderRadius: 5,
     width: '100%',
    }

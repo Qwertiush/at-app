@@ -3,7 +3,6 @@ import CustomIconButton from '@/components/CustomIconButton';
 import FormField from '@/components/FormField';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import { router } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
 import globalStyles, { colors } from '../Styles/global-styles';
@@ -18,7 +17,7 @@ type FormState = {
 };
 
 const Create = () => {
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
   const [form, setForm] = useState<FormState>({
@@ -48,7 +47,6 @@ const Create = () => {
       onConfirm: (decison) => {
         if(decison){
           SubmitForm();
-          router.replace('/(tabs)/home');
         }
       }
     });
@@ -117,13 +115,14 @@ const Create = () => {
 
   return (
     <ContentContainer>
-      <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${colors.secondary}`}, globalStyles.textContainer]}>
+      <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${colors.secondary}`,backgroundColor: themeData.bc2}, globalStyles.textContainer]}>
       <ScrollView>
         <View style={[{flexDirection: 'column'},globalStyles.centerElement]}>
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.createScreen.header}</Text>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.createScreen.header}</Text>
           <Image
             source={require('@/assets/images/icons/logo.png')}
             style={{ width: 40, height: 40, alignSelf: 'center'}}
+            tintColor={themeData.text1}
           />
         </View>
         <View style={{ marginVertical: 10, width: '100%' }}>

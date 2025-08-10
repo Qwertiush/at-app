@@ -1,8 +1,8 @@
 import TabsIcon from '@/components/TabsIcon';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import { ImageSourcePropType } from 'react-native';
-import { colors } from '../app/Styles/global-styles';
 
 type Tab = {
     name: string,
@@ -15,6 +15,8 @@ type TabsLayoutProps = {
 }
 
 const TabsLayout: React.FC<TabsLayoutProps> = ({tabs}) => {
+  const {themeData} = useContext(UserPrefsContext);
+
   return (
     <>
     <Tabs
@@ -22,7 +24,7 @@ const TabsLayout: React.FC<TabsLayoutProps> = ({tabs}) => {
       tabBarShowLabel: false,
       tabBarStyle: {
         height: 70,
-        backgroundColor: colors.secondary,
+        backgroundColor: themeData.tabsBar,
       },
       }}>
       {tabs.map((tab) => (

@@ -1,6 +1,6 @@
 
 import { getUserProfile } from '@/app/firebase/firebaseDB';
-import globalStyles, { colors } from '@/app/Styles/global-styles';
+import globalStyles from '@/app/Styles/global-styles';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { Recipe } from '@/models/Recipe';
@@ -23,7 +23,7 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
   const [user, setUser] = useState<User | null>(null);
   const {setRecipeId} = useContext(RecipeContext);
   const {setUserRecipecontext} = useContext(RecipeContext);
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
 
   useEffect(() => {
     let mounted = true;
@@ -61,12 +61,12 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
   }
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPressRecipe}>
-      <Text style={styles.title}>{recipe.title}</Text>
+    <TouchableOpacity style={[styles.card,{backgroundColor: themeData.bc2, shadowColor: themeData.bc2}]} onPress={onPressRecipe}>
+      <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-          <Text style={styles.meta}>{textData.recipeCard.text1}{user?.username ?? 'Unknown'}</Text>
-          <Text style={styles.meta}>
+          <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeCard.text1}{user?.username ?? 'Unknown'}</Text>
+          <Text style={[styles.meta,{color: themeData.text2}]}>
             {textData.recipeCard.text2}{formatDate(recipe.createdAt)}
           </Text>
         </View>
@@ -74,9 +74,9 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
           {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
         </View>
       </View>
-      <Text style={styles.sectionTitle}>{textData.recipeCard.text3}</Text>
+      <Text style={[styles.sectionTitle, {color: themeData.text1}]}>{textData.recipeCard.text3}</Text>
       {recipe.ingredients.map((item, index) => (
-        <Text key={index} style={styles.listItem}>• {item}</Text>
+        <Text key={index} style={[styles.listItem,{color: themeData.text1}]}>• {item}</Text>
       ))}
     </TouchableOpacity>
   );
@@ -86,12 +86,10 @@ export default RecipeCard;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.bc2,
     padding: 16,
     borderRadius: 10,
     margin: 12,
     elevation: 3,
-    shadowColor: colors.bc2,
     shadowOpacity: 0.1,
     shadowRadius: 4
   },
@@ -102,7 +100,6 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 12,
-    color: '#888'
   },
   description: {
     marginVertical: 12,

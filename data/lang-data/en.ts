@@ -54,6 +54,7 @@ export default {
     settingsScreen: {
         changePicText: 'Change profile pic',
         changeLanguageTxt: 'Change language',
+        changeThemeTxt: 'Change theme',
     },
     favouritesScreen: {
         header1: 'Your favourite ',
@@ -86,7 +87,7 @@ export default {
     popupDefault:{
         buttonConfirm: "Yes",
         buttonNotConfirm: "No",
-        buttonInfo: "Affirmative"
+        buttonInfo: "Close"
     },
     addingRecipePopup:{
         title: 'Confirm action.',
@@ -125,5 +126,24 @@ export default {
     deleteRecipeError:{
         title: "Error!",
         content: "There was an error while removing your recipe.",
-    }
+    },
+    changeLanguagePopUp:{
+        title: "Change language",
+        content: "Change language for application.",
+    },
+    changeThemePopUp:{
+        title: "Change Theme",
+        content: "Change theme for application.",
+    },
+    changeAvatarPopUp:{
+        title: "Change Avatar",
+        content: "Pick the image.",
+
+        button: "Pick",
+    },
+    //Themes
+    themesText:[
+        {name: 'Light', value: 'light'},
+        {name: 'Dark', value: 'dark'},
+    ]
 }

@@ -15,7 +15,7 @@ import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRe
 
 const Content = () => {
   const { recipe, userRecipeContext, recipeId } = useContext(RecipeContext);
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
   const [reacted, setReacted] = useState<number>();
@@ -117,33 +117,56 @@ const Content = () => {
     <ContentContainer style={globalStyles.container}>
       <ScrollView style={{width: '100%'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
-          {recipe.authorId == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> : <></>}
-          {reacted == 1 ? <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>}
+          {
+          recipe.authorId == currentUser?.uid 
+          ?
+          <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> :
+            <></>
+          }
+          {
+          reacted == 1 
+          ?
+          <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> 
+          : 
+          <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>
+          }
         </View>
-        {recipe.upVotes != 1 ? <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header1}</Text> : <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>}
-        <View style={styles.card}>
-          <Text style={styles.title}>{recipe.title}</Text>
+        {
+        recipe.upVotes != 1 
+        ? 
+        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header1}</Text> 
+        : 
+        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>
+        }
+        <View style={[styles.card,{backgroundColor: themeData.bc2, shadowColor: themeData.bc2,}]}>
+          <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-              <Text style={styles.meta}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</Text>
-              <Text style={styles.meta}>
+              <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</Text>
+              <Text style={[styles.meta,{color: themeData.text2}]}>
                 {textData.recipeScreen.text2}{formatDate(recipe.createdAt)}
               </Text>
             </View>
             <View>
-              {userRecipeContext?.avatarUrl ? <Avatar source={{uri: userRecipeContext?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
+              {
+              userRecipeContext?.avatarUrl 
+              ? 
+              <Avatar source={{uri: userRecipeContext?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> 
+              : 
+              <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>
+              }
             </View>
           </View>
-          <Text style={styles.description}>{recipe.description}</Text>
+          <Text style={[styles.description,{color: themeData.text1}]}>{recipe.description}</Text>
 
-          <Text style={styles.sectionTitle}>{textData.recipeScreen.text3}</Text>
+          <Text style={[styles.sectionTitle,{color: themeData.text1}]}>{textData.recipeScreen.text3}</Text>
           {recipe.ingredients.map((item, index) => (
-            <Text key={index} style={styles.listItem}>• {item}</Text>
+            <Text key={index} style={[styles.listItem,{color: themeData.text1}]}>• {item}</Text>
           ))}
 
-          <Text style={styles.sectionTitle}>{textData.recipeScreen.text4}</Text>
+          <Text style={[styles.sectionTitle,{color: themeData.text1}]}>{textData.recipeScreen.text4}</Text>
           {recipe.steps.map((step, index) => (
-            <Text key={index} style={styles.listItem}>{index + 1}. {step}</Text>
+            <Text key={index} style={[styles.listItem,{color: themeData.text1}]}>{index + 1}. {step}</Text>
           ))}
           <Image
             source={require('@/assets/images/icons/logo.png')}
@@ -161,12 +184,10 @@ const styles = StyleSheet.create({
   card: {
     alignSelf: 'center',
     width:'90%',
-    backgroundColor: colors.bc2,
     padding: 16,
     borderRadius: 10,
     margin: 12,
     elevation: 3,
-    shadowColor: colors.bc2,
     shadowOpacity: 0.1,
     shadowRadius: 4
   },
@@ -177,7 +198,6 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 12,
-    color: '#888'
   },
   description: {
     marginVertical: 12,

@@ -9,7 +9,7 @@ import globalStyles from '../Styles/global-styles';
 import { subscribeToLikedRecipes } from '../firebase/firebaseDB';
 
 const Favourites = () => {
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -37,17 +37,18 @@ const Favourites = () => {
       onEndReached={loadMoreRecipes}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
-        <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row'}]}>
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.favouritesScreen.header1}</Text>
+        <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row', backgroundColor: themeData.bc2}]}>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.favouritesScreen.header1}</Text>
           <Image
             source={require('@/assets/images/icons/logo.png')}
             style={{ width: 50, height: 50, alignSelf: 'center' }}
+            tintColor={themeData.text1}
           />
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.favouritesScreen.header2}</Text>
+          <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.favouritesScreen.header2}</Text>
         </View>
         }
       ListFooterComponent={
-        <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120}]}>{textData.favouritesScreen.text1}</Text>
+        <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 120, color: themeData.text1}]}>{textData.favouritesScreen.text1}</Text>
       }
       >
       </FlatList>

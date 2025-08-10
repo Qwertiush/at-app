@@ -1,11 +1,9 @@
 import globalStyles from '@/app/Styles/global-styles';
-import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Image } from 'react-native';
 import ContentContainer from './ContentContainer';
 
 const LoadingComponent = () => {
-  const {textData} = useContext(UserPrefsContext);
 
   return (
     <ContentContainer style={globalStyles.container}>

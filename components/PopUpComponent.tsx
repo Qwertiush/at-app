@@ -1,7 +1,7 @@
-import globalStyles, { colors } from '@/app/Styles/global-styles';
+import globalStyles from '@/app/Styles/global-styles';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomButton from './CustomButton';
 
@@ -9,25 +9,27 @@ type PopUpProps = {
     title: string;
     content: string;
     handleConfirm?: ((decision: boolean) => void) | null;
+    children?: ReactNode;
 };
 
-const PopUpComponent: React.FC<PopUpProps> = ({ title, content, handleConfirm }) => {
-  const {textData} = useContext(UserPrefsContext);
+const PopUpComponent: React.FC<PopUpProps> = ({ title, content, handleConfirm, children }) => {
+  const {textData, themeData} = useContext(UserPrefsContext);
   const {hidePopup} = usePopup();
 
   return (
     <View style={styles.overlay}>
-      <View style={styles.background} />
-      <View style={styles.container}>
-        <Text style={[globalStyles.textXXL, styles.header]}>{title}</Text>
-        <Text style={[globalStyles.textXL, styles.text]}>{content}</Text>
+      <View style={[styles.background,{backgroundColor: themeData.popupoverlay}]} />
+      <View style={[styles.container,{backgroundColor: themeData.bc2,}]}>
+        <Text style={[globalStyles.textXXL, styles.header,{color: themeData.text1,}]}>{title}</Text>
+        <Text style={[globalStyles.textXL, styles.text,{color: themeData.text1,}]}>{content}</Text>
+        {children}
         {handleConfirm ? (
           <View style={styles.buttonsRow}>
-            <CustomButton style={{ backgroundColor: colors.error }} text={textData.popupDefault.buttonNotConfirm} handlePress={() => handleConfirm(false)}/>
-            <CustomButton style={{ backgroundColor: colors.succes }} text={textData.popupDefault.buttonConfirm} handlePress={() => handleConfirm(true)}/>
+            <CustomButton style={{ backgroundColor: themeData.error }} text={textData.popupDefault.buttonNotConfirm} handlePress={() => handleConfirm(false)}/>
+            <CustomButton style={{ backgroundColor: themeData.succes }} text={textData.popupDefault.buttonConfirm} handlePress={() => handleConfirm(true)}/>
           </View>
         ) : (
-          <CustomButton style={{ backgroundColor: colors.succes }} text={textData.popupDefault.buttonInfo} handlePress={hidePopup}/>
+          <CustomButton style={{ backgroundColor: themeData.secondary }} text={textData.popupDefault.buttonInfo} handlePress={hidePopup}/>
         )}
       </View>
     </View>
@@ -45,10 +47,8 @@ const styles = StyleSheet.create({
     },
     background: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     container: {
-        backgroundColor: colors.secondary,
         padding: 20,
         width: '80%',
         borderRadius: 20,
@@ -57,12 +57,10 @@ const styles = StyleSheet.create({
     },
     header: {
         textAlign: 'center',
-        color: colors.text3,
         marginBottom: 10,
     },
     text: {
         textAlign: 'center',
-        color: colors.text3,
         marginBottom: 20,
     },
     buttonsRow: {

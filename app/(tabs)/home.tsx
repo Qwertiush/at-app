@@ -8,11 +8,11 @@ import { Recipe } from '@/models/Recipe';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Image, KeyboardAvoidingView, Text, View } from 'react-native';
 import { subscribeToFilteredRecipes, subscribeToRecipes } from '../firebase/firebaseDB';
-import globalStyles, { colors } from '../Styles/global-styles';
+import globalStyles from '../Styles/global-styles';
 //TODO when user deleted - (change recipes/comments - to "user deleted")
 const Home = () => {
   const {user, loading} = useAuth();
-  const {textData} = useContext(UserPrefsContext);
+  const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -38,14 +38,15 @@ const Home = () => {
     
     <ContentContainer style={globalStyles.container}>
       <KeyboardAvoidingView behavior='padding' style={[{width: '100%',position: 'absolute', left: 0, top: 0, zIndex: 10},globalStyles.contentContainer]}>
-        <View style={[globalStyles.textContainer,{width: '90%', boxShadow: `0 0 10px 5px ${colors.secondary}`}]}>
+        <View style={[globalStyles.textContainer,{width: '90%',backgroundColor: themeData.bc2, boxShadow: `0 0 10px 5px ${themeData.secondary}`}]}>
         <View style={[{flexDirection: 'row', width: '100%',borderTopLeftRadius: 20, borderTopRightRadius: 20, justifyContent:'center'}]}>
-            <Text style={[globalStyles.textXXL, globalStyles.centerElement]}>{textData.homeScreen.header}</Text>
+            <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.homeScreen.header}</Text>
             <Image
               source={require('@/assets/images/icons/logo.png')}
               style={{ width: 50, height: 50, alignSelf: 'center' }}
+              tintColor={themeData.text1}
             />
-            <Text style={[globalStyles.textXXL, globalStyles.centerElement]}> ?</Text>
+            <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}> ?</Text>
           </View>
         <FormField title={textData.homeScreen.searchBarPlaceholderText} value={searchQuery} handleChangeText={setSearchQuery} style={{width: '90%', marginBottom: 10, marginTop: 0}}></FormField>
         </View>
@@ -58,7 +59,7 @@ const Home = () => {
         onEndReached={loadMoreRecipes}
         onEndReachedThreshold={0.1}
         ListFooterComponent={
-          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 200}]}>{textData.homeScreen.text1}</Text>
+          <Text style={[globalStyles.centerElement, globalStyles.textM,{paddingTop: 10, paddingBottom: 200, color: themeData.text1}]}>{textData.homeScreen.text1}</Text>
         }
         >
       </FlatList>

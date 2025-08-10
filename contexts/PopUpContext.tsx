@@ -4,6 +4,7 @@ import React, { createContext, ReactNode, useContext } from "react";
 type PopupOptions = {
   title: string;
   content: string;
+  childForPopUp?: ReactNode;
   onConfirm?: (decision: boolean) => void;
 };
 
@@ -46,6 +47,7 @@ export const PopupProvider = ({ children }: { children: ReactNode }) => {
           title={popupOptions.title}
           content={popupOptions.content}
           handleConfirm={popupOptions.onConfirm ? handleConfirm : null}
+          children={popupOptions.childForPopUp}
         />
       )}
     </PopupContext.Provider>

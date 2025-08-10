@@ -1,6 +1,7 @@
-import React from 'react';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import React, { useContext } from 'react';
 import { ColorValue, StyleSheet, TextInput, View } from 'react-native';
-import globalStyles, { colors } from '../app/Styles/global-styles.js';
+import globalStyles from '../app/Styles/global-styles.js';
 
 type FormFieldProps = {
     title: string;
@@ -14,16 +15,18 @@ type FormFieldProps = {
 }
 
 const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keyboardType, multiline, style, styleText, placeHolderColor}) => {
+  const {themeData} = useContext(UserPrefsContext);
+  
   return (
-    <View style={[FormFieldStyle.input, style]}>
+    <View style={[FormFieldStyle.input, {backgroundColor: themeData.bc2,}, style]}>
       <TextInput
-        style={[globalStyles.textM, {color: colors.text1}, styleText]}
+        style={[globalStyles.textM, {color: themeData.text1}, styleText]}
         value={value}
         onChangeText={handleChangeText}
         secureTextEntry={keyboardType === 'password'}
         autoCapitalize="none"
         placeholder={title}
-        placeholderTextColor={placeHolderColor ? placeHolderColor : colors.text2}
+        placeholderTextColor={placeHolderColor ? placeHolderColor : themeData.text2}
         multiline={multiline}
       />
     </View>
@@ -32,7 +35,6 @@ const FormField: React.FC<FormFieldProps> = ({title,value,handleChangeText,keybo
 
 const FormFieldStyle = StyleSheet.create({
   input:{
-    backgroundColor: colors.bc2,
     padding: 10,
     textAlign: 'center',
     width: '90%',

@@ -1,5 +1,5 @@
-import { colors } from '@/app/Styles/global-styles';
-import React from 'react';
+import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import React, { useContext } from 'react';
 import { ColorValue, Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 
 type CustomIconButtonProps = {
@@ -11,9 +11,11 @@ type CustomIconButtonProps = {
 }
 
 const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePress, isLoading, style, tintColor}) => {
+  const {themeData} = useContext(UserPrefsContext);
+  
   return (
       <TouchableOpacity 
-          style={[buttonStyle.button, {opacity: isLoading ? 0.5 : 1}, style]}
+          style={[buttonStyle.button, {backgroundColor: themeData.secondary, opacity: isLoading ? 0.5 : 1}, style]}
           activeOpacity={0.7}
           onPress={handlePress}
           disabled={isLoading}
@@ -21,7 +23,7 @@ const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePr
         <Image
             source={iconSource}
             style={{ width: 30, height: 30, alignSelf: 'center' }}
-            tintColor={tintColor ?? colors.text3}
+            tintColor={tintColor ?? themeData.buttontxt}
         />
       </TouchableOpacity>
     )
@@ -29,7 +31,6 @@ const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePr
 
 const buttonStyle = StyleSheet.create({
   button:{
-    backgroundColor: colors.secondary,
     padding: 10,
     alignSelf: 'center',
     borderRadius: 15,
