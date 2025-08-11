@@ -22,6 +22,12 @@ export const getUserProfile = async (uid: string) => {
   return snapshot.exists() ? snapshot.data() : null;
 };
 
+export const updateUsersAvatar = async (uid: string, path2Picture: string) =>{
+  const recipeRef = doc(DB, "users", uid);
+    await updateDoc(recipeRef, {
+      avatarUrl: path2Picture
+    });
+}
 //Recipe
 export const getAllRecipes = async (): Promise<Recipe[]> => {
   const recipesRef = collection(DB, "recipes");
@@ -210,17 +216,14 @@ export const subscribeToLikedRecipes = (
 };
 
 export const deleteRecipeById = async (id: string): Promise<void> => {
-  // 1. Usuń komentarze związane z tym przepisem
   const commentsQuery = query(collection(DB, "comments"), where("recipeId", "==", id));
   const commentsSnapshot = await getDocs(commentsQuery);
   const commentDeletions = commentsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "comments", docu.id)));
 
-  // 2. Usuń reakcje związane z tym przepisem
   const reactionsQuery = query(collection(DB, "reactions"), where("recipeId", "==", id));
   const reactionsSnapshot = await getDocs(reactionsQuery);
   const reactionDeletions = reactionsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "reactions", docu.id)));
 
-  // 3. Usuń sam przepis
   const recipeDeletion = deleteDoc(doc(DB, "recipes", id));
 
   // 4. Poczekaj na wszystkie operacje
@@ -262,7 +265,7 @@ export const checkIfAddedReactionToRecipe = async (recipeId: string, userId: str
 
   return typeof value == 'number' ? value : -1;
 }
-//TODO add field to receipe - upvotes ad update when reacted (+1/-1)
+
 export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
   try {
     const docRef = await addDoc(collection(DB, "reactions"), {

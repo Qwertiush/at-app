@@ -10,6 +10,7 @@ import { Timestamp } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Avatar from './Avatar';
+import CustomImage from './CustomPrymitives/CustomImage';
 
 export const formatDate = (ts?: Timestamp | null) => {
   if (ts && typeof (ts as any).seconds === 'number') {
@@ -62,6 +63,13 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
 
   return (
     <TouchableOpacity style={[styles.card,{backgroundColor: themeData.bc2, shadowColor: themeData.bc2}]} onPress={onPressRecipe}>
+      {
+      recipe.pictures?.length != 0
+      ?
+      <CustomImage source={{ uri: recipe.pictures?.[0] ?? '' }} dimentions={{width: '100%', height: 200}} removeTint={true} style={{borderRadius: 20}}/>
+      :
+      <CustomImage source={require('@/assets/images/picturePlaceholder.png')} dimentions={{width: 100, height: 100}} removeTint={true}/>
+      }
       <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
@@ -96,7 +104,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 4
+    marginBottom: 4,
+    marginTop: 10
   },
   meta: {
     fontSize: 12,

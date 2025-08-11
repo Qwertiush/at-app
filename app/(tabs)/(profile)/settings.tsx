@@ -1,20 +1,25 @@
 import { logoutUser } from '@/app/firebase/firebaseAuth'
+import { updateUsersAvatar } from '@/app/firebase/firebaseDB'
 import globalStyles, { colors } from '@/app/Styles/global-styles'
 import ContentContainer from '@/components/ContentContainer'
 import CustomButton from '@/components/CustomButton'
 import CustomIconButton from '@/components/CustomIconButton'
 import CustomImage from '@/components/CustomPrymitives/CustomImage'
+import FormField from '@/components/CustomPrymitives/FormField'
 import SimpleDropdown from '@/components/SimpleDropdown'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { languages } from '@/data/lang-data'
 import { themes } from '@/data/theme-data'
+import { useAuth } from '@/hooks/useAuth'
 import React, { useContext } from 'react'
 import { ScrollView, View } from 'react-native'
 
 const Settings = () => {
   const {lang, textData, setLang, theme, themeData, setTheme} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
+
+  const {user, loading} = useAuth();
 
   const handleLoggingOut = () => {
     showPopup({
@@ -28,16 +33,32 @@ const Settings = () => {
     });
   }
 
+  const changeAvatar = async (path: string) => {
+    if(!user?.uid){
+      return;
+    }
+    await updateUsersAvatar(user?.uid,path as string);
+  }
   const handleChangingAvatar = () => {
+    let localPath = '';
+
     showPopup({
       title: textData.changeAvatarPopUp.title,
       content: textData.changeAvatarPopUp.content,
-      childForPopUp:(
+      childForPopUp: (
         <View>
-          <CustomButton text={textData.changeAvatarPopUp.button}/>
+          <FormField
+            title="href to picture"
+            value={localPath}
+            handleChangeText={(val) => (localPath = val)}
+          />
+          <CustomButton
+            text={textData.changeAvatarPopUp.button}
+            handlePress={() => changeAvatar(localPath)}
+          />
         </View>
       )
-    });
+  });
   }
 
   const handleChangingLanguage = () => {
