@@ -7,10 +7,11 @@ type CustomIconButtonProps = {
     handlePress?: () => void;
     isLoading?: boolean;
     style?: ViewStyle;
+    styleIcon?: Object;
     tintColor?: ColorValue;
 }
 
-const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePress, isLoading, style, tintColor}) => {
+const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePress, isLoading, style, tintColor, styleIcon}) => {
   const {themeData} = useContext(UserPrefsContext);
   
   return (
@@ -22,7 +23,7 @@ const CustomIconButton: React.FC<CustomIconButtonProps> = ({iconSource, handlePr
       >
         <Image
             source={iconSource}
-            style={{ width: 30, height: 30, alignSelf: 'center' }}
+            style={[{ width: 30, height: 30, alignSelf: 'center' }, styleIcon]}
             tintColor={tintColor ?? themeData.buttontxt}
         />
       </TouchableOpacity>

@@ -1,7 +1,7 @@
 import CommentCard from '@/components/CommentCard'
 import ContentContainer from '@/components/ContentContainer'
 import CustomIconButton from '@/components/CustomIconButton'
-import FormField from '@/components/FormField'
+import FormField from '@/components/CustomPrymitives/FormField'
 import { RecipeContext } from '@/contexts/RecipeContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { RecipeComment } from '@/models/Comment'
@@ -69,7 +69,7 @@ const Comments = () => {
   }
 
   return (
-    <ContentContainer style={globalStyles.container}>
+    <ContentContainer>
     <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.container]}>
       <FlatList
         style={{width: '100%'}}

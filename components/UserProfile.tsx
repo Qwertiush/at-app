@@ -7,9 +7,12 @@ import { User } from '@/models/User'
 import { router } from 'expo-router'
 import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, Image, Text, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import Avatar from './Avatar'
 import CustomIconButton from './CustomIconButton'
+import CustomImage from './CustomPrymitives/CustomImage'
+import TextM from './CustomPrymitives/Text/TextM'
+import TextXXL from './CustomPrymitives/Text/TextXXL'
 import RecipeCard from './RecipeCard'
 
 type UserProfileProps = {
@@ -57,7 +60,6 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
         <View style={globalStyles.contentContainer}>
           <View
             style={[
-              globalStyles.centerElement,
               globalStyles.textContainer,
               {
                 width: '95%',
@@ -65,82 +67,69 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 paddingVertical: 20,
                 boxShadow: `0 0 10px 5px ${themeData.secondary}`,
                 backgroundColor: themeData.bc2,
+                alignItems: 'center',
+                gap: 5
               },
             ]}
           >
             <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
-              {user?.uid == currentUser?.uid ? <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> : <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting}/>}
+              {user?.uid == currentUser?.uid ?
+              <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> 
+              :
+              <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting}
+            />}
             </View>
-            <View style={[globalStyles.centerElement, { marginBottom: 12 }]}>
-              {user?.avatarUrl ? (
-                <Avatar source={{ uri: user.avatarUrl }} />
-              ) : (
-                <Avatar source={require('@/assets/images/icons/def_avatar.png')} />
-              )}
+            <View>
+              {user?.avatarUrl ? 
+              <Avatar source={{ uri: user.avatarUrl }} />
+              : 
+              <Avatar source={require('@/assets/images/icons/def_avatar.png')} />
+              }
             </View>
-            <Text style={[globalStyles.textXXL, { textAlign: 'center', marginBottom: 8, color: themeData.text1 }]}>
-              {user?.username}!
-            </Text>
-            <Text style={[globalStyles.textXL, { textAlign: 'center', marginBottom: 20, color: themeData.text1 }]}>
-              {textData.profileScreen.text1} {user?.createdAt?.toDate().toLocaleDateString()}!
-            </Text>
+            <TextXXL>{user?.username}!</TextXXL>
+            <TextM>{textData.profileScreen.text1} {user?.createdAt?.toDate().toLocaleDateString()}!</TextM>
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
                 width: '100%',
-                marginBottom: 20,
+                gap: '10%'
               }}
             >
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginRight: 30,
+                  gap: 2
                 }}
               >
-                <Image
+                <CustomImage
                   source={require('@/assets/images/icons/recipe.png')}
-                  style={{ width: 30, height: 30, marginRight: 6 }}
-                  tintColor={themeData.text1}
+                  dimentions={{width: 30, height: 30}}
                 />
-                <Text style={[globalStyles.textM, {color: themeData.text1}]}>{textData.profileScreen.text2}</Text>
-                <Text style={[globalStyles.textM, { marginLeft: 4, color: themeData.text1 }]}>{recipesCount}</Text>
+                <TextM>{textData.profileScreen.text2}</TextM>
+                <TextM>{recipesCount}</TextM>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  gap: 2
                 }}
               >
-                <Image
+                <CustomImage
                   source={require('@/assets/images/icons/favs.png')}
-                  style={{ width: 30, height: 30, marginRight: 6 }}
-                  tintColor={themeData.text1}
+                  dimentions={{width: 30, height: 30}}
                 />
-                <Text style={[globalStyles.textM,{color: themeData.text1}]}>{textData.profileScreen.text3}</Text>
-                <Text style={[globalStyles.textM, { marginLeft: 4, color: themeData.text1 }]}>0</Text>
+                <TextM>{textData.profileScreen.text3}</TextM>
+                <TextM>0</TextM>
               </View>
             </View>
-            {user?.uid == currentUser?.uid ? 
-              <Text
-                style={[
-                  globalStyles.textXL,
-                  { textAlign: 'center', marginTop: 20, color: themeData.text1 },
-                  globalStyles.centerElement,
-                ]}
-              >
-              {textData.profileScreen.text4}
-              </Text> :
-              <Text
-                style={[
-                  globalStyles.textXL,
-                  { textAlign: 'center', marginTop: 20 },
-                  globalStyles.centerElement,
-                ]}
-              >
-              {user?.username}{textData.profileScreen.text5}
-              </Text>
+            {user?.uid == currentUser?.uid 
+            ? 
+            <TextM>{textData.profileScreen.text4}</TextM>
+            :
+            <TextM>{user?.username}{textData.profileScreen.text5}</TextM>
             }
           </View>
         </View>

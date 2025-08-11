@@ -1,5 +1,5 @@
 import CustomButton from '@/components/CustomButton';
-import FormField from '@/components/FormField';
+import FormField from '@/components/CustomPrymitives/FormField';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { User } from '@/models/User';
 import { Link, router } from 'expo-router';

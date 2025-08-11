@@ -3,7 +3,7 @@ import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Link, router } from 'expo-router'
 import React, { useContext, useState } from 'react'
 import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
-import FormField from '../../components/FormField'
+import FormField from '../../components/CustomPrymitives/FormField'
 import globalStyles from '../Styles/global-styles'
 import { loginUser } from '../firebase/firebaseAuth'
 

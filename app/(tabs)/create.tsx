@@ -1,10 +1,12 @@
 import ContentContainer from '@/components/ContentContainer';
 import CustomIconButton from '@/components/CustomIconButton';
-import FormField from '@/components/FormField';
+import CustomImage from '@/components/CustomPrymitives/CustomImage';
+import FormField from '@/components/CustomPrymitives/FormField';
+import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext, useState } from 'react';
-import { Image, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import globalStyles from '../Styles/global-styles';
 import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
 import { addRecipe } from '../firebase/firebaseDB';
@@ -117,54 +119,40 @@ const Create = () => {
     <ContentContainer>
       <KeyboardAvoidingView behavior='padding' style={[{width: '95%', boxShadow: `0 0 10px 5px ${themeData.secondary}`,backgroundColor: themeData.bc2}, globalStyles.textContainer]}>
       <ScrollView>
-        <View style={[{flexDirection: 'column'},globalStyles.centerElement]}>
-          <Text style={[globalStyles.textXXL, globalStyles.centerElement,{color: themeData.text1}]}>{textData.createScreen.header}</Text>
-          <Image
+        <View style={[{flexDirection: 'column', alignItems: 'center'}]}>
+          <TextXXL>{textData.createScreen.header}</TextXXL>
+          <CustomImage
             source={require('@/assets/images/icons/logo.png')}
-            style={{ width: 40, height: 40, alignSelf: 'center'}}
-            tintColor={themeData.text1}
+            dimentions={{width: 40, height: 40}}
           />
         </View>
-        <View style={{ marginVertical: 10, width: '100%' }}>
-          <FormField
-            title={textData.createScreen.titlePlaceholderText}
-            value={form.title}
-            handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
-            keyboardType="default"
-          />
-        </View>
-
-        <View style={{ marginVertical: 10, width: '100%' }}>
-          <FormField
-            title={textData.createScreen.descriptionPlaceholderText}
-            value={form.description}
-            handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
-            keyboardType="default"
-            multiline={true}
-          />
-        </View>
-
-        <View style={{ marginVertical: 10, width: '100%' }}>
-          <FormField
-            title={textData.createScreen.ingredientsPlaceholderText}
-            value={form.ingredientsInput}
-            handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
-            keyboardType="default"
-            multiline={true}
-          />
-        </View>      
-
-        <View style={{ marginVertical: 10, width: '100%' }}>
-          <FormField
-            title={textData.createScreen.stepsPlaceholderText}
-            value={form.stepsInput}
-            handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
-            keyboardType="default"
-            multiline={true}
-          />
-        </View>
-
-        <CustomIconButton iconSource={require('@/assets/images/icons/create.png')} handlePress={handleAddingRecipe}></CustomIconButton>
+        <FormField
+          title={textData.createScreen.titlePlaceholderText}
+          value={form.title}
+          handleChangeText={e => setForm(prev => ({ ...prev, title: e }))}
+        />
+        <FormField
+          title={textData.createScreen.descriptionPlaceholderText}
+          value={form.description}
+          handleChangeText={e => setForm(prev => ({ ...prev, description: e }))}
+          multiline={true}
+        />
+        <FormField
+          title={textData.createScreen.ingredientsPlaceholderText}
+          value={form.ingredientsInput}
+          handleChangeText={e => setForm(prev => ({ ...prev, ingredientsInput: e }))}
+          multiline={true}
+        />   
+        <FormField
+          title={textData.createScreen.stepsPlaceholderText}
+          value={form.stepsInput}
+          handleChangeText={e => setForm(prev => ({ ...prev, stepsInput: e }))}
+          multiline={true}
+        />
+        <CustomIconButton 
+          iconSource={require('@/assets/images/icons/create.png')} 
+          handlePress={handleAddingRecipe}
+        />
       </ScrollView>
       </KeyboardAvoidingView>
     </ContentContainer>

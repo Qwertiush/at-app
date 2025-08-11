@@ -1,6 +1,12 @@
 import Avatar from '@/components/Avatar';
 import ContentContainer from '@/components/ContentContainer';
 import CustomIconButton from '@/components/CustomIconButton';
+import CustomImage from '@/components/CustomPrymitives/CustomImage';
+import TextM from '@/components/CustomPrymitives/Text/TextM';
+import TextS from '@/components/CustomPrymitives/Text/TextS';
+import TextXS from '@/components/CustomPrymitives/Text/TextXS';
+import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
+import GalleryComponent from '@/components/GalleryComponent';
 import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
@@ -9,8 +15,8 @@ import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
 import { getAuth } from 'firebase/auth';
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import globalStyles, { colors } from '../Styles/global-styles';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import globalStyles from '../Styles/global-styles';
 import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
 
 const Content = () => {
@@ -104,7 +110,6 @@ const Content = () => {
       if(recipeId && currentUser?.uid){
         const reactedVal = await checkIfAddedReactionToRecipe(recipeId, currentUser?.uid );
         setReacted(reactedVal);
-        console.log(reactedVal);
       }
     }
 
@@ -114,38 +119,41 @@ const Content = () => {
   if (!recipe) return <Text>Loading recipe...</Text>;
 
   return (
-    <ContentContainer style={globalStyles.container}>
+    <ContentContainer>
       <ScrollView style={{width: '100%'}}>
+        <View style={{flexDirection: 'column', alignItems: 'center'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
           {
           recipe.authorId == currentUser?.uid 
           ?
-          <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: colors.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> :
-            <></>
+          <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: themeData.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> 
+          :
+          <></>
           }
           {
           reacted == 1 
           ?
-          <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: colors.error}}/> 
+          <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} handlePress={addDownVote} isLoading={isSubmitting} style={{backgroundColor: themeData.error}}/> 
           : 
-          <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: colors.succes}}/>
+          <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} handlePress={addUpVote} isLoading={isSubmitting} style={{backgroundColor: themeData.succes}}/>
           }
         </View>
         {
         recipe.upVotes != 1 
         ? 
-        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header1}</Text> 
+        <>
+        <TextM style={{alignSelf: 'center',boxShadow: `0 0 10px 5px ${themeData.secondary}`, padding: 10, borderRadius: 20, backgroundColor: themeData.bc2}}>{recipe.upVotes}{textData.recipeScreen.header1}</TextM>
+        </>
         : 
-        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${colors.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>
+        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${themeData.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>
         }
+        <GalleryComponent images={recipe.pictures as string[]}/>
         <View style={[styles.card,{backgroundColor: themeData.bc2, shadowColor: themeData.bc2,}]}>
-          <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
+          <TextXXL style={styles.title} >{recipe.title}</TextXXL>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-              <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</Text>
-              <Text style={[styles.meta,{color: themeData.text2}]}>
-                {textData.recipeScreen.text2}{formatDate(recipe.createdAt)}
-              </Text>
+              <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</TextXS>
+              <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text2}{formatDate(recipe.createdAt)}</TextXS>
             </View>
             <View>
               {
@@ -157,21 +165,23 @@ const Content = () => {
               }
             </View>
           </View>
-          <Text style={[styles.description,{color: themeData.text1}]}>{recipe.description}</Text>
-
-          <Text style={[styles.sectionTitle,{color: themeData.text1}]}>{textData.recipeScreen.text3}</Text>
+          <TextS style={styles.description} >{recipe.description}</TextS>
+          <TextM style={styles.sectionTitle} >{textData.recipeScreen.text3}</TextM>
+          
           {recipe.ingredients.map((item, index) => (
-            <Text key={index} style={[styles.listItem,{color: themeData.text1}]}>• {item}</Text>
+            <TextS key={index} style={styles.listItem}>• {item}</TextS>
           ))}
 
           <Text style={[styles.sectionTitle,{color: themeData.text1}]}>{textData.recipeScreen.text4}</Text>
           {recipe.steps.map((step, index) => (
-            <Text key={index} style={[styles.listItem,{color: themeData.text1}]}>{index + 1}. {step}</Text>
+            <TextS key={index} style={styles.listItem}>{index + 1}. {step}</TextS>
           ))}
-          <Image
+          <CustomImage
             source={require('@/assets/images/icons/logo.png')}
-            style={{ width: 30, height: 30, alignSelf: 'flex-end' }}
+            dimentions={{width: 30, height: 30}}
+            style={{alignSelf: 'flex-end'}}
           />
+        </View>
         </View>
       </ScrollView>
     </ContentContainer>
@@ -192,19 +202,15 @@ const styles = StyleSheet.create({
     shadowRadius: 4
   },
   title: {
-    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 4
-  },
-  meta: {
-    fontSize: 12,
   },
   description: {
     marginVertical: 12,
     fontSize: 14
   },
   sectionTitle: {
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginTop: 10
   },
   listItem: {

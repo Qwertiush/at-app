@@ -1,11 +1,11 @@
 import globalStyles from '@/app/Styles/global-styles';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext } from 'react';
-import { ImageBackground, View, ViewStyle } from 'react-native';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 
 type ContentContainerProps = {
     children: React.ReactNode;
-    style?: ViewStyle;
+    style?: Object;
 }
 
 const ContentContainer: React.FC<ContentContainerProps> = ({children}) => {
@@ -13,7 +13,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({children}) => {
   
   return (
     <ImageBackground
-        style={globalStyles.container}
+        style={ContainerStyle.container}
         source={require('@/assets/images/bc_pattern.jpg')}
         resizeMode='repeat'
     >
@@ -25,5 +25,13 @@ const ContentContainer: React.FC<ContentContainerProps> = ({children}) => {
     </ImageBackground>
   )
 }
+
+const ContainerStyle= StyleSheet.create({
+  container:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default ContentContainer

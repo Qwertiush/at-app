@@ -1,4 +1,3 @@
-import globalStyles from '@/app/Styles/global-styles'
 import ContentContainer from '@/components/ContentContainer'
 import LoadingComponent from '@/components/LoadingComponent'
 import UserProfile from '@/components/UserProfile'
@@ -11,7 +10,7 @@ const Profile = () => {
   if (loading) return <LoadingComponent/>;
 
   return (
-    <ContentContainer style={globalStyles.container}>
+    <ContentContainer>
       <UserProfile user={user} loading={loading}/>
     </ContentContainer>
   )
