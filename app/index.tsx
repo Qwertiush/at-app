@@ -25,6 +25,10 @@ export default function App() {
     return unsubscribe;
   }, []);
 
+  const handleGoTo = () => {
+    router.replace('/sign-in');
+  }
+
   return (
     <>
     <StatusBar translucent backgroundColor="transparent" />
@@ -55,7 +59,7 @@ export default function App() {
                 tintColor={themeData.text1}
               />
             </View>
-            <CustomButton text={textData.indexScreen.button} handlePress={()=>router.push('/sign-in')}/>
+            <CustomButton text={textData.indexScreen.button} handlePress={handleGoTo}/>
           </View>      
         </ScrollView>
       </ImageBackground>

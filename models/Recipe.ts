@@ -7,6 +7,7 @@ export type Recipe = {
   description: string;
   authorId: string;
   createdAt: Timestamp;
+  updatedAt?: Timestamp;
   ingredients: string[];
   steps: string[];
   upVotes: number;
@@ -14,3 +15,4 @@ export type Recipe = {
 };
 
 export type CreateRecipeInput = Omit<Recipe, "id" | "createdAt">;
+export type EditRecipeInput = Omit<Recipe, "id" | "createdAt" | "authorId" | "upVotes">;

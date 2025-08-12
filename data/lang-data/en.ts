@@ -72,8 +72,12 @@ export default {
         text2: 'Created:',
         text3: 'Ingredients:',
         text4: 'Steps:',
+        text5: 'Edited: ',
 
         userNotFound: 'User removed',
+    },
+    editRecipeScreen:{
+        header: 'Edit the recipe',
     },
     commentsScreen: {
         commentPlaceholderText: 'Comment...',
@@ -122,6 +126,10 @@ export default {
         title: "Success!",
         content: 'Recipe has been added.',
     },
+    addingRecipeError2Popup:{
+        title: "Upss...!!!",
+        content: 'There was an error while adding your recipe.',
+    },
     errorWhileSavingRecipePopup:{
         title: "Error!",
         content: 'Err r ooooor whl  ee sav i nn gg',
@@ -144,6 +152,20 @@ export default {
         title: "Error!",
         content: "There was an error while removing your recipe.",
     },
+    //popups (recipe)edit screen
+    editRecipePopup:{
+        title: "Confirm action",
+        content: "Do you really want to edit this recipe?",
+    },
+    edittingRecipeSuccessPopup:{
+        title: "Success!",
+        content: 'Recipe has been editted.',
+    },
+    edittingRecipeErrorPopup:{
+        title: "Error!",
+        content: 'Error occured while editting recipe.',
+    },
+    //popups settings screen
     changeLanguagePopUp:{
         title: "Change language",
         content: "Change language for application.",

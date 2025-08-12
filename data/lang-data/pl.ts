@@ -72,8 +72,12 @@ export default {
         text2: 'Dodano: ',
         text3: 'Składniki:',
         text4: 'Kroki:',
+        text5: 'Edytowano: ',
 
         userNotFound: 'Użytkownik usunięty',
+    },
+    editRecipeScreen:{
+        header: 'Edytuj przepis',
     },
     commentsScreen: {
         commentPlaceholderText: 'Napisz komentarz...',
@@ -118,6 +122,10 @@ export default {
         title: "Upss...!!!",
         content: 'Pole "tytuł" i "opis" sa wymagane.',
     },
+    addingRecipeError2Popup:{
+        title: "Upss...!!!",
+        content: 'Nastąpił problem podczas dodawania przepisu.',
+    },
     addinngRecipeSuccessPopup:{
         title: "Sukces!",
         content: 'Przepis został dodany.',
@@ -144,6 +152,20 @@ export default {
         title: "Error!",
         content: "Nastąpił problem podczas usuwaia przepisu.",
     },
+    //popups (recipe)edit screen
+    editRecipePopup:{
+        title: "Zatwierdź akcję",
+        content: "Czy na pewno chcesz edytować ten przepis?",
+    },
+        edittingRecipeSuccessPopup:{
+        title: "Sukces!",
+        content: 'Przepis został edytowany.',
+    },
+    edittingRecipeErrorPopup:{
+        title: "Error!",
+        content: 'Nastąpił problem przy edytowaniu przepisu.',
+    },
+    //popups settings screen
     changeLanguagePopUp:{
         title: "Zmień język",
         content: "Wybierz język aplikacji.",

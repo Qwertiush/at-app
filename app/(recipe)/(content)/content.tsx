@@ -12,13 +12,13 @@ import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '@/firebase/firebaseDB';
 import { useAuth } from '@/hooks/useAuth';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '../../firebase/firebaseDB';
-import globalStyles from '../Styles/global-styles';
+import globalStyles from '../../Styles/global-styles';
 
 const Content = () => {
   const {user, loadingUser} = useAuth();
@@ -104,10 +104,7 @@ const Content = () => {
   }
 
   const handleEditRecipe = () => {
-    showPopup({
-        title: 'Error',
-        content: 'Not implemented yet.',
-      });
+    router.replace('/edit')
   }
 
   useEffect(() => {
@@ -119,7 +116,7 @@ const Content = () => {
     }
 
     checkIfReacted();
-  }, [reload, recipeId, user]);
+  }, [reload, recipeId, user, recipe]);
 
   if (loadingUser || !recipe) return (
     <ContentContainer>
@@ -165,7 +162,13 @@ const Content = () => {
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
               <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? textData.recipeScreen.userNotFound}</TextXS>
-              <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text2}{formatDate(recipe.createdAt)}</TextXS>
+              {
+                recipe.updatedAt
+                ?
+                <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text5}{formatDate(recipe.updatedAt)}</TextXS>
+                :
+                <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text2}{formatDate(recipe.createdAt)}</TextXS>
+              }
             </View>
             <View>
               {

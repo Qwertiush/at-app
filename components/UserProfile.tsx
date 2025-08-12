@@ -48,7 +48,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
   }
 
   const handleSettingsPress = () => {
-    router.push('/settings');
+    router.replace('/settings');
   }
   const handleVoting = () => {
     showPopup({

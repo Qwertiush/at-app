@@ -95,11 +95,11 @@ const Settings = () => {
 
   return (
     <ContentContainer>
-      <View style={[globalStyles.textContainer, {marginTop: 60, width: '90%', height: '100%',backgroundColor: themeData.bc2}]}>
+      <View style={[globalStyles.textContainer, {marginTop: 60, width: '95%', height: '100%',backgroundColor: themeData.bc2}]}>
         <ScrollView>
           <View style={{width: '100%', height: '100%',}}>
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' , marginBottom: 20}}>
-              <CustomIconButton iconSource={require('@/assets/images/icons/back.png')} style={{ marginTop: 10, marginBottom: 0}} handlePress={ () => router.push('/profile') }/>
+              <CustomIconButton iconSource={require('@/assets/images/icons/back.png')} style={{ marginTop: 10, marginBottom: 0}} handlePress={ () => router.replace('/profile') }/>
               <CustomImage
                 source={require('@/assets/images/icons/logo.png')}
                 dimentions={{width: 50, height: 50}}

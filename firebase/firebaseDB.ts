@@ -1,6 +1,6 @@
 import { RecipeComment } from "@/models/Comment";
 import { Reaction } from "@/models/Reaction";
-import { CreateRecipeInput, Recipe } from "@/models/Recipe";
+import { CreateRecipeInput, EditRecipeInput, Recipe } from "@/models/Recipe";
 import { User } from "@/models/User";
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, increment, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
@@ -23,8 +23,8 @@ export const getUserProfile = async (uid: string) => {
 };
 
 export const updateUsersAvatar = async (uid: string, path2Picture: string) =>{
-  const recipeRef = doc(DB, "users", uid);
-    await updateDoc(recipeRef, {
+  const userRef = doc(DB, "users", uid);
+    await updateDoc(userRef, {
       avatarUrl: path2Picture
     });
 }
@@ -81,6 +81,22 @@ export const addRecipe = async (recipe: CreateRecipeInput) => {
     throw e;
   }
 };
+
+export const editRecipe = async (recipe: EditRecipeInput, recipeId: string) => {
+  try {
+    const recipeRef = doc(DB, 'recipes', recipeId);
+    await setDoc(
+      recipeRef,
+      { ...recipe, updatedAt: serverTimestamp() },
+      { merge: true }
+    );
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    throw error;
+  }
+};
+
+
 
 export const subscribeToRecipes = (
   onSuccess: (recipes: Recipe[]) => void,

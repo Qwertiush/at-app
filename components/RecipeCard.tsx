@@ -11,6 +11,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Avatar from './Avatar';
 import CustomImage from './CustomPrymitives/CustomImage';
+import TextXS from './CustomPrymitives/Text/TextXS';
 
 export const formatDate = (ts?: Timestamp | null) => {
   if (ts && typeof (ts as any).seconds === 'number') {
@@ -74,9 +75,13 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
           <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeCard.text1}{user?.username ?? textData.recipeCard.userNotFound}</Text>
-          <Text style={[styles.meta,{color: themeData.text2}]}>
-            {textData.recipeCard.text2}{formatDate(recipe.createdAt)}
-          </Text>
+          {
+            recipe.updatedAt
+            ?
+            <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text5}{formatDate(recipe.updatedAt)}</TextXS>
+            :
+            <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text2}{formatDate(recipe.createdAt)}</TextXS>
+          }
         </View>
         <View>
           {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}

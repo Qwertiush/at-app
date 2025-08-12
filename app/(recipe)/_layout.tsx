@@ -3,7 +3,7 @@ import React from 'react'
 
 const TabsArray = [
   {
-    name: 'content',
+    name: '(content)',
     icon: require('@/assets/images/icons/recipe.png'),
     title: 'Recipe',
   },

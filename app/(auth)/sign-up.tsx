@@ -47,7 +47,7 @@ const SignUp = () => {
         title: textData.signUpSuccessPopup.title,
         content: textData.signUpSuccessPopup.content
       });
-      router.push('/sign-in');
+      router.replace('/sign-in');
     }catch(error) {
       showPopup({
         title: textData.signUpFailPopup.title,

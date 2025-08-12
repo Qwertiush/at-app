@@ -29,7 +29,7 @@ const SignIn = () => {
     try{
       const response = await loginUser(form.email, form.password);
       setErrorMessage('');
-      router.push('/(tabs)/home');
+      router.replace('/(tabs)/home');
     }catch(error) {
       const message = error instanceof Error ? error.message : String(error);
       setErrorMessage(message);
