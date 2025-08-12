@@ -8,7 +8,7 @@ const Author = () => {
 
   return (
     <ContentContainer>
-      <UserProfile user={userRecipeContext} loading={false} />
+      <UserProfile user2Show={userRecipeContext} />
     </ContentContainer>
   )
 }

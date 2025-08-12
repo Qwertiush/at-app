@@ -2,13 +2,13 @@
 
 import { User as FirebaseUser, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { AUTH } from "../app/firebase/FirebaseConfig";
-import { getUserProfile } from "../app/firebase/firebaseDB";
+import { AUTH } from "../firebase/FirebaseConfig";
+import { getUserProfile } from "../firebase/firebaseDB";
 import { User } from "../models/User";
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingUser, setLoadingUser] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, async (firebaseUser: FirebaseUser | null) => {
@@ -20,11 +20,11 @@ export const useAuth = () => {
       } else {
         setUser(null);
       }
-      setLoading(false);
+      setLoadingUser(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  return { user, loading };
+  return { user, loadingUser };
 };

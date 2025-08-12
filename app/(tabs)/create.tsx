@@ -5,13 +5,14 @@ import FormField from '@/components/CustomPrymitives/FormField';
 import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import GalleryPreview from '@/components/GalleryPreview';
+import LoadingComponent from '@/components/LoadingComponent';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { useAuth } from '@/hooks/useAuth';
 import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
+import { addRecipe } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-import { AUTH } from '../firebase/FirebaseConfig'; // dopasuj ścieżkę do swojego eksportu AUTH
-import { addRecipe } from '../firebase/firebaseDB';
 
 type FormState = {
   title: string;
@@ -21,6 +22,7 @@ type FormState = {
 };
 
 const Create = () => {
+  const {user, loadingUser} = useAuth();
   const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
@@ -94,7 +96,6 @@ const Create = () => {
 
   const SubmitForm = async () => {
     try {
-      const user = AUTH.currentUser;
       if (!user) {
         showPopup({
           title: textData.notLoggedInPopup.title,
@@ -152,6 +153,13 @@ const Create = () => {
       });
     }
   };
+
+  if(loadingUser)
+    return(
+      <ContentContainer>
+        <LoadingComponent/>
+      </ContentContainer>
+    );
 
   return (
     <ContentContainer style={{flex: 1}}>

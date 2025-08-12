@@ -2,25 +2,28 @@ import CommentCard from '@/components/CommentCard'
 import ContentContainer from '@/components/ContentContainer'
 import CustomIconButton from '@/components/CustomIconButton'
 import FormField from '@/components/CustomPrymitives/FormField'
+import LoadingComponent from '@/components/LoadingComponent'
 import { RecipeContext } from '@/contexts/RecipeContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
+import { useAuth } from '@/hooks/useAuth'
 import { RecipeComment } from '@/models/Comment'
-import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
 import { Alert, FlatList, KeyboardAvoidingView, View } from 'react-native'
+import { addComment, subscribeToCommentsByRecipeId } from '../../firebase/firebaseDB'
 import globalStyles, { colors } from '../Styles/global-styles'
-import { addComment, subscribeToCommentsByRecipeId } from '../firebase/firebaseDB'
 
 type CommentState = {
   content: string
 }
 
 const Comments = () => {
+  const {user, loadingUser} = useAuth();
   const { recipeId } = useContext(RecipeContext);
   const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
+  const [loadingComments, setLoadingComments] = useState<boolean>(true);
 
   const [newComment, setNewComment] = useState<CommentState>({
     content: ''
@@ -28,17 +31,16 @@ const Comments = () => {
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>();
 
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-
   useEffect(() => {
+    setLoadingComments(true);
     if(recipeId){
       const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipeId);
+      setLoadingComments(false);
       return () => unsubscribe(); 
     }
   }, [itemsLimit, recipeId]);
 
-  const loadMoreRecipes = () => {
+  const loadMoreComments = () => {
     setItemsLimit((prev) => prev + 10);
   }
 
@@ -52,13 +54,13 @@ const Comments = () => {
       return;
     }
 
-    if(!currentUser?.uid || !recipeId){
+    if(!user?.uid || !recipeId){
       setIsSubmitting(false);
       return;
     } 
     const comment2send: Omit<RecipeComment, 'id' | 'createdAt'> = {
       description: content.trim(),
-      authorId: currentUser?.uid,
+      authorId: user?.uid,
       recipeId: recipeId
     }
 
@@ -68,19 +70,32 @@ const Comments = () => {
     setIsSubmitting(false);
   }
 
+  if(loadingUser)
+    return (
+      <ContentContainer>
+        <LoadingComponent/>
+      </ContentContainer>
+    );
+
   return (
     <ContentContainer>
     <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.container]}>
-      <FlatList
-        style={{width: '100%'}}
-        data={comments}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CommentCard comment={item} />}
-        onEndReached={loadMoreRecipes}
-        onEndReachedThreshold={0.1}
-        inverted
-      >
-      </FlatList>
+      {
+        loadingComments
+      ?
+      <LoadingComponent/>
+      :
+        <FlatList
+          style={{width: '100%'}}
+          data={comments}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <CommentCard comment={item} />}
+          onEndReached={loadMoreComments}
+          onEndReachedThreshold={0.1}
+          inverted
+        >
+        </FlatList>
+      }
       <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`, backgroundColor: themeData.bc2}}>
         <FormField
           title={textData.commentsScreen.commentPlaceholderText}

@@ -5,9 +5,9 @@ import { User } from '@/models/User';
 import { Link, router } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { registerUser } from '../../firebase/firebaseAuth';
+import { createUserProfile } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-import { registerUser } from '../firebase/firebaseAuth';
-import { createUserProfile } from '../firebase/firebaseDB';
 
 const SignUp = () => {
   const {textData, themeData} = useContext(UserPrefsContext);

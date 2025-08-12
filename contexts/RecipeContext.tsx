@@ -1,4 +1,4 @@
-import { subscribeToRecipeById } from '@/app/firebase/firebaseDB';
+import { subscribeToRecipeById } from '@/firebase/firebaseDB';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
 import React, { createContext, useEffect, useState } from 'react';

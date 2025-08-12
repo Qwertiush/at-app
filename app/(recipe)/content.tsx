@@ -7,19 +7,21 @@ import TextS from '@/components/CustomPrymitives/Text/TextS';
 import TextXS from '@/components/CustomPrymitives/Text/TextXS';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import GalleryComponent from '@/components/GalleryComponent';
+import LoadingComponent from '@/components/LoadingComponent';
 import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
-import { getAuth } from 'firebase/auth';
 import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '../firebase/firebaseDB';
 
 const Content = () => {
+  const {user, loadingUser} = useAuth();
   const { recipe, userRecipeContext, recipeId } = useContext(RecipeContext);
   const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
@@ -29,9 +31,6 @@ const Content = () => {
   const [reload, setReload] = useState<boolean>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>();
 
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
-
   const addUpVote = async () => {
     setIsSubmitting(true);
     if(reacted != -1){
@@ -40,13 +39,13 @@ const Content = () => {
       return;
     }
 
-    if (!recipeId || !currentUser?.uid){
+    if (!recipeId || !user?.uid){
       setIsSubmitting(false);
       return;
     } 
     const newReaction: Omit<Reaction, 'id'> = {
       recipeId: recipeId,
-      userId: currentUser?.uid,
+      userId: user?.uid,
       type: 1
     }
 
@@ -58,11 +57,11 @@ const Content = () => {
 
   const addDownVote = async () => {
     setIsSubmitting(true);
-    if (!recipeId || !currentUser?.uid){
+    if (!recipeId || !user?.uid){
       setIsSubmitting(false);
       return;
     }
-    const response = await getReactionIdByRecipeAndUserIds(recipeId,currentUser.uid);
+    const response = await getReactionIdByRecipeAndUserIds(recipeId,user.uid);
 
     if(response == '-1'){
       setIsSubmitting(false);
@@ -105,18 +104,29 @@ const Content = () => {
     }
   }
 
+  const handleEditRecipe = () => {
+    showPopup({
+        title: 'Error',
+        content: 'Not implemented yet.',
+      });
+  }
+
   useEffect(() => {
     const checkIfReacted = async () => {
-      if(recipeId && currentUser?.uid){
-        const reactedVal = await checkIfAddedReactionToRecipe(recipeId, currentUser?.uid );
+      if(recipeId && user?.uid){
+        const reactedVal = await checkIfAddedReactionToRecipe(recipeId, user?.uid );
         setReacted(reactedVal);
       }
     }
 
     checkIfReacted();
-  }, [reload, recipeId, currentUser?.uid]);
+  }, [reload, recipeId, user?.uid]);
 
-  if (!recipe) return <Text>Loading recipe...</Text>;
+  if (loadingUser || !recipe) return (
+    <ContentContainer>
+      <LoadingComponent/>
+    </ContentContainer>
+  );
 
   return (
     <ContentContainer>
@@ -124,9 +134,12 @@ const Content = () => {
         <View style={{flexDirection: 'column', alignItems: 'center'}}>
         <View style={[globalStyles.contentContainer,{width: '90%', flexDirection: 'row', justifyContent: 'center', alignSelf:'center',gap: '10%'}]}>
           {
-          recipe.authorId == currentUser?.uid 
+          recipe.authorId == user?.uid 
           ?
-          <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: themeData.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/> 
+          <>
+            <CustomIconButton iconSource={require('@/assets/images/icons/delete.png')} style={{ backgroundColor: themeData.error}} handlePress={handledeleteRecipe} isLoading={isSubmitting}/>
+            <CustomIconButton iconSource={require('@/assets/images/icons/edit.png')} style={{ backgroundColor: themeData.secondary}} handlePress={handleEditRecipe} isLoading={isSubmitting}/> 
+          </>
           :
           <></>
           }

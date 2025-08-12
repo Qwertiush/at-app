@@ -2,31 +2,43 @@ import ContentContainer from '@/components/ContentContainer';
 import CustomImage from '@/components/CustomPrymitives/CustomImage';
 import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
+import LoadingComponent from '@/components/LoadingComponent';
 import RecipeCard from '@/components/RecipeCard';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
-import { getAuth } from 'firebase/auth';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
+import { subscribeToLikedRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-import { subscribeToLikedRecipes } from '../firebase/firebaseDB';
 
 const Favourites = () => {
   const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true)
 
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const {user, loadingUser} = useAuth();
 
   useEffect(() => {
-    const unsubscribe = subscribeToLikedRecipes(setRecipes,user?.uid,itemsLimit);
-    return () => unsubscribe(); 
-  }, []);
+    if(!loadingUser && user){
+      const unsubscribe = subscribeToLikedRecipes(setRecipes,user?.uid,itemsLimit);
+      setLoadingRecipes(false);
+      return () => unsubscribe();
+    }
+  }, [loadingUser, itemsLimit]);
 
     const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);
+  }
+
+  if(loadingUser || loadingRecipes){
+    return (
+      <ContentContainer>
+        <LoadingComponent/>
+      </ContentContainer>
+    );
   }
 
   return (

@@ -1,6 +1,6 @@
-import { getUserProfile } from '@/app/firebase/firebaseDB'
 import globalStyles from '@/app/Styles/global-styles'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
+import { getUserProfile } from '@/firebase/firebaseDB'
 import { RecipeComment } from '@/models/Comment'
 import { User } from '@/models/User'
 import React, { useContext, useEffect, useState } from 'react'

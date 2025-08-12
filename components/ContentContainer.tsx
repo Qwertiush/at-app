@@ -15,7 +15,6 @@ const ContentContainer: React.FC<ContentContainerProps> = ({children}) => {
     <ImageBackground
         style={ContainerStyle.container}
         source={require('@/assets/images/bc_pattern.jpg')}
-        resizeMode='repeat'
     >
         <View
             style={[{backgroundColor: themeData.overlay, width: '100%'},globalStyles.container]}

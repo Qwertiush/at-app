@@ -1,11 +1,11 @@
-import { subscribeToUsersRecipes } from '@/app/firebase/firebaseDB'
 import globalStyles from '@/app/Styles/global-styles'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
+import { subscribeToUsersRecipes } from '@/firebase/firebaseDB'
+import { useAuth } from '@/hooks/useAuth'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
 import { router } from 'expo-router'
-import { getAuth } from 'firebase/auth'
 import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import Avatar from './Avatar'
@@ -13,14 +13,14 @@ import CustomIconButton from './CustomIconButton'
 import CustomImage from './CustomPrymitives/CustomImage'
 import TextM from './CustomPrymitives/Text/TextM'
 import TextXXL from './CustomPrymitives/Text/TextXXL'
+import LoadingComponent from './LoadingComponent'
 import RecipeCard from './RecipeCard'
 
 type UserProfileProps = {
- user: User | null,
- loading: boolean
+ user2Show: User | null,
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
+const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
   
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -28,18 +28,20 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
   const {textData, themeData} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
-  const auth = getAuth();
-  const currentUser = auth.currentUser;
+  const {user, loadingUser} = useAuth();
+  const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!loading && user?.uid) {
+    setLoadingRecipes(true);
+    if (!loadingUser && user2Show?.uid) {
       const unsubscribe = subscribeToUsersRecipes(({ recipes, count }) => {
-      setRecipes(recipes);
-      setRecipesCount(count);
-    }, itemsLimit, user.uid);
-    return () => unsubscribe();
+        setRecipes(recipes);
+        setRecipesCount(count);
+      }, itemsLimit, user2Show.uid);
+      setLoadingRecipes(false);
+      return () => unsubscribe();
     }
-  }, [loading, user, itemsLimit]);
+  }, [loadingUser, user2Show, itemsLimit]);
 
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);
@@ -54,8 +56,11 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
       content: "Not implemented yet",
     });
   }
-  
-    return (
+
+  if(loadingUser)
+    return <LoadingComponent/>
+
+  return (
     <>
         <View style={globalStyles.contentContainer}>
           <View
@@ -73,21 +78,21 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
             ]}
           >
             <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'center', gap: '10%'}, globalStyles.centerElement]}>
-              {user?.uid == currentUser?.uid ?
+              {user?.uid == user2Show?.uid ?
               <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> 
               :
               <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting}
             />}
             </View>
             <View>
-              {user?.avatarUrl ? 
-              <Avatar source={{ uri: user.avatarUrl }} />
+              {user2Show?.avatarUrl ? 
+              <Avatar source={{ uri: user2Show.avatarUrl }} />
               : 
               <Avatar source={require('@/assets/images/icons/def_avatar.png')} />
               }
             </View>
-            <TextXXL>{user?.username}!</TextXXL>
-            <TextM>{textData.profileScreen.text1} {user?.createdAt?.toDate().toLocaleDateString()}!</TextM>
+            <TextXXL>{user2Show?.username}!</TextXXL>
+            <TextM>{textData.profileScreen.text1} {user2Show?.createdAt?.toDate().toLocaleDateString()}!</TextM>
             <View
               style={{
                 flexDirection: 'row',
@@ -125,23 +130,28 @@ const UserProfile: React.FC<UserProfileProps> = ({user,loading}) => {
                 <TextM>0</TextM>
               </View>
             </View>
-            {user?.uid == currentUser?.uid 
+            {user?.uid == user2Show?.uid 
             ? 
             <TextM>{textData.profileScreen.text4}</TextM>
             :
-            <TextM>{user?.username}{textData.profileScreen.text5}</TextM>
+            <TextM>{user2Show?.username}{textData.profileScreen.text5}</TextM>
             }
           </View>
         </View>
-        <FlatList
-          style={{width: '100%', flex: 1, marginTop: 10}}
-          data={recipes}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <RecipeCard recipe={item} />}
-          onEndReached={loadMoreRecipes}
-          onEndReachedThreshold={0.1}
-        >
-        </FlatList>
+        {
+        loadingRecipes 
+        ?
+          <LoadingComponent/>
+        :
+          <FlatList
+            style={{width: '100%', flex: 1, marginTop: 10}}
+            data={recipes}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <RecipeCard recipe={item} />}
+            onEndReached={loadMoreRecipes}
+            onEndReachedThreshold={0.1}
+          />
+        }
       </>
   )
 }

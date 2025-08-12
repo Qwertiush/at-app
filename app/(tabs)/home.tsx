@@ -11,24 +11,28 @@ import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View } from 'react-native';
-import { subscribeToFilteredRecipes, subscribeToRecipes } from '../firebase/firebaseDB';
+import { subscribeToFilteredRecipes, subscribeToRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 //TODO when user deleted - (change recipes/comments - to "user deleted")
 const Home = () => {
-  const {user, loading} = useAuth();
+  const {user, loadingUser} = useAuth();
   const {textData, themeData} = useContext(UserPrefsContext);
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true)
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
+    setLoadingRecipes(true);
     if(searchQuery != ''){
       const unsubscribe = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
+      setLoadingRecipes(false);
       return () => unsubscribe(); 
     }
     const unsubscribe = subscribeToRecipes(setRecipes,itemsLimit);
+      setLoadingRecipes(false);
       return () => unsubscribe(); 
   }, [itemsLimit, searchQuery]);
 
@@ -36,7 +40,12 @@ const Home = () => {
     setItemsLimit((prev) => prev + 10);
   }
 
-  if (loading) return <LoadingComponent/>;
+  if (loadingUser)
+     return (
+     <ContentContainer>
+      <LoadingComponent/>
+    </ContentContainer>
+    );
 
   return (
     
@@ -85,24 +94,30 @@ const Home = () => {
           </View>
         </View>
       </KeyboardAvoidingView>
-      <FlatList
-        style={[{width: '100%', paddingTop: 180}]}
-        data={recipes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
-        onEndReached={loadMoreRecipes}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={
-          <TextM style={{
-            paddingTop: 10,
-            paddingBottom: 200,
-            alignSelf: 'center',
-          }}>
-            {textData.homeScreen.text1}
-          </TextM>
-        }
-        >
-      </FlatList>
+      {
+        loadingRecipes
+        ?
+        <LoadingComponent/>
+        :
+        <FlatList
+          style={[{width: '100%', paddingTop: 180}]}
+          data={recipes}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <RecipeCard recipe={item} />}
+          onEndReached={loadMoreRecipes}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={
+            <TextM style={{
+              paddingTop: 10,
+              paddingBottom: 200,
+              alignSelf: 'center',
+            }}>
+              {textData.homeScreen.text1}
+            </TextM>
+          }
+          >
+        </FlatList>
+      }
     </ContentContainer>
   )
 }

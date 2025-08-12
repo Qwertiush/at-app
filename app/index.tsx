@@ -7,7 +7,7 @@ import { useContext, useEffect } from 'react';
 import { Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from '../components/CustomButton';
-import { AUTH } from './firebase/FirebaseConfig';
+import { AUTH } from '../firebase/FirebaseConfig';
 import globalStyles, { default as styles } from './Styles/global-styles.js';
 
 export default function App() {

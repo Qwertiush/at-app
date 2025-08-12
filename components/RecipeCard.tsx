@@ -1,8 +1,8 @@
 
-import { getUserProfile } from '@/app/firebase/firebaseDB';
 import globalStyles from '@/app/Styles/global-styles';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { getUserProfile } from '@/firebase/firebaseDB';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
 import { router } from 'expo-router';
