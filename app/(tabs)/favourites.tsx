@@ -22,12 +22,12 @@ const Favourites = () => {
   const {user, loadingUser} = useAuth();
 
   useEffect(() => {
-    if(!loadingUser && user){
+    if(!loadingUser && user?.uid){
       const unsubscribe = subscribeToLikedRecipes(setRecipes,user?.uid,itemsLimit);
       setLoadingRecipes(false);
       return () => unsubscribe();
     }
-  }, [loadingUser, itemsLimit]);
+  }, [user, itemsLimit]);
 
     const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);

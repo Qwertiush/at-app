@@ -34,7 +34,6 @@ const Content = () => {
   const addUpVote = async () => {
     setIsSubmitting(true);
     if(reacted != -1){
-      alert("You arleady added reaction to this.")
       setIsSubmitting(false);
       return;
     }
@@ -120,7 +119,7 @@ const Content = () => {
     }
 
     checkIfReacted();
-  }, [reload, recipeId, user?.uid]);
+  }, [reload, recipeId, user]);
 
   if (loadingUser || !recipe) return (
     <ContentContainer>
@@ -165,7 +164,7 @@ const Content = () => {
           <TextXXL style={styles.title} >{recipe.title}</TextXXL>
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-              <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? 'Unknown'}</TextXS>
+              <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text1}{userRecipeContext?.username ?? textData.recipeScreen.userNotFound}</TextXS>
               <TextXS style={{color: themeData.text2}}>{textData.recipeScreen.text2}{formatDate(recipe.createdAt)}</TextXS>
             </View>
             <View>

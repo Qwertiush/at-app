@@ -1,5 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/CustomPrymitives/FormField';
+import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { User } from '@/models/User';
 import { Link, router } from 'expo-router';
@@ -11,6 +12,9 @@ import globalStyles from '../Styles/global-styles';
 
 const SignUp = () => {
   const {textData, themeData} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [form, setForm] = useState({
     email:'',
@@ -23,7 +27,7 @@ const SignUp = () => {
   const submitForm = () => {
     signUp();
   }
-
+  //TODO better validation
   const signUp = async () => {
     setIsSubmitting(true);
     try{
@@ -39,10 +43,16 @@ const SignUp = () => {
 
       createUserProfile(user);
 
-      alert('Sign up successful');
+      showPopup({
+        title: textData.signUpSuccessPopup.title,
+        content: textData.signUpSuccessPopup.content
+      });
       router.push('/sign-in');
     }catch(error) {
-      alert('Sign up failed: ' + error);
+      showPopup({
+        title: textData.signUpFailPopup.title,
+        content: textData.signUpFailPopup.content + error
+      });
     }finally{
       setIsSubmitting(false);
     }

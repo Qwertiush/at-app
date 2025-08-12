@@ -21,7 +21,7 @@ const Settings = () => {
   const {lang, textData, setLang, theme, themeData, setTheme} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
-  const {user, loading} = useAuth();
+  const {user, loadingUser} = useAuth();
 
   const handleLoggingOut = () => {
     showPopup({
@@ -87,7 +87,11 @@ const Settings = () => {
     });
   }
 
-  if (loading) return <LoadingComponent/>;
+  if (loadingUser) return (
+    <ContentContainer>
+      <LoadingComponent/>
+    </ContentContainer>
+    );
 
   return (
     <ContentContainer>

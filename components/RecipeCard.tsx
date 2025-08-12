@@ -73,7 +73,7 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
       <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-          <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeCard.text1}{user?.username ?? 'Unknown'}</Text>
+          <Text style={[styles.meta,{color: themeData.text2}]}>{textData.recipeCard.text1}{user?.username ?? textData.recipeCard.userNotFound}</Text>
           <Text style={[styles.meta,{color: themeData.text2}]}>
             {textData.recipeCard.text2}{formatDate(recipe.createdAt)}
           </Text>

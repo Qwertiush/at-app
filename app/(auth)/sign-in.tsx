@@ -1,4 +1,5 @@
 import CustomButton from '@/components/CustomButton'
+import TextM from '@/components/CustomPrymitives/Text/TextM'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Link, router } from 'expo-router'
 import React, { useContext, useState } from 'react'
@@ -9,6 +10,8 @@ import globalStyles from '../Styles/global-styles'
 
 const SignIn = () => {
   const {textData, themeData} = useContext(UserPrefsContext);
+
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [form, setForm] = useState({
     email:'',
@@ -25,10 +28,11 @@ const SignIn = () => {
     setIsSubmitting(true);
     try{
       const response = await loginUser(form.email, form.password);
+      setErrorMessage('');
       router.push('/(tabs)/home');
     }catch(error) {
-      console.error('Error signing in:', error);
-      alert('X( Sign in failed: ' + error);
+      const message = error instanceof Error ? error.message : String(error);
+      setErrorMessage(message);
     }finally {
       setIsSubmitting(false);
     }
@@ -58,6 +62,13 @@ const SignIn = () => {
                 tintColor={themeData.text1}
               />
             </View>
+            {
+              errorMessage != ''
+            ?
+              <TextM style={{color: themeData.error}}>{textData.signInScreen.errorMessage}</TextM>
+            :
+              <></>
+            }
             <FormField title={textData.signInScreen.emailPlaceholderText} value={form.email} handleChangeText={(e)=>setForm({...form, email: e})} keyboardType="email-address" />
             <FormField title={textData.signInScreen.passwordPlaceholderText} value={form.password} handleChangeText={(e)=>setForm({...form, password: e})} keyboardType="password" />
             <CustomButton text={textData.signInScreen.button} handlePress={submitForm} isLoading={isSubmitting}/>

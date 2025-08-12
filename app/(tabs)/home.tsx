@@ -13,7 +13,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View } from 'react-native';
 import { subscribeToFilteredRecipes, subscribeToRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
-//TODO when user deleted - (change recipes/comments - to "user deleted")
+
 const Home = () => {
   const {user, loadingUser} = useAuth();
   const {textData, themeData} = useContext(UserPrefsContext);
@@ -26,6 +26,11 @@ const Home = () => {
 
   useEffect(() => {
     setLoadingRecipes(true);
+    if(!user?.uid){
+      setLoadingRecipes(false);
+      return;
+    }
+    
     if(searchQuery != ''){
       const unsubscribe = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
       setLoadingRecipes(false);
@@ -34,7 +39,7 @@ const Home = () => {
     const unsubscribe = subscribeToRecipes(setRecipes,itemsLimit);
       setLoadingRecipes(false);
       return () => unsubscribe(); 
-  }, [itemsLimit, searchQuery]);
+  }, [itemsLimit, searchQuery, user]);
 
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);

@@ -96,7 +96,7 @@ const Create = () => {
 
   const SubmitForm = async () => {
     try {
-      if (!user) {
+      if (!user?.uid) {
         showPopup({
           title: textData.notLoggedInPopup.title,
           content: textData.notLoggedInPopup.content,

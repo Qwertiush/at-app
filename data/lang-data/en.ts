@@ -13,7 +13,9 @@ export default {
         button: 'Sign In',
 
         text1: "Don't have an account yet? ",
-        text2: 'Sign up.'
+        text2: 'Sign up.',
+
+        errorMessage: 'Wrong e-mail or password.'
     },
     signUpScreen: {
         header1: 'Create your ',
@@ -70,6 +72,8 @@ export default {
         text2: 'Created:',
         text3: 'Ingredients:',
         text4: 'Steps:',
+
+        userNotFound: 'User removed',
     },
     commentsScreen: {
         commentPlaceholderText: 'Comment...',
@@ -77,18 +81,31 @@ export default {
     commentCard:{
         text1: 'By ',
         text2: 'Created: ',
+
+        userNotFound: 'User removed',
     },
     recipeCard:{
         text1: 'By ',
         text2: 'Created: ',
         text3: 'Ingredients:',
+
+        userNotFound: 'User removed',
     },
-    //popups crate screen
     popupDefault:{
         buttonConfirm: "Yes",
         buttonNotConfirm: "No",
         buttonInfo: "Close"
     },
+    //popup sign-up screen
+    signUpFailPopup:{
+        title: 'Error while creating account.',
+        content: 'Error: '
+    },
+    signUpSuccessPopup:{
+        title: 'Success.',
+        content: 'Your account have been created. Log in to the app.'
+    },
+    //popups crate screen
     addingRecipePopup:{
         title: 'Confirm action.',
         content: 'Do You really want to add this recipe?'
@@ -140,6 +157,11 @@ export default {
         content: "Pick the image.",
 
         button: "Pick",
+    },
+    //popups (recipe)commentsScreen
+    validateCommentPopup:{
+        title: "Upss...",
+        content: "Comment can't be MT.",
     },
     //Themes
     themesText:[

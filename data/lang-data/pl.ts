@@ -13,7 +13,9 @@ export default {
         button: 'Zaloguj',
 
         text1: 'Nie masz jeszcze konta? ',
-        text2: 'Zarejestruj się.'
+        text2: 'Zarejestruj się.',
+
+        errorMessage: 'Błędny e-mail lub hasło.'
     },
     signUpScreen:{
         header1: 'Załóż swoje ',
@@ -26,7 +28,7 @@ export default {
         button: 'Zarejestruj się',
 
         text1: 'Masz już konto? ',
-        text2: 'Zaloguj się.'
+        text2: 'Zaloguj się.',
     },
     homeScreen: {
         header: 'Co nowego w ',        
@@ -70,6 +72,8 @@ export default {
         text2: 'Dodano: ',
         text3: 'Składniki:',
         text4: 'Kroki:',
+
+        userNotFound: 'Użytkownik usunięty',
     },
     commentsScreen: {
         commentPlaceholderText: 'Napisz komentarz...',
@@ -77,18 +81,31 @@ export default {
     commentCard:{
         text1: 'Napisał ',
         text2: 'Dodano: ',
+
+        userNotFound: 'Użytkownik usunięty',
     },
     recipeCard:{
         text1: 'Wykonał ',
         text2: 'Dodano: ',
         text3: 'Składniki:',
+
+        userNotFound: 'Użytkownik usunięty',
     },
-    //popups crateScreen
     popupDefault:{
         buttonConfirm: "Tak",
         buttonNotConfirm: "Nie",
         buttonInfo: "Zamknij"
     },
+    //popup sign-up screen
+    signUpFailPopup:{
+        title: 'Błąd podczas zakładania konta.',
+        content: 'Błąd: '
+    },
+    signUpSuccessPopup:{
+        title: 'Sukces.',
+        content: 'Twoje konto zostało założone. Zaloguj się do aplikacji.'
+    },
+    //popups crateScreen
     addingRecipePopup:{
         title: 'Zatwierdź akcję.',
         content: 'Czy na pewno chcesz dodać ten przepis?'
@@ -140,6 +157,11 @@ export default {
         content: "Wybierz zdjęcie.",
 
         button: "Wybierz"
+    },
+    //popups (recipe)commentsScreen
+    validateCommentPopup:{
+        title: "Upss...",
+        content: "Komentarz nie może być pusty.",
     },
     //Themes
     themesText:[

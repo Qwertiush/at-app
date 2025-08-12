@@ -3,12 +3,13 @@ import ContentContainer from '@/components/ContentContainer'
 import CustomIconButton from '@/components/CustomIconButton'
 import FormField from '@/components/CustomPrymitives/FormField'
 import LoadingComponent from '@/components/LoadingComponent'
+import { usePopup } from '@/contexts/PopUpContext'
 import { RecipeContext } from '@/contexts/RecipeContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { useAuth } from '@/hooks/useAuth'
 import { RecipeComment } from '@/models/Comment'
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, FlatList, KeyboardAvoidingView, View } from 'react-native'
+import { FlatList, KeyboardAvoidingView, View } from 'react-native'
 import { addComment, subscribeToCommentsByRecipeId } from '../../firebase/firebaseDB'
 import globalStyles, { colors } from '../Styles/global-styles'
 
@@ -20,6 +21,7 @@ const Comments = () => {
   const {user, loadingUser} = useAuth();
   const { recipeId } = useContext(RecipeContext);
   const {textData, themeData} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
 
   const [itemsLimit, setItemsLimit] = useState(10); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
@@ -33,12 +35,12 @@ const Comments = () => {
 
   useEffect(() => {
     setLoadingComments(true);
-    if(recipeId){
+    if(recipeId && user?.uid && user){
       const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipeId);
       setLoadingComments(false);
       return () => unsubscribe(); 
     }
-  }, [itemsLimit, recipeId]);
+  }, [itemsLimit, recipeId, user]);
 
   const loadMoreComments = () => {
     setItemsLimit((prev) => prev + 10);
@@ -49,7 +51,10 @@ const Comments = () => {
     const {content} = newComment;
     
     if (!content.trimEnd()) {
-      Alert.alert("comment can't be mt!");
+      showPopup({
+      title: textData.validateCommentPopup.title,
+      content: textData.validateCommentPopup.content,
+    });
       setIsSubmitting(false);
       return;
     }

@@ -33,7 +33,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
 
   useEffect(() => {
     setLoadingRecipes(true);
-    if (!loadingUser && user2Show?.uid) {
+    if (!loadingUser && user2Show?.uid && user) {
       const unsubscribe = subscribeToUsersRecipes(({ recipes, count }) => {
         setRecipes(recipes);
         setRecipesCount(count);
@@ -41,7 +41,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
       setLoadingRecipes(false);
       return () => unsubscribe();
     }
-  }, [loadingUser, user2Show, itemsLimit]);
+  }, [user, user2Show, itemsLimit]);
 
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + 10);

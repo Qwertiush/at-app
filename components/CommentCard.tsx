@@ -46,7 +46,7 @@ const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
     <View style={[styles.card, {backgroundColor: themeData.bc2, shadowColor: themeData.bc2}]}>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column'}, globalStyles.centerElement]}>
-          <Text style={[styles.meta,{color: themeData.text2}]}>{textData.commentCard.text1}{user?.username ?? 'Unknown'}</Text>
+          <Text style={[styles.meta,{color: themeData.text2}]}>{textData.commentCard.text1}{user?.username ?? textData.commentCard.userNotFound}</Text>
           <Text style={[styles.meta,{color: themeData.text2}]}>
             {textData.commentCard.text2}{formatDate(comment.createdAt)}
           </Text>

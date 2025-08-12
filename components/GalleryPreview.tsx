@@ -15,7 +15,6 @@ const GalleryPreview: React.FC<GalleryPreviewProps> = ({pictures, onRemovePictur
   return (
     <View style={[styles.container, {backgroundColor: themeData.bc}]}>
         {pictures.map((pic, index) => {
-            console.log(pic);
            return (
             <ImageBackground
                 key={index}
