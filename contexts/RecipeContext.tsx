@@ -1,4 +1,5 @@
 import { subscribeToRecipeById } from '@/firebase/firebaseDB';
+import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
 import React, { createContext, useEffect, useState } from 'react';
@@ -22,16 +23,18 @@ export const RecipeContext = createContext<RecipeContextType>({
 });
 
 export const RecipeProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  const {user} = useAuth();
+
   const [recipeId, setRecipeId] = useState<string | null>(null);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [userRecipeContext, setUserRecipecontext] = useState<User | null>(null);
 
   useEffect(() => {
-    if(recipeId != null){
+    if(recipeId != null && user){
       const unsubscribe = subscribeToRecipeById(setRecipe, recipeId);
       return () => unsubscribe();
     }
-  }, [recipeId]);
+  }, [recipeId, user]);
   
 
   return (

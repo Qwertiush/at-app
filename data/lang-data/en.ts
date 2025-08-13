@@ -57,6 +57,7 @@ export default {
         changePicText: 'Change profile pic',
         changeLanguageTxt: 'Change language',
         changeThemeTxt: 'Change theme',
+        appInfoTxt: 'Application info',
     },
     favouritesScreen: {
         header1: 'Your favourite ',
@@ -182,6 +183,10 @@ export default {
         content: "Pick the image.",
 
         button: "Pick",
+    },
+    appInformationsPopUp:{
+        title: "AT app 1.0",
+        content: "Created by: Paweł Rycerz.",
     },
     //popups (recipe)commentsScreen
     validateCommentPopup:{

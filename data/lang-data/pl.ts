@@ -57,6 +57,7 @@ export default {
         changePicText: 'Zmień zdjęcie profilowe',
         changeLanguageTxt: 'Zmień język',
         changeThemeTxt: 'Zmień motyw',
+        appInfoTxt: 'Informacje o aplikacji',
     },
     favouritesScreen: {
         header1: 'Twoje ulubione ',
@@ -182,6 +183,10 @@ export default {
         content: "Wybierz zdjęcie.",
 
         button: "Wybierz"
+    },
+    appInformationsPopUp:{
+        title: "AT app 1.0",
+        content: "Twórca: Paweł Rycerz.",
     },
     //popups (recipe)commentsScreen
     validateCommentPopup:{

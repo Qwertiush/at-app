@@ -87,6 +87,13 @@ const Settings = () => {
     });
   }
 
+  const handleShowingInfo = () => {
+    showPopup({
+      title: textData.appInformationsPopUp.title,
+      content: textData.appInformationsPopUp.content,
+    });
+  }
+
   if (loadingUser) return (
     <ContentContainer>
       <LoadingComponent/>
@@ -109,6 +116,7 @@ const Settings = () => {
             <CustomButton text={textData.settingsScreen.changePicText} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleChangingAvatar}/>
             <CustomButton text={textData.settingsScreen.changeLanguageTxt} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleChangingLanguage}/>
             <CustomButton text={textData.settingsScreen.changeThemeTxt} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleChangingTheme}/>
+            <CustomButton text={textData.settingsScreen.appInfoTxt} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleShowingInfo}/>
           </View>
         </ScrollView>
       </View>
