@@ -13,9 +13,9 @@ import { subscribeToLikedRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 
 const Favourites = () => {
-  const {textData, themeData} = useContext(UserPrefsContext);
+  const {textData, themeData, listLimit} = useContext(UserPrefsContext);
 
-  const [itemsLimit, setItemsLimit] = useState(10); 
+  const [itemsLimit, setItemsLimit] = useState(listLimit); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true)
 
@@ -30,7 +30,7 @@ const Favourites = () => {
   }, [user, itemsLimit]);
 
     const loadMoreRecipes = () => {
-    setItemsLimit((prev) => prev + 10);
+    setItemsLimit((prev) => prev + listLimit);
   }
 
   if(loadingUser || loadingRecipes){
@@ -40,6 +40,9 @@ const Favourites = () => {
       </ContentContainer>
     );
   }
+
+  console.log(itemsLimit);
+  
 
   return (
     <>

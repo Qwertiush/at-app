@@ -22,10 +22,10 @@ type CommentState = {
 const Comments = () => {
   const {user, loadingUser} = useAuth();
   const { recipeId } = useContext(RecipeContext);
-  const {textData, themeData} = useContext(UserPrefsContext);
+  const {textData, themeData, listLimit} = useContext(UserPrefsContext);
   const {showPopup} = usePopup();
 
-  const [itemsLimit, setItemsLimit] = useState(10); 
+  const [itemsLimit, setItemsLimit] = useState(listLimit); 
   const [comments, setComments] = useState<RecipeComment[]>([]);
   const [loadingComments, setLoadingComments] = useState<boolean>(true);
 

@@ -143,7 +143,6 @@ const Create = () => {
           title: textData.addinngRecipeSuccessPopup.title,
           content: textData.addinngRecipeSuccessPopup.content,
       });
-      
       setForm({ title: '', description: '', ingredientsInput: '', stepsInput: '' });
     } catch (error: any) {
       console.error('Error while saving recipe:', error);

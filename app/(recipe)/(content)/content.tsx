@@ -88,8 +88,8 @@ const Content = () => {
 
   const deleteRecipe = async () => {
     try{
-      if(recipeId){
-        await deleteRecipeById(recipeId);
+      if(recipeId && user){
+        await deleteRecipeById(recipeId, user.uid);
         showPopup({
           title: textData.deleteRecipeSuccess.title,
           content: textData.deleteRecipeSuccess.content,

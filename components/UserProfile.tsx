@@ -23,14 +23,14 @@ type UserProfileProps = {
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
-  
-  const [itemsLimit, setItemsLimit] = useState(10); 
+  const {textData, themeData, listLimit} = useContext(UserPrefsContext);
+  const {showPopup} = usePopup();
+  const {user, loadingUser} = useAuth();
+
+  const [itemsLimit, setItemsLimit] = useState(listLimit); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
-  const {textData, themeData} = useContext(UserPrefsContext);
-  const {showPopup} = usePopup();
-
-  const {user, loadingUser} = useAuth();
+  
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true);
 
   useEffect(() => {
@@ -45,8 +45,11 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
     }
   }, [user, user2Show, itemsLimit]);
 
+  console.log(itemsLimit);
+  
+
   const loadMoreRecipes = () => {
-    setItemsLimit((prev) => prev + 10);
+    setItemsLimit((prev) => prev + listLimit);
   }
 
   const handleSettingsPress = () => {
@@ -127,7 +130,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
                   dimentions={{width: 30, height: 30}}
                 />
                 <TextM>{textData.profileScreen.text2}</TextM>
-                <TextM>{recipesCount}</TextM>
+                <TextM>{user2Show.nrOfRecipes}</TextM>
               </View>
               <View
                 style={{
@@ -141,7 +144,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
                   dimentions={{width: 30, height: 30}}
                 />
                 <TextM>{textData.profileScreen.text3}</TextM>
-                <TextM>0</TextM>
+                <TextM>{user2Show.likes}</TextM>
               </View>
             </View>
             {user?.uid == user2Show?.uid 

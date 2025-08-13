@@ -6,4 +6,6 @@ export type User = {
     email: string;
     avatarUrl?: string;
     createdAt?: Timestamp;
+    nrOfRecipes?: number;
+    likes?: number;
 }

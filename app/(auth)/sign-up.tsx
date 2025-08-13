@@ -38,7 +38,9 @@ const SignUp = () => {
         uid: firebaseuser.uid,
         username: form.username,
         email: form.email,
-        avatarUrl: ''
+        avatarUrl: '',
+        nrOfRecipes: 0,
+        likes: 0
       }
 
       createUserProfile(user);

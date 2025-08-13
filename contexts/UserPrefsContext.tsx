@@ -14,6 +14,8 @@ type UserPrefsContextType = {
   theme: keyof typeof themes;
   themeData: ThemeData;
   setTheme: (theme: keyof typeof themes) => void;
+
+  listLimit: number
 };
 
 export const UserPrefsContext = createContext<UserPrefsContextType>({
@@ -24,6 +26,8 @@ export const UserPrefsContext = createContext<UserPrefsContextType>({
   theme: 'dark',
   themeData: themes.dark,
   setTheme: () => {},
+
+  listLimit: 5
 });
 
 export const UserPrefsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -32,6 +36,8 @@ export const UserPrefsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const textData = languages[lang];
   const themeData = themes[theme];
+
+  const listLimit = 5;
 
   useEffect(() => {
     const fetchUserPrefs = () => {
@@ -44,7 +50,7 @@ export const UserPrefsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, []);
 
   return (
-    <UserPrefsContext.Provider value={{ lang, textData, setLang, theme, themeData, setTheme }}>
+    <UserPrefsContext.Provider value={{ lang, textData, setLang, theme, themeData, setTheme, listLimit }}>
       {children}
     </UserPrefsContext.Provider>
   );

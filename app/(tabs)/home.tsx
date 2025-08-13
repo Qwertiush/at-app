@@ -11,57 +11,79 @@ import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
-import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { FlatList, InteractionManager, KeyboardAvoidingView, View } from 'react-native';
 import { getUsersByName, subscribeToFilteredRecipes, subscribeToRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 
 const Home = () => {
-  const {user, loadingUser} = useAuth();
-  const {textData, themeData} = useContext(UserPrefsContext);
+  const { user, loadingUser } = useAuth();
+  const { textData, themeData, listLimit: defaultLimit } = useContext(UserPrefsContext);
 
-  const [itemsLimit, setItemsLimit] = useState(10);
+  const [itemsLimit, setItemsLimit] = useState(defaultLimit);
+  const [usersLimit, setUsersLimit] = useState(defaultLimit);
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true)
+  const [loadingRecipes, setLoadingRecipes] = useState(true);
 
   const [users, setUsers] = useState<User[]>([]);
-  const [loadingUsers, setLoadingUsers] = useState<boolean>(true)
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const usersListRef = useRef<FlatList<User>>(null);
+  const recipesListRef = useRef<FlatList<Recipe>>(null);
+
+  useEffect(()=>{
+    setItemsLimit(defaultLimit);
+    setUsersLimit(defaultLimit);
+
+    InteractionManager.runAfterInteractions(() => {
+      usersListRef.current?.scrollToOffset({ offset: 0, animated: true });
+      recipesListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    });
+  },[searchQuery])
 
   useEffect(() => {
     setLoadingRecipes(true);
-    setLoadingUsers(true);
-    if(!user?.uid){
-      return;
-    }
-    
-    if(searchQuery != ''){
-      const unsubscribeRecipes = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
+    if (!user?.uid) return;
+
+    let unsubscribeRecipes: () => void = () => {};
+    let unsubscribeUsers: () => void = () => {};
+
+    if (searchQuery.trim() !== '') {
+      setLoadingRecipes(true);
+      setLoadingUsers(true);
+
+      unsubscribeRecipes = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
       setLoadingRecipes(false);
 
-      const unsubscribeUsers = getUsersByName(setUsers,searchQuery, itemsLimit);
+      unsubscribeUsers = getUsersByName(setUsers,searchQuery, usersLimit);
       setLoadingUsers(false);
 
-      return () => {
-        unsubscribeRecipes();
-        unsubscribeUsers();
-      };
+    } else {
+      setLoadingRecipes(true);
+      unsubscribeRecipes = subscribeToRecipes(setRecipes,itemsLimit);
+      setLoadingRecipes(false);
+
+      setUsers([]);
+      setLoadingUsers(false);
     }
-    const unsubscribeRecipies = subscribeToRecipes(setRecipes,itemsLimit);
-    setLoadingRecipes(false);
-    const  unsubscribeUsers = setUsers([]);
-    setLoadingUsers(false);
     
-    return () => {
-      unsubscribeRecipies();
-    }; 
-  }, [itemsLimit, searchQuery, user]);
+    return () => {      
+      unsubscribeRecipes();
+      unsubscribeUsers();
+    };
+  }, [itemsLimit, usersLimit, searchQuery, user]);
 
   const loadMoreRecipes = () => {
-    setItemsLimit((prev) => prev + 10);
-  }
+    setItemsLimit(prev => prev + defaultLimit);
+  };
+
+  const loadMoreUsers= () => {
+    setUsersLimit(prev => prev + defaultLimit);
+  };
+
 
   if (loadingUser)
      return (
@@ -118,27 +140,38 @@ const Home = () => {
         </View>
       </KeyboardAvoidingView>
       {
-        loadingUsers
+        loadingUsers || users.length <= 0
         ?
-        <LoadingComponent/>
+        <></>
         :
         <FlatList
+          ref={usersListRef}
           style={[{width: '100%', paddingTop: 200}]}
           data={users}
           keyExtractor={(item) => item.uid}
           renderItem={({ item }) => <UserCard user={item}/>}
-          onEndReached={loadMoreRecipes}
+          onEndReached={loadMoreUsers}
           onEndReachedThreshold={0.1}
+          ListFooterComponent={
+            <TextM style={{
+              paddingTop: 10,
+              paddingBottom: 220,
+              alignSelf: 'center',
+            }}>
+              {textData.homeScreen.text1}
+            </TextM>
+          }
           >
         </FlatList>
       }
       {
-        loadingRecipes
+        loadingRecipes || recipes.length <= 0
         ?
-        <LoadingComponent/>
+        <></>
         :
         <FlatList
-          style={[{width: '100%'}]}
+          ref={recipesListRef}
+          style={[{width: '100%', paddingTop: 200}]}
           data={recipes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <RecipeCard recipe={item} />}
@@ -147,7 +180,7 @@ const Home = () => {
           ListFooterComponent={
             <TextM style={{
               paddingTop: 10,
-              paddingBottom: 200,
+              paddingBottom: 220,
               alignSelf: 'center',
             }}>
               {textData.homeScreen.text1}

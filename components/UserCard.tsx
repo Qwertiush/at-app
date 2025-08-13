@@ -24,7 +24,7 @@ const UserCard: React.FC<{user: User}>= ({user}) => {
   }
 
   return (
-    <TouchableOpacity style={[{width: '95%', alignSelf: 'center', padding: 10 ,backgroundColor: themeData.bc2, shadowColor: themeData.bc2, borderRadius: 20}]} onPress={handleOnUserPress}>
+    <TouchableOpacity style={[{marginTop: 20, width: '95%', alignSelf: 'center', padding: 10 ,backgroundColor: themeData.bc2, shadowColor: themeData.bc2, borderRadius: 20}]} onPress={handleOnUserPress}>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column', alignSelf: 'center'}]}>
           <TextS style={[{color: themeData.text2}]}>{user?.username ?? textData.recipeCard.userNotFound}</TextS>

@@ -97,6 +97,10 @@ export const addRecipe = async (recipe: CreateRecipeInput) => {
       ...recipe,
       createdAt: serverTimestamp(),
     });
+    const userRef = doc(DB,'users',recipe.authorId);
+    await updateDoc(userRef, {
+      nrOfRecipes: increment(1)
+    });
     return docRef.id;
   } catch (e) {
     console.error("Error adding recipe: ", e);
@@ -253,7 +257,7 @@ export const subscribeToLikedRecipes = (
   );
 };
 
-export const deleteRecipeById = async (id: string): Promise<void> => {
+export const deleteRecipeById = async (id: string, userId: string): Promise<void> => {
   const commentsQuery = query(collection(DB, "comments"), where("recipeId", "==", id));
   const commentsSnapshot = await getDocs(commentsQuery);
   const commentDeletions = commentsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "comments", docu.id)));
@@ -261,6 +265,11 @@ export const deleteRecipeById = async (id: string): Promise<void> => {
   const reactionsQuery = query(collection(DB, "reactions"), where("recipeId", "==", id));
   const reactionsSnapshot = await getDocs(reactionsQuery);
   const reactionDeletions = reactionsSnapshot.docs.map((docu) => deleteDoc(doc(DB, "reactions", docu.id)));
+
+  const userRef = doc(DB,'users',userId);
+    await updateDoc(userRef, {
+      nrOfRecipes: increment(-1)
+    });
 
   const recipeDeletion = deleteDoc(doc(DB, "recipes", id));
 
