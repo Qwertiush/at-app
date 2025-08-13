@@ -74,6 +74,7 @@ export default {
         text3: 'Składniki:',
         text4: 'Kroki:',
         text5: 'Edytowano: ',
+        text6: "Wybierz jeden z przepisów tego autora.",
 
         userNotFound: 'Użytkownik usunięty',
     },
@@ -82,6 +83,7 @@ export default {
     },
     commentsScreen: {
         commentPlaceholderText: 'Napisz komentarz...',
+        text1: "Wybierz jeden z przepisów tego autora.",
     },
     commentCard:{
         text1: 'Napisał ',

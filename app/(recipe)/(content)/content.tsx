@@ -4,6 +4,7 @@ import CustomIconButton from '@/components/CustomIconButton';
 import CustomImage from '@/components/CustomPrymitives/CustomImage';
 import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextS from '@/components/CustomPrymitives/Text/TextS';
+import TextXL from '@/components/CustomPrymitives/Text/TextXL';
 import TextXS from '@/components/CustomPrymitives/Text/TextXS';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import GalleryComponent from '@/components/GalleryComponent';
@@ -121,6 +122,14 @@ const Content = () => {
   if (loadingUser || !recipe) return (
     <ContentContainer>
       <LoadingComponent/>
+      <View>
+        <TextXL>{textData.recipeScreen.text6}</TextXL>
+        <CustomImage 
+          source={require('@/assets/images/icons/arrow.png')} 
+          dimentions={{width:50,height:50}}
+          style={{alignSelf: 'flex-end', transform: [{rotate: '-90deg'}]}}
+        />
+      </View>
     </ContentContainer>
   );
 

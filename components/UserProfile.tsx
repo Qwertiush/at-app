@@ -9,9 +9,11 @@ import { router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
 import Avatar from './Avatar'
+import ContentContainer from './ContentContainer'
 import CustomIconButton from './CustomIconButton'
 import CustomImage from './CustomPrymitives/CustomImage'
 import TextM from './CustomPrymitives/Text/TextM'
+import TextXL from './CustomPrymitives/Text/TextXL'
 import TextXXL from './CustomPrymitives/Text/TextXXL'
 import LoadingComponent from './LoadingComponent'
 import RecipeCard from './RecipeCard'
@@ -58,7 +60,19 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
   }
 
   if(loadingUser)
-    return <LoadingComponent/>
+    return (
+      <ContentContainer>
+        <LoadingComponent/>
+      </ContentContainer>  
+    );
+
+  if(user2Show == null){
+    return(
+    <ContentContainer>
+      <TextXL>User has been removed.</TextXL>
+    </ContentContainer> 
+    );
+  }
 
   return (
     <>
@@ -91,8 +105,8 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
               <Avatar source={require('@/assets/images/icons/def_avatar.png')} />
               }
             </View>
-            <TextXXL>{user2Show?.username}!</TextXXL>
-            <TextM>{textData.profileScreen.text1} {user2Show?.createdAt?.toDate().toLocaleDateString()}!</TextM>
+            <TextXXL>{user2Show?.username}</TextXXL>
+            <TextM>{textData.profileScreen.text1} {user2Show?.createdAt?.toDate().toLocaleDateString()}</TextM>
             <View
               style={{
                 flexDirection: 'row',

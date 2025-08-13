@@ -1,7 +1,9 @@
 import CommentCard from '@/components/CommentCard'
 import ContentContainer from '@/components/ContentContainer'
 import CustomIconButton from '@/components/CustomIconButton'
+import CustomImage from '@/components/CustomPrymitives/CustomImage'
 import FormField from '@/components/CustomPrymitives/FormField'
+import TextXL from '@/components/CustomPrymitives/Text/TextXL'
 import LoadingComponent from '@/components/LoadingComponent'
 import { usePopup } from '@/contexts/PopUpContext'
 import { RecipeContext } from '@/contexts/RecipeContext'
@@ -75,10 +77,18 @@ const Comments = () => {
     setIsSubmitting(false);
   }
 
-  if(loadingUser)
+  if(loadingUser || !recipeId)
     return (
       <ContentContainer>
         <LoadingComponent/>
+        <View>
+        <TextXL>{textData.commentsScreen.text1}</TextXL>
+        <CustomImage 
+          source={require('@/assets/images/icons/arrow.png')} 
+          dimentions={{width:50,height:50}}
+          style={{alignSelf: 'flex-end', transform: [{rotate: '-90deg'}]}}
+        />
+      </View>
       </ContentContainer>
     );
 

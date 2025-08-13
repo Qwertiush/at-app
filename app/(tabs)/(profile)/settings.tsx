@@ -106,7 +106,7 @@ const Settings = () => {
         <ScrollView>
           <View style={{width: '100%', height: '100%',}}>
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' , marginBottom: 20}}>
-              <CustomIconButton iconSource={require('@/assets/images/icons/back.png')} style={{ marginTop: 10, marginBottom: 0}} handlePress={ () => router.replace('/profile') }/>
+              <CustomIconButton iconSource={require('@/assets/images/icons/arrow.png')} style={{ marginTop: 10, marginBottom: 0}} handlePress={ () => router.replace('/profile') }/>
               <CustomImage
                 source={require('@/assets/images/icons/logo.png')}
                 dimentions={{width: 50, height: 50}}

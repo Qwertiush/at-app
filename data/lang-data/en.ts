@@ -74,6 +74,7 @@ export default {
         text3: 'Ingredients:',
         text4: 'Steps:',
         text5: 'Edited: ',
+        text6: "Choose one of this author's recipe.",
 
         userNotFound: 'User removed',
     },
@@ -82,6 +83,7 @@ export default {
     },
     commentsScreen: {
         commentPlaceholderText: 'Comment...',
+        text1: "Choose one of this author's recipe.",
     },
     commentCard:{
         text1: 'By ',
