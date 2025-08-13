@@ -12,6 +12,11 @@ const TabsArray = [
     icon: require('../../assets/images/icons/create.png'),
     title: 'Create',
   },
+  {
+    name: 'random',
+    icon: require('../../assets/images/icons/random.png'),
+    title: 'random',
+  },
     {
     name: '(profile)',
     icon: require('../../assets/images/icons/profile.png'),

@@ -1,7 +1,9 @@
+import { DB } from '@/firebase/FirebaseConfig';
 import { subscribeToRecipeById } from '@/firebase/firebaseDB';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
 import { User } from '@/models/User';
+import { doc, onSnapshot } from 'firebase/firestore';
 import React, { createContext, useEffect, useState } from 'react';
 
 type RecipeContextType = {
@@ -30,9 +32,33 @@ export const RecipeProvider: React.FC<{children: React.ReactNode}> = ({ children
   const [userRecipeContext, setUserRecipecontext] = useState<User | null>(null);
 
   useEffect(() => {
+    let unsubscribeRecipe: () => void = () => {};
+    let unsubscribeUser: () => void = () => {};
+
     if(recipeId != null && user){
-      const unsubscribe = subscribeToRecipeById(setRecipe, recipeId);
-      return () => unsubscribe();
+      
+      const unsubscribeRecipe = subscribeToRecipeById(setRecipe, recipeId);
+
+      if (userRecipeContext) {
+        const userRef = doc(DB, "users", userRecipeContext.uid);
+        unsubscribeUser = onSnapshot(userRef, (snapshot) => {
+          if (snapshot.exists()) {
+            setUserRecipecontext({ uid: userRecipeContext.uid, ...snapshot.data() } as User);
+          } else {
+            setUserRecipecontext(null);
+          }
+        });
+        } else {
+          setUserRecipecontext(null);
+          if (unsubscribeUser) {
+            unsubscribeUser();
+          }
+        }
+
+        return () => {
+          unsubscribeRecipe();
+          unsubscribeUser();
+        }
     }
   }, [recipeId, user]);
   

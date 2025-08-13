@@ -65,6 +65,10 @@ export default {
 
         text1: 'To już jest koniec :('
     },
+    randomScreen:{
+        text1: 'Znajdź coś losowego.',
+        text2: 'Nie masz ulubionych przepisów ;('
+    },
     recipeScreen:{
         header1: ' użytkowników lubi ten przepis.',
         header2: ' użytkownik lubi ten przepis.',
@@ -187,7 +191,7 @@ export default {
         button: "Wybierz"
     },
     appInformationsPopUp:{
-        title: "AT app 1.0",
+        title: "AT-app v0.1",
         content: "Twórca: Paweł Rycerz.",
     },
     //popups (recipe)commentsScreen

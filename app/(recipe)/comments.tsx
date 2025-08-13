@@ -45,7 +45,7 @@ const Comments = () => {
   }, [itemsLimit, recipeId, user]);
 
   const loadMoreComments = () => {
-    setItemsLimit((prev) => prev + 10);
+    setItemsLimit((prev) => prev + listLimit);
   }
 
   const handleAddingComment = async () => {

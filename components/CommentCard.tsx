@@ -64,6 +64,7 @@ export default CommentCard
 
 const styles = StyleSheet.create({
   card: {
+    minHeight: 150,
     padding: 16,
     borderRadius: 10,
     margin: 12,

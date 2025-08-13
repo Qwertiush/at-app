@@ -65,6 +65,10 @@ export default {
 
         text1: 'This is the end :('
     },
+    randomScreen:{
+        text1: 'Find something random.',
+        text2: "You don't have favourite recipes ;("
+    },
     recipeScreen: {
         header1: ' users like this recipe.',
         header2: ' user likes this recipe.',
@@ -187,7 +191,7 @@ export default {
         button: "Pick",
     },
     appInformationsPopUp:{
-        title: "AT app 1.0",
+        title: "AT-app v0.1",
         content: "Created by: Paweł Rycerz.",
     },
     //popups (recipe)commentsScreen

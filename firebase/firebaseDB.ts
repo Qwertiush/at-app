@@ -121,7 +121,54 @@ export const editRecipe = async (recipe: EditRecipeInput, recipeId: string) => {
     throw error;
   }
 };
+//TODO better algorythm
+export const getRandomRecipe = async (): Promise<Recipe> => {
+  const snapshot = await getDocs(collection(DB, "recipes"));
+  const allIds = snapshot.docs.map(doc => doc.id);
+  const randomId = allIds[Math.floor(Math.random() * allIds.length)];
 
+  const recipeRef = doc(DB, "recipes", randomId);
+  const snapshotRecipe = await getDoc(recipeRef);
+  const result = {
+    id: randomId,
+    ...snapshotRecipe.data()
+  };
+  return result as Recipe;
+}
+
+export const getRandomFavouriteRecipe = async (authorId: string): Promise<Recipe | null> => {
+  const reactionsRef = collection(DB, "reactions");
+  const q = query(
+    reactionsRef,
+    where("userId", "==", authorId)
+  );
+  const snapshot = await getDocs(q);
+
+  if(snapshot.empty){
+    return null;
+  }
+  
+  const allIds = snapshot.docs.map(doc => doc.data().recipeId);
+
+  if(allIds.length === 0){
+    return null;
+  }
+
+  const randomId = allIds[Math.floor(Math.random() * allIds.length)];
+
+  const recipeRef = doc(DB, "recipes", randomId);
+  const snapshotRecipe = await getDoc(recipeRef);
+
+  if(!snapshotRecipe.exists()){
+    return null;
+  }
+
+  const result = {
+    id: randomId,
+    ...snapshotRecipe.data()
+  };
+  return result as Recipe;
+}
 
 
 export const subscribeToRecipes = (

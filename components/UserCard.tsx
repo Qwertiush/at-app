@@ -24,14 +24,14 @@ const UserCard: React.FC<{user: User}>= ({user}) => {
   }
 
   return (
-    <TouchableOpacity style={[{marginTop: 20, width: '95%', alignSelf: 'center', padding: 10 ,backgroundColor: themeData.bc2, shadowColor: themeData.bc2, borderRadius: 20}]} onPress={handleOnUserPress}>
+    <TouchableOpacity style={[{minHeight: 150 ,marginTop: 20, width: '95%', alignSelf: 'center', padding: 10 ,backgroundColor: themeData.bc2, shadowColor: themeData.bc2, borderRadius: 20}]} onPress={handleOnUserPress}>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={[{flexDirection: 'column', alignSelf: 'center'}]}>
           <TextS style={[{color: themeData.text2}]}>{user?.username ?? textData.recipeCard.userNotFound}</TextS>
           <TextXS style={{color: themeData.text2}}>{textData.userCard.text1}{formatDate(user.createdAt)}</TextXS>
         </View>
         <View>
-          {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
+          {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ minHeight: 130, width: 130 , borderRadius: 70, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ minHeight: 130, width: 130 , borderRadius: 70, borderWidth: 2}}/>}
         </View>
       </View>
     </TouchableOpacity>

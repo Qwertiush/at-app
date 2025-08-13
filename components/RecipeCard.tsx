@@ -68,7 +68,7 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
       ?
       <CustomImage source={{ uri: recipe.pictures?.[0] ?? '' }} dimentions={{width: '100%', height: 200}} removeTint={true} style={{borderRadius: 20}}/>
       :
-      <CustomImage source={require('@/assets/images/picturePlaceholder.png')} dimentions={{width: 100, height: 100}} removeTint={true}/>
+      <CustomImage source={require('@/assets/images/picturePlaceholder.png')} dimentions={{width: '100%', height: 200}} removeTint={true} style={{borderRadius: 20}}/>
       }
       <Text style={[styles.title,{color: themeData.text1}]}>{recipe.title}</Text>
       <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>

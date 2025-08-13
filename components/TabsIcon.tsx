@@ -14,14 +14,14 @@ const TabsIcon: React.FC<TabsIconProps> = ({ icon, name, focused }) => {
   return (
     <View style={{ 
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      alignContent: 'center',
       height: '100%',
       paddingTop: 8,
     }}>
       <Image
         source={icon}
         resizeMode="contain"
-        style={focused ? { width: 40, height: 40 } : { width: 30, height: 30 }}
+        style={focused ? { width: 35, height: 35 } : { width: 30, height: 30 }}
         tintColor={focused ? themeData.highlight: themeData.text2}
       />
       {/*<Text style={focused ?[globalStyles.textXS, { marginTop: 2, color: colors.secondary }]:[globalStyles.textS, { marginTop: 2, color: colors.text2, width: 50,textAlign: 'center' }]}>{name}</Text>*/}
