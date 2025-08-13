@@ -23,8 +23,7 @@ export const formatDate = (ts?: Timestamp | null) => {
 
 const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
   const [user, setUser] = useState<User | null>(null);
-  const {setRecipeId} = useContext(RecipeContext);
-  const {setUserRecipecontext} = useContext(RecipeContext);
+  const {setUserRecipecontext, setRecipeId} = useContext(RecipeContext);
   const {textData, themeData} = useContext(UserPrefsContext);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const RecipeCard: React.FC<{ recipe: Recipe}> = ({ recipe }) => {
   const onPressRecipe = () => {
     setRecipeId(recipe.id);
     setUserRecipecontext(user);
-    router.push('/(recipe)/content')
+    router.push('/(recipe)/(content)/content')
   }
 
   return (

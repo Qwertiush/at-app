@@ -95,6 +95,9 @@ export default {
 
         userNotFound: 'Użytkownik usunięty',
     },
+    userCard:{
+        text1: "Dołączył: ",
+    },
     popupDefault:{
         buttonConfirm: "Tak",
         buttonNotConfirm: "Nie",

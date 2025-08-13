@@ -35,7 +35,7 @@ const Comments = () => {
 
   useEffect(() => {
     setLoadingComments(true);
-    if(recipeId && user?.uid && user){
+    if(recipeId && user?.uid){
       const unsubscribe = subscribeToCommentsByRecipeId(setComments,itemsLimit, recipeId);
       setLoadingComments(false);
       return () => unsubscribe(); 

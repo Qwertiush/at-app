@@ -22,6 +22,28 @@ export const getUserProfile = async (uid: string) => {
   return snapshot.exists() ? snapshot.data() : null;
 };
 
+export const getUsersByName = (
+  onSuccess: (users: User[]) => void,
+  searchQuery: string,
+  limitCount: number
+) => {
+
+  const q = query(
+    collection(DB, "users"),
+    where("username", "==", searchQuery.trim()),
+    limit(limitCount)
+  );
+
+  return onSnapshot(q, (snapshot) => {
+    const userList = snapshot.docs.map((doc) => ({
+      uid: doc.id,
+      ...doc.data(),
+    })) as User[];
+
+    onSuccess(userList);
+  });
+};
+
 export const updateUsersAvatar = async (uid: string, path2Picture: string) =>{
   const userRef = doc(DB, "users", uid);
     await updateDoc(userRef, {

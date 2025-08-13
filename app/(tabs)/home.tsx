@@ -6,39 +6,57 @@ import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import LoadingComponent from '@/components/LoadingComponent';
 import RecipeCard from '@/components/RecipeCard';
+import UserCard from '@/components/UserCard';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
+import { User } from '@/models/User';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, View } from 'react-native';
-import { subscribeToFilteredRecipes, subscribeToRecipes } from '../../firebase/firebaseDB';
+import { getUsersByName, subscribeToFilteredRecipes, subscribeToRecipes } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 
 const Home = () => {
   const {user, loadingUser} = useAuth();
   const {textData, themeData} = useContext(UserPrefsContext);
 
-  const [itemsLimit, setItemsLimit] = useState(10); 
+  const [itemsLimit, setItemsLimit] = useState(10);
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true)
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState<boolean>(true)
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     setLoadingRecipes(true);
+    setLoadingUsers(true);
     if(!user?.uid){
-      setLoadingRecipes(false);
       return;
     }
     
     if(searchQuery != ''){
-      const unsubscribe = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
+      const unsubscribeRecipes = subscribeToFilteredRecipes(setRecipes,searchQuery.toLowerCase(),itemsLimit);
       setLoadingRecipes(false);
-      return () => unsubscribe(); 
+
+      const unsubscribeUsers = getUsersByName(setUsers,searchQuery, itemsLimit);
+      setLoadingUsers(false);
+
+      return () => {
+        unsubscribeRecipes();
+        unsubscribeUsers();
+      };
     }
-    const unsubscribe = subscribeToRecipes(setRecipes,itemsLimit);
-      setLoadingRecipes(false);
-      return () => unsubscribe(); 
+    const unsubscribeRecipies = subscribeToRecipes(setRecipes,itemsLimit);
+    setLoadingRecipes(false);
+    const  unsubscribeUsers = setUsers([]);
+    setLoadingUsers(false);
+    
+    return () => {
+      unsubscribeRecipies();
+    }; 
   }, [itemsLimit, searchQuery, user]);
 
   const loadMoreRecipes = () => {
@@ -100,12 +118,27 @@ const Home = () => {
         </View>
       </KeyboardAvoidingView>
       {
+        loadingUsers
+        ?
+        <LoadingComponent/>
+        :
+        <FlatList
+          style={[{width: '100%', paddingTop: 200}]}
+          data={users}
+          keyExtractor={(item) => item.uid}
+          renderItem={({ item }) => <UserCard user={item}/>}
+          onEndReached={loadMoreRecipes}
+          onEndReachedThreshold={0.1}
+          >
+        </FlatList>
+      }
+      {
         loadingRecipes
         ?
         <LoadingComponent/>
         :
         <FlatList
-          style={[{width: '100%', paddingTop: 180}]}
+          style={[{width: '100%'}]}
           data={recipes}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <RecipeCard recipe={item} />}

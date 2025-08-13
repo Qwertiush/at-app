@@ -7,8 +7,8 @@ export default function RootLayout() {
   return (
     
     <UserPrefsProvider>
-    <PopupProvider>
     <RecipeProvider>
+      <PopupProvider>
       <Stack>
         <Stack.Screen name="index" options={{ title: "Home",headerShown: false  }} />
         <Stack.Screen name="(auth)" options={{ title: "Auth",headerShown: false  }} />
@@ -16,8 +16,8 @@ export default function RootLayout() {
         {/*<Stack.Screen name="/search/[query]" options={{ title: "Search",headerShown: false  }} />*/}
         <Stack.Screen name="(recipe)" options={{ title: "Recipe",headerShown: false  }} />
       </Stack>
+      </PopupProvider>
     </RecipeProvider>
-    </PopupProvider>
     </UserPrefsProvider>
   );
 }

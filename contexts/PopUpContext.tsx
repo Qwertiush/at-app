@@ -6,6 +6,7 @@ type PopupOptions = {
   content: string;
   childForPopUp?: ReactNode;
   onConfirm?: (decision: boolean) => void;
+  clear?: boolean;
 };
 
 type PopupContextType = {
@@ -48,6 +49,7 @@ export const PopupProvider = ({ children }: { children: ReactNode }) => {
           content={popupOptions.content}
           handleConfirm={popupOptions.onConfirm ? handleConfirm : null}
           children={popupOptions.childForPopUp}
+          clear={popupOptions.clear}
         />
       )}
     </PopupContext.Provider>

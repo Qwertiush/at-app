@@ -10,9 +10,10 @@ type PopUpProps = {
     content: string;
     handleConfirm?: ((decision: boolean) => void) | null;
     children?: ReactNode;
+    clear?: boolean;
 };
 
-const PopUpComponent: React.FC<PopUpProps> = ({ title, content, handleConfirm, children }) => {
+const PopUpComponent: React.FC<PopUpProps> = ({ title, content, handleConfirm, children, clear }) => {
   const {textData, themeData} = useContext(UserPrefsContext);
   const {hidePopup} = usePopup();
 
@@ -20,8 +21,15 @@ const PopUpComponent: React.FC<PopUpProps> = ({ title, content, handleConfirm, c
     <View style={styles.overlay}>
       <View style={[styles.background,{backgroundColor: themeData.popupoverlay}]} />
       <View style={[styles.container,{backgroundColor: themeData.bc2,}]}>
-        <Text style={[globalStyles.textXXL, styles.header,{color: themeData.text1,}]}>{title}</Text>
-        <Text style={[globalStyles.textXL, styles.text,{color: themeData.text1,}]}>{content}</Text>
+        {clear
+        ?
+        <></>
+        :
+        <>
+          <Text style={[globalStyles.textXXL, styles.header,{color: themeData.text1,}]}>{title}</Text>
+          <Text style={[globalStyles.textXL, styles.text,{color: themeData.text1,}]}>{content}</Text>
+        </>
+        }
         {children}
         {handleConfirm ? (
           <View style={styles.buttonsRow}>
