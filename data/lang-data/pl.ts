@@ -191,7 +191,7 @@ export default {
         button: "Wybierz"
     },
     appInformationsPopUp:{
-        title: "AT-app v0.1",
+        title: "AT-app v0.3",
         content: "Twórca: Paweł Rycerz.",
     },
     //popups (recipe)commentsScreen

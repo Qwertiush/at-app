@@ -45,9 +45,6 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
     }
   }, [user, user2Show, itemsLimit]);
 
-  console.log(itemsLimit);
-  
-
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + listLimit);
   }

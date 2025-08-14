@@ -1,12 +1,12 @@
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext } from 'react';
-import { ColorValue, Image, ImageSourcePropType, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { ColorValue, Image, ImageSourcePropType, StyleSheet, TouchableOpacity } from 'react-native';
 
 type CustomIconButtonProps = {
     iconSource: ImageSourcePropType
     handlePress?: () => void;
     isLoading?: boolean;
-    style?: ViewStyle;
+    style?: Object;
     styleIcon?: Object;
     tintColor?: ColorValue;
 }

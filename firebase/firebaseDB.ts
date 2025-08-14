@@ -472,5 +472,24 @@ export const addComment = async (comment: Omit<RecipeComment, 'id' | 'createdAt'
     throw e;
   }
 }
+//TODO nwm co tu jak tu
+export async function uploadImageToCloudinary(imageUri: string) {
+  const data = new FormData();
+  data.append("file", {
+    uri: imageUri,
+    type: "image/jpeg",
+    name: "upload.jpg",
+  } as any);
+  data.append("upload_preset", "unsigned_preset"); // ← nazwa z Cloudinary
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/<twoj_cloud_name>/image/upload`, {
+    method: "POST",
+    body: data,
+  });
+
+  const file = await res.json();
+  console.log("Cloudinary URL:", file.secure_url);
+  return file.secure_url; // link do zapisania w Firestore
+}
 
 export default createUserProfile;

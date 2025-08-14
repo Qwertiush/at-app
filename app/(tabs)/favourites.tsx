@@ -41,9 +41,6 @@ const Favourites = () => {
     );
   }
 
-  console.log(itemsLimit);
-  
-
   return (
     <>
     <ContentContainer style={globalStyles.container}>

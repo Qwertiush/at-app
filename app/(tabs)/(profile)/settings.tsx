@@ -3,15 +3,14 @@ import ContentContainer from '@/components/ContentContainer'
 import CustomButton from '@/components/CustomButton'
 import CustomIconButton from '@/components/CustomIconButton'
 import CustomImage from '@/components/CustomPrymitives/CustomImage'
-import FormField from '@/components/CustomPrymitives/FormField'
 import LoadingComponent from '@/components/LoadingComponent'
+import PickImageComponent from '@/components/PickImageComponent'
 import SimpleDropdown from '@/components/SimpleDropdown'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { languages } from '@/data/lang-data'
 import { themes } from '@/data/theme-data'
 import { logoutUser } from '@/firebase/firebaseAuth'
-import { updateUsersAvatar } from '@/firebase/firebaseDB'
 import { useAuth } from '@/hooks/useAuth'
 import { router } from 'expo-router'
 import React, { useContext } from 'react'
@@ -35,32 +34,14 @@ const Settings = () => {
     });
   }
 
-  const changeAvatar = async (path: string) => {
-    if(!user?.uid){
-      return;
-    }
-    await updateUsersAvatar(user?.uid,path as string);
-  }
   const handleChangingAvatar = () => {
-    let localPath = '';
-
     showPopup({
       title: textData.changeAvatarPopUp.title,
       content: textData.changeAvatarPopUp.content,
       childForPopUp: (
-        <View>
-          <FormField
-            title="href to picture"
-            value={localPath}
-            handleChangeText={(val) => (localPath = val)}
-          />
-          <CustomButton
-            text={textData.changeAvatarPopUp.button}
-            handlePress={() => changeAvatar(localPath)}
-          />
-        </View>
+        <PickImageComponent/>
       )
-  });
+    });
   }
 
   const handleChangingLanguage = () => {

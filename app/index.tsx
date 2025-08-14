@@ -1,14 +1,17 @@
+import TextXL from '@/components/CustomPrymitives/Text/TextXL';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
+import { registerRootComponent } from 'expo';
 import { ImageBackground } from 'expo-image';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useContext, useEffect } from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Image, ScrollView, View } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { AUTH } from '../firebase/FirebaseConfig';
-import globalStyles, { default as styles } from './Styles/global-styles.js';
+import globalStyles from './Styles/global-styles.js';
+
+registerRootComponent(App);
 
 export default function App() {
   const {textData, themeData} = useContext(UserPrefsContext);
@@ -31,39 +34,64 @@ export default function App() {
 
   return (
     <>
-    <StatusBar translucent backgroundColor="transparent" />
+      <StatusBar translucent />
 
-    <SafeAreaView style={[globalStyles.container, {backgroundColor: themeData.bc}]}> 
-      <ImageBackground
-        style={globalStyles.container}
-        source={require('@/assets/images/bc1.png')}
-        tintColor={themeData.text1}
-      >
-        <ScrollView contentContainerStyle={[{height: '100%'}]}>
-          <View style={styles.centered}>
+      <View style={[globalStyles.container, { backgroundColor: themeData.bc }]}>
+        <ImageBackground
+          style={globalStyles.container}
+          source={require('@/assets/images/bc1.png')}
+          tintColor={themeData.text1}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              paddingVertical: 20,
+              alignItems: 'center',
+            }}
+          >
             <Image
               source={require('../assets/images/icons/logo.png')}
               style={{ width: 200, height: 200, alignSelf: 'center' }}
               tintColor={themeData.text1}
             />
+
             <Image
               source={require('../assets/images/icons/cards.png')}
-              style={{ width: 400, height: 400, alignSelf: 'center', backgroundColor: themeData.bc }}
+              style={{
+                width: 400,
+                height: 300,
+                alignSelf: 'center',
+                backgroundColor: themeData.bc,
+              }}
               tintColor={themeData.text1}
             />
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <Text style={[styles.textXL,{color: themeData.text1, backgroundColor: themeData.bc}]}>{textData.indexScreen.paragraph}</Text>
+
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '70%',
+                marginVertical: 20,
+              }}
+            >
+              <TextXL style={{ backgroundColor: themeData.bc, textAlign: 'center' }}>
+                {textData.indexScreen.paragraph}
+              </TextXL>
               <Image
                 source={require('../assets/images/icons/logo.png')}
-                style={{ width: 40, height: 40, alignSelf: 'center' }}
+                style={{ width: 40, height: 40, marginTop: 20, alignSelf: 'center' }}
                 tintColor={themeData.text1}
               />
             </View>
-            <CustomButton text={textData.indexScreen.button} handlePress={handleGoTo}/>
-          </View>      
-        </ScrollView>
-      </ImageBackground>
-    </SafeAreaView>
+
+            <CustomButton
+              text={textData.indexScreen.button}
+              handlePress={handleGoTo}
+            />
+          </ScrollView>
+        </ImageBackground>
+      </View>
     </>
+
   );
 }
