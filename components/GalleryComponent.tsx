@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 type GalleryComponentProps ={
-    images: string[];
+    images:  string[];
 }
 
 const GalleryComponent: React.FC<GalleryComponentProps> = ({images}) => {

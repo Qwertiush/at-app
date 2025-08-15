@@ -23,7 +23,7 @@ const TabsArray = [
     title: 'Profile',
   },
     {
-    name: 'favourites',
+    name: '(favourites)',
     icon: require('../../assets/images/icons/favs.png'),
     title: 'Favourites',
   },

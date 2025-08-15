@@ -4,7 +4,7 @@ import CustomButton from '@/components/CustomButton'
 import CustomIconButton from '@/components/CustomIconButton'
 import CustomImage from '@/components/CustomPrymitives/CustomImage'
 import LoadingComponent from '@/components/LoadingComponent'
-import PickImageComponent from '@/components/PickImageComponent'
+import PickAvatarComponent from '@/components/PickAvatarComponent'
 import SimpleDropdown from '@/components/SimpleDropdown'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
@@ -39,7 +39,7 @@ const Settings = () => {
       title: textData.changeAvatarPopUp.title,
       content: textData.changeAvatarPopUp.content,
       childForPopUp: (
-        <PickImageComponent/>
+        <PickAvatarComponent/>
       )
     });
   }

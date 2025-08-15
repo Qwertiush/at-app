@@ -2,13 +2,14 @@ import ContentContainer from '@/components/ContentContainer';
 import CustomIconButton from '@/components/CustomIconButton';
 import CustomImage from '@/components/CustomPrymitives/CustomImage';
 import FormField from '@/components/CustomPrymitives/FormField';
-import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import GalleryPreview from '@/components/GalleryPreview';
 import LoadingComponent from '@/components/LoadingComponent';
+import PickImageComponent from '@/components/PickImageComponent';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { useAuth } from '@/hooks/useAuth';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { addRecipe } from '../../firebase/firebaseDB';
@@ -32,8 +33,7 @@ const Create = () => {
     ingredientsInput: '',
     stepsInput: '',
   });
-  const [pictures, setPictures] = useState<string[]>([]);
-  const [picPath, setPicPath] = useState<string>('');
+  const [pictures, setPictures] = useState<ImagePicker.ImagePickerAsset[]>([]);
 
 //Function creates structure to imporve searching expirience "pasta" - [p,pa,pas,past,past]
   function generateSearchIndex(title: string, ingredients: string[]) {
@@ -49,25 +49,18 @@ const Create = () => {
     return Array.from(uniqueWords);
   }
 
-  const handleAddingPhotoToPreview = () => {
-    if(!picPath.trim()){
-      showPopup({
-        title: "href can't be empty",
-        content: "",
-      });
-      return;
-    }
-    //Limit to 4 picures
-    if(pictures.length>=4){
-      showPopup({
-        title: "can't add more than 4 pics",
-        content: "",
-      });
+  const handleAddingPhotoToPreview = (result: ImagePicker.ImagePickerResult) => {
+    if (!result || result.canceled) {
+      showPopup({ title: "Nie wybrano zdjęcia", content: "" });
       return;
     }
 
-    setPictures(prev => [...prev, picPath as string]);
-    setPicPath('');
+    if (pictures.length >= 4) {
+      showPopup({ title: "Nie można dodać więcej niż 4 zdjęcia", content: "" });
+      return;
+    }
+
+    setPictures(prev => [...prev, result.assets[0]]);
   }
 
   const handleRemovingPhotoFromPreview = (id: number) => {
@@ -135,7 +128,8 @@ const Create = () => {
           .map(s => s.trim())
           .filter(s => s.length > 0),
         upVotes: 0,
-        pictures: pictures,
+        /*TODO uplad pic to cloud, get href, and then picturesHrefs will be sent*/
+        pictures: pictures.map((pic)=>pic.uri),
       };
 
       const id = await addRecipe(newRecipe);
@@ -176,12 +170,8 @@ const Create = () => {
           />
         </View>
 
-        {/*TODO Implement choosing photo from gallery*/}
-        <TextM style={{alignSelf: 'center', marginTop: 10}}>Add photos</TextM>
-        <FormField title='Enter href for photo...' value={picPath as string} handleChangeText={setPicPath}/>
-        <CustomIconButton iconSource={require('@/assets/images/icons/create.png')} handlePress={handleAddingPhotoToPreview}/>
-        <GalleryPreview pictures={pictures} onRemovePicture={handleRemovingPhotoFromPreview}/>
-        {/*------------------------------------------*/}
+        <PickImageComponent setPhoto={handleAddingPhotoToPreview}/>
+        <GalleryPreview pictures={pictures.map((pic)=>pic.uri)} onRemovePicture={handleRemovingPhotoFromPreview}/>
 
         <FormField
           title={textData.createScreen.titlePlaceholderText}

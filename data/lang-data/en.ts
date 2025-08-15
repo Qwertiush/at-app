@@ -63,6 +63,9 @@ export default {
         header1: 'Your favourite ',
         header2: ' recipes',
 
+        header3: 'Your favourite ',
+        header4: ' users',
+
         text1: 'This is the end :('
     },
     randomScreen:{

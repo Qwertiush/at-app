@@ -1,4 +1,5 @@
 import ContentContainer from '@/components/ContentContainer';
+import CustomIconButton from '@/components/CustomIconButton';
 import CustomImage from '@/components/CustomPrymitives/CustomImage';
 import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
@@ -7,10 +8,11 @@ import RecipeCard from '@/components/RecipeCard';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Recipe } from '@/models/Recipe';
+import { router } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
-import { subscribeToLikedRecipes } from '../../firebase/firebaseDB';
-import globalStyles from '../Styles/global-styles';
+import { subscribeToLikedRecipes } from '../../../firebase/firebaseDB';
+import globalStyles from '../../Styles/global-styles';
 
 const Favourites = () => {
   const {textData, themeData, listLimit} = useContext(UserPrefsContext);
@@ -29,7 +31,7 @@ const Favourites = () => {
     }
   }, [user, itemsLimit]);
 
-    const loadMoreRecipes = () => {
+  const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + listLimit);
   }
 
@@ -55,14 +57,20 @@ const Favourites = () => {
       onEndReached={loadMoreRecipes}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
-        <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row', alignItems: 'center', backgroundColor: themeData.bc2}]}>
-          <TextXXL>{textData.favouritesScreen.header1}</TextXXL>
-          <CustomImage
-            source={require('@/assets/images/icons/logo.png')}
-            dimentions={{width: 50, height: 50}}
-          />
-          <TextXXL>{textData.favouritesScreen.header2}</TextXXL>
-        </View>
+        <>
+          <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+            <CustomIconButton iconSource={require('@/assets/images/icons/arrow.png')} style={{ marginTop: 0, marginBottom: 0, transform: [{rotate: '180deg'}]}} handlePress={ () => router.replace('/favUsers') }/>
+            <CustomImage source={require('@/assets/images/icons/profile.png')} dimentions={{width: 40, height: 40}}/>
+          </View>
+          <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row', alignItems: 'center', backgroundColor: themeData.bc2}]}>
+            <TextXXL>{textData.favouritesScreen.header1}</TextXXL>
+            <CustomImage
+              source={require('@/assets/images/icons/logo.png')}
+              dimentions={{width: 50, height: 50}}
+            />
+            <TextXXL>{textData.favouritesScreen.header2}</TextXXL>
+          </View>
+        </>
         }
       ListFooterComponent={
         <TextM style={{
