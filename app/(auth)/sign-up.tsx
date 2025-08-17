@@ -40,7 +40,7 @@ const SignUp = () => {
         email: form.email,
         avatarUrl: '',
         nrOfRecipes: 0,
-        likes: 0
+        upVotes: 0
       }
 
       createUserProfile(user);

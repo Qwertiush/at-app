@@ -1,8 +1,9 @@
 import globalStyles from '@/app/Styles/global-styles'
 import { usePopup } from '@/contexts/PopUpContext'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
-import { subscribeToUsersRecipes } from '@/firebase/firebaseDB'
+import { addReaction, checkIfAddedReaction, deleteReactionById, getReactionIdByRecipeAndUserIds, subscribeToUsersRecipes } from '@/firebase/firebaseDB'
 import { useAuth } from '@/hooks/useAuth'
+import { Reaction } from '@/models/Reaction'
 import { Recipe } from '@/models/Recipe'
 import { User } from '@/models/User'
 import { router } from 'expo-router'
@@ -30,6 +31,9 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
   const [itemsLimit, setItemsLimit] = useState(listLimit); 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesCount, setRecipesCount] = useState<number>();
+
+  const [reacted, setReacted] = useState<number>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>();
   
   const [loadingRecipes, setLoadingRecipes] = useState<boolean>(true);
 
@@ -45,6 +49,17 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
     }
   }, [user, user2Show, itemsLimit]);
 
+  useEffect(() => {
+    const checkIfReacted = async () => {
+      if(user2Show?.uid && user?.uid){
+        const reactedVal = await checkIfAddedReaction(user2Show?.uid, user?.uid );
+
+        setReacted(reactedVal);
+      }
+    }
+    checkIfReacted();
+  }, [user, user2Show]);
+
   const loadMoreRecipes = () => {
     setItemsLimit((prev) => prev + listLimit);
   }
@@ -52,12 +67,64 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
   const handleSettingsPress = () => {
     router.replace('/settings');
   }
+
   const handleVoting = () => {
-    showPopup({
-      title: "Error",
-      content: "Not implemented yet",
-    });
+    console.log("reacted value:", reacted);
+    if (reacted == -1) {
+      addUpVote();
+    } else {
+      addDownVote();
+    }
   }
+
+
+  const addUpVote = async () => {
+    try{
+      setIsSubmitting(true);
+      if(reacted != -1){
+        
+        setIsSubmitting(false);
+        return;
+      }
+  
+      if (!user2Show?.uid || !user?.uid){
+        
+        setIsSubmitting(false);
+        return;
+      } 
+      const newReaction: Omit<Reaction, 'id'> = {
+        objectId: user2Show?.uid,
+        userId: user?.uid,
+        type: 2
+      }
+  
+      const response = await addReaction(newReaction,"users");
+  
+      setIsSubmitting(false);
+    }
+    catch(e){
+      console.log(e);      
+    }
+  }
+
+  const addDownVote = async () => {
+      setIsSubmitting(true);
+      if (!user2Show?.uid || !user?.uid){
+        setIsSubmitting(false);
+        return;
+      }
+      const response = await getReactionIdByRecipeAndUserIds(user2Show?.uid,user.uid);
+  
+      if(response == '-1'){
+        setIsSubmitting(false);
+        return;
+      }
+  
+      await deleteReactionById(response,"users");
+  
+      setIsSubmitting(false);
+    }
+  
 
   if(loadingUser)
     return (
@@ -95,8 +162,12 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
               {user?.uid == user2Show?.uid ?
               <CustomIconButton iconSource={require('@/assets/images/icons/settings.png')} handlePress={handleSettingsPress}/> 
               :
-              <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting}
-            />}
+              reacted == -1
+              ?
+              <CustomIconButton iconSource={require('@/assets/images/icons/upvote.png')} style={{backgroundColor: themeData.succes}} handlePress={handleVoting} isLoading={isSubmitting}/>
+              :
+              <CustomIconButton iconSource={require('@/assets/images/icons/downvote.png')} style={{backgroundColor: themeData.error}} handlePress={handleVoting} isLoading={isSubmitting}/>
+              }
             </View>
             <View>
               {user2Show?.avatarUrl ? 
@@ -141,7 +212,7 @@ const UserProfile: React.FC<UserProfileProps> = ({user2Show}) => {
                   dimentions={{width: 30, height: 30}}
                 />
                 <TextM>{textData.profileScreen.text3}</TextM>
-                <TextM>{user2Show.likes}</TextM>
+                <TextM>{user2Show.upVotes}</TextM>
               </View>
             </View>
             {user?.uid == user2Show?.uid 

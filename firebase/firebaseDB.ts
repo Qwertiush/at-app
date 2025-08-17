@@ -5,6 +5,8 @@ import { User } from "@/models/User";
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getDocs, increment, limit, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { DB } from "./FirebaseConfig";
 
+//Reactions - [1 - recipe, 2 - user]
+
 //User
 export const createUserProfile = async (user: User) => {
   const userRef = doc(DB, "users", user.uid);
@@ -148,7 +150,7 @@ export const getRandomFavouriteRecipe = async (authorId: string): Promise<Recipe
     return null;
   }
   
-  const allIds = snapshot.docs.map(doc => doc.data().recipeId);
+  const allIds = snapshot.docs.map(doc => doc.data().objectId);
 
   if(allIds.length === 0){
     return null;
@@ -272,9 +274,8 @@ export const subscribeToLikedRecipes = (
     async (snapshot) => {
       try {
         const reactionDocs = snapshot.docs.map(doc => doc.data());
-        const recipeIds = reactionDocs.map((reaction: any) => reaction.recipeId);
+        const recipeIds = reactionDocs.map((reaction: any) => reaction.objectId);
 
-        // max 10 elementów!
         if (recipeIds.length === 0) {
           onSuccess([]);
           return;
@@ -294,7 +295,56 @@ export const subscribeToLikedRecipes = (
         onSuccess(recipes);
       } catch (error) {
         if (onError) onError(error);
-        else console.error("🔥 Błąd podczas pobierania przepisów:", error);
+        else console.error("🔥 Errow while fetching recipes:", error);
+      }
+    },
+    (error) => {
+      if (onError) onError(error);
+      else console.error("Snapshot error:", error);
+    }
+  );
+};
+
+export const subscribeToLikedUsers = (
+  onSuccess: (recipes: User[]) => void,
+  userId: string | undefined,
+  limited: number,
+  onError?: (error: any) => void,
+) => {
+  const q = query(
+    collection(DB, "reactions"),
+    where("userId", "==", userId),
+    where("type", "==", 2),
+    limit(limited)
+  );
+
+  return onSnapshot(
+    q,
+    async (snapshot) => {
+      try {
+        const reactionDocs = snapshot.docs.map(doc => doc.data());
+        const recipeIds = reactionDocs.map((reaction: any) => reaction.objectId);
+
+        if (recipeIds.length === 0) {
+          onSuccess([]);
+          return;
+        }
+
+        const usersQuery = query(
+          collection(DB, "users"),
+          where("__name__", "in", recipeIds.slice(0, 10)) // tylko max 10 ID na raz
+        );
+
+        const usersSnapshot = await getDocs(usersQuery);
+        const users = usersSnapshot.docs.map(doc => ({
+          uid: doc.id,
+          ...doc.data(),
+        })) as User[];
+
+        onSuccess(users);
+      } catch (error) {
+        if (onError) onError(error);
+        else console.error("🔥 Errow while fetching users:", error);
       }
     },
     (error) => {
@@ -328,7 +378,7 @@ export const deleteRecipeById = async (id: string, userId: string): Promise<void
 export const getNrOfReactionsByRecipeId = async (id: string): Promise<number> => {
   const q = query(
     collection(DB, "reactions"),
-    where("recipeId", "==", id),
+    where("objectId", "==", id),
   );
 
   const snapshot = await getCountFromServer(q);
@@ -338,10 +388,10 @@ export const getNrOfReactionsByRecipeId = async (id: string): Promise<number> =>
 }
 
 //returns 1 upvoted, 0 - no upvote but reaction exists, -1 - no reaction
-export const checkIfAddedReactionToRecipe = async (recipeId: string, userId: string): Promise<number> => {
+export const checkIfAddedReaction = async (objectId: string, userId: string): Promise<number> => {
   const q = query(
     collection(DB, "reactions"),
-    where("recipeId", "==", recipeId),
+    where("objectId", "==", objectId),
     where("userId", "==", userId)
   );
 
@@ -360,13 +410,13 @@ export const checkIfAddedReactionToRecipe = async (recipeId: string, userId: str
   return typeof value == 'number' ? value : -1;
 }
 
-export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<string> => {
+export const addReaction = async (reaction: Omit<Reaction, 'id'>, forWhatCollection: string): Promise<string> => {
   try {
     const docRef = await addDoc(collection(DB, "reactions"), {
       ...reaction
     });
-    const recipeRef = doc(DB, "recipes", reaction.recipeId);
-    await updateDoc(recipeRef, {
+    const obiectRef = doc(DB, forWhatCollection, reaction.objectId);
+    await updateDoc(obiectRef, {
       upVotes: increment(1)
     });
 
@@ -381,7 +431,7 @@ export const addReaction = async (reaction: Omit<Reaction, 'id'>): Promise<strin
 export const getReactionIdByRecipeAndUserIds = async (recipeId: string, userId: string): Promise<string> =>{
     const q = query(
     collection(DB, "reactions"),
-    where("recipeId", "==", recipeId),
+    where("objectId", "==", recipeId),
     where("userId", "==", userId)
   );
 
@@ -400,7 +450,7 @@ export const getReactionIdByRecipeAndUserIds = async (recipeId: string, userId: 
   return typeof value == 'string' ? value : '-1';
 }
 
-export const deleteReactionById = async (reactionId: string): Promise<void> =>{
+export const deleteReactionById = async (reactionId: string, whatCollection: string): Promise<void> =>{
   try{
     const reactionRef = doc(DB, "reactions", reactionId);
     const snapshot = await getDoc(reactionRef);
@@ -409,13 +459,13 @@ export const deleteReactionById = async (reactionId: string): Promise<void> =>{
       throw new Error("Reaction not found");
     }
 
-    const recipeId = snapshot.data().recipeId;
+    const recipeId = snapshot.data().objectId;
 
     if (!recipeId) {
       throw new Error("Recipe ID not found in reaction data");
     }
 
-    const recipeRef = doc(DB, "recipes", recipeId);
+    const recipeRef = doc(DB, whatCollection, recipeId);
     await updateDoc(recipeRef, {
       upVotes: increment(-1)
     });
@@ -472,7 +522,7 @@ export const addComment = async (comment: Omit<RecipeComment, 'id' | 'createdAt'
     throw e;
   }
 }
-//TODO nwm co tu jak tu
+//TODO
 export async function uploadImageToCloudinary(imageUri: string) {
   const data = new FormData();
   data.append("file", {
@@ -482,7 +532,7 @@ export async function uploadImageToCloudinary(imageUri: string) {
   } as any);
   data.append("upload_preset", "unsigned_preset"); // ← nazwa z Cloudinary
 
-  const res = await fetch(`https://api.cloudinary.com/v1_1/<twoj_cloud_name>/image/upload`, {
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${'asd'}/image/upload`, {
     method: "POST",
     body: data,
   });

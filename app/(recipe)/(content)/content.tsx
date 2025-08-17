@@ -13,7 +13,7 @@ import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import { addReaction, checkIfAddedReactionToRecipe, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '@/firebase/firebaseDB';
+import { addReaction, checkIfAddedReaction, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '@/firebase/firebaseDB';
 import { useAuth } from '@/hooks/useAuth';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
@@ -44,12 +44,12 @@ const Content = () => {
       return;
     } 
     const newReaction: Omit<Reaction, 'id'> = {
-      recipeId: recipeId,
+      objectId: recipeId,
       userId: user?.uid,
       type: 1
     }
 
-    const response = await addReaction(newReaction);
+    const response = await addReaction(newReaction,"recipes");
 
     setReload(!reload);
     setIsSubmitting(false);
@@ -68,7 +68,7 @@ const Content = () => {
       return;
     }
 
-    await deleteReactionById(response);
+    await deleteReactionById(response,"recipes");
 
     setReload(!reload);
     setIsSubmitting(false);
@@ -111,7 +111,7 @@ const Content = () => {
   useEffect(() => {
     const checkIfReacted = async () => {
       if(recipeId && user?.uid){
-        const reactedVal = await checkIfAddedReactionToRecipe(recipeId, user?.uid );
+        const reactedVal = await checkIfAddedReaction(recipeId, user?.uid );
         setReacted(reactedVal);
       }
     }

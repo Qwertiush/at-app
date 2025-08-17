@@ -7,5 +7,5 @@ export type User = {
     avatarUrl?: string;
     createdAt?: Timestamp;
     nrOfRecipes?: number;
-    likes?: number;
+    upVotes?: number;
 }

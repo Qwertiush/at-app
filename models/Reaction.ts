@@ -1,6 +1,6 @@
 export type Reaction = {
     id: string,
-    recipeId: string;
+    objectId: string;
     userId: string;
     type: number
 }

@@ -7,6 +7,7 @@ import TextXXL from '@/components/CustomPrymitives/Text/TextXXL'
 import LoadingComponent from '@/components/LoadingComponent'
 import UserCard from '@/components/UserCard'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
+import { subscribeToLikedUsers } from '@/firebase/firebaseDB'
 import { useAuth } from '@/hooks/useAuth'
 import { User } from '@/models/User'
 import { router } from 'expo-router'
@@ -23,11 +24,11 @@ const FavUsers = () => {
     const {user, loadingUser} = useAuth();
 
     useEffect(() => {
-        if(!loadingUser && user?.uid){
-            //const unsubscribe = subscribeToLikedUsers(setUsers,user?.uid,itemsLimit);
-            //setLoadingUsers(false);
-            //return () => unsubscribe();
-        }
+      if(!loadingUser && user?.uid){
+        const unsubscribe = subscribeToLikedUsers(setUsers,user?.uid,itemsLimit);
+        setLoadingUsers(false);
+        return () => unsubscribe();
+      }
     }, [user, itemsLimit]);
 
     const loadMoreRecipes = () => {
@@ -67,15 +68,21 @@ const FavUsers = () => {
       onEndReached={loadMoreRecipes}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={
-        <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row', alignItems: 'center', backgroundColor: themeData.bc2}]}>
-          <TextXXL>{textData.favouritesScreen.header1}</TextXXL>
-          <CustomImage
-            source={require('@/assets/images/icons/logo.png')}
-            dimentions={{width: 50, height: 50}}
-          />
-          <TextXXL>{textData.favouritesScreen.header2}</TextXXL>
-          <CustomIconButton iconSource={require('@/assets/images/icons/arrow.png')} style={{ marginTop: 40, marginBottom: 0}} handlePress={ () => router.replace('/favourites') }/>
-        </View>
+        <>
+          <View style={{flexDirection: 'row', alignSelf: 'flex-start'}}>
+            <CustomImage source={require('@/assets/images/icons/recipe.png')} dimentions={{width: 40, height: 40}}/>
+            <CustomIconButton iconSource={require('@/assets/images/icons/arrow.png')} style={{ marginTop: 0, marginBottom: 0}} handlePress={ () => router.replace('/favourites') }/>
+          </View>
+           
+          <View style={[globalStyles.centerElement, globalStyles.textContainer,{flexDirection: 'row', alignItems: 'center', backgroundColor: themeData.bc2}]}>
+            <TextXXL>{textData.favouritesScreen.header3}</TextXXL>
+            <CustomImage
+              source={require('@/assets/images/icons/logo.png')}
+              dimentions={{width: 50, height: 50}}
+            />
+            <TextXXL>{textData.favouritesScreen.header4}</TextXXL>
+          </View>
+        </>
         }
       ListFooterComponent={
         <TextM style={{
