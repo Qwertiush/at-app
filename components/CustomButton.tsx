@@ -1,7 +1,8 @@
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import React, { useContext } from 'react';
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
-import globalStyles from '../app/Styles/global-styles.js';
+import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import globalStyles from '../app/Styles/global-styles';
+import TextM from './CustomPrymitives/Text/TextM';
 
 type CustomButtonProps = {
     text: string;
@@ -20,7 +21,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({text, handlePress, isLoading
         onPress={handlePress}
         disabled={isLoading}
     >
-      <Text style={[globalStyles.textM, globalStyles.centerElement,{color: themeData.buttontxt}]}>{text}</Text>
+      <TextM style={[globalStyles.centerElement, {color: themeData.buttontxt}]}>{text}</TextM>
     </TouchableOpacity>
   )
 }

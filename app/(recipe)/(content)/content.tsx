@@ -163,7 +163,7 @@ const Content = () => {
         <TextM style={{alignSelf: 'center',boxShadow: `0 0 10px 5px ${themeData.secondary}`, padding: 10, borderRadius: 20, backgroundColor: themeData.bc2}}>{recipe.upVotes}{textData.recipeScreen.header1}</TextM>
         </>
         : 
-        <Text style={[globalStyles.textM, globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${themeData.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header2}</Text>
+        <TextM style={[globalStyles.centerElement, globalStyles.textContainer,{boxShadow: `0 0 10px 5px ${themeData.secondary}`, color: themeData.text1, backgroundColor: themeData.bc2}]}>{recipe.upVotes}{textData.recipeScreen.header2}</TextM>
         }
         <GalleryComponent images={recipe.pictures as string[]}/>
         <View style={[styles.card,{backgroundColor: themeData.bc2, shadowColor: themeData.bc2,}]}>

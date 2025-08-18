@@ -13,7 +13,7 @@ import { RecipeComment } from '@/models/Comment'
 import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, KeyboardAvoidingView, View } from 'react-native'
 import { addComment, subscribeToCommentsByRecipeId } from '../../firebase/firebaseDB'
-import globalStyles, { colors } from '../Styles/global-styles'
+import globalStyles from '../Styles/global-styles'
 
 type CommentState = {
   content: string
@@ -94,7 +94,7 @@ const Comments = () => {
 
   return (
     <ContentContainer>
-    <KeyboardAvoidingView behavior='padding' style={[{width: '100%'},globalStyles.container]}>
+    <KeyboardAvoidingView behavior='padding' style={[{width: '100%'}, globalStyles.container]}>
       {
         loadingComments
       ?
@@ -111,7 +111,7 @@ const Comments = () => {
         >
         </FlatList>
       }
-      <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${colors.secondary}`, backgroundColor: themeData.bc2}}>
+      <View style={{flexDirection: 'row', gap: '5%', justifyContent: 'center', width: '100%', borderTopLeftRadius: 20, borderTopRightRadius: 20, boxShadow: `0 0 10px 5px ${themeData.secondary}`, backgroundColor: themeData.bc2}}>
         <FormField
           title={textData.commentsScreen.commentPlaceholderText}
           value={newComment.content}

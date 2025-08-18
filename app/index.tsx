@@ -9,7 +9,7 @@ import { useContext, useEffect } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import { AUTH } from '../firebase/FirebaseConfig';
-import globalStyles from './Styles/global-styles.js';
+import globalStyles from './Styles/global-styles';
 
 registerRootComponent(App);
 

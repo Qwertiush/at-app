@@ -6,6 +6,7 @@ import { User } from '@/models/User'
 import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Avatar from './Avatar'
+import TextM from './CustomPrymitives/Text/TextM'
 import { formatDate } from './RecipeCard'
 
 const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
@@ -55,7 +56,7 @@ const CommentCard: React.FC<{comment: RecipeComment}> = ({comment}) => {
           {user?.avatarUrl ? <Avatar source={{uri: user?.avatarUrl}} style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/> : <Avatar source={require('@/assets/images/icons/def_avatar.png')}  style={{ width: 50, height: 50, borderRadius: 50, borderWidth: 2}}/>}
         </View>
       </View>
-      <Text style={[globalStyles.textM, {color: themeData.text1}]}>{comment.description}</Text>
+      <TextM style={[{color: themeData.text1}]}>{comment.description}</TextM>
     </View>
   )
 }

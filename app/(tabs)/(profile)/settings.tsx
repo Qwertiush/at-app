@@ -1,4 +1,4 @@
-import globalStyles, { colors } from '@/app/Styles/global-styles'
+import globalStyles from '@/app/Styles/global-styles'
 import ContentContainer from '@/components/ContentContainer'
 import CustomButton from '@/components/CustomButton'
 import CustomIconButton from '@/components/CustomIconButton'
@@ -92,7 +92,7 @@ const Settings = () => {
                 source={require('@/assets/images/icons/logo.png')}
                 dimentions={{width: 50, height: 50}}
               />
-              <CustomIconButton iconSource={require('@/assets/images/icons/log-out.png')} style={{ marginTop: 10, marginBottom: 0, backgroundColor: colors.error}} handlePress={handleLoggingOut}/>
+              <CustomIconButton iconSource={require('@/assets/images/icons/log-out.png')} style={{ marginTop: 10, marginBottom: 0, backgroundColor: themeData.error}} handlePress={handleLoggingOut}/>
             </View>
             <CustomButton text={textData.settingsScreen.changePicText} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleChangingAvatar}/>
             <CustomButton text={textData.settingsScreen.changeLanguageTxt} style={{width: '100%', marginTop: 10, marginBottom: 0}} handlePress={handleChangingLanguage}/>

@@ -1,11 +1,12 @@
 import CustomButton from '@/components/CustomButton';
 import FormField from '@/components/CustomPrymitives/FormField';
+import TextXL from '@/components/CustomPrymitives/Text/TextXL';
 import { usePopup } from '@/contexts/PopUpContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
 import { User } from '@/models/User';
 import { Link, router } from 'expo-router';
 import React, { useContext, useState } from 'react';
-import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { registerUser } from '../../firebase/firebaseAuth';
 import { createUserProfile } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
@@ -75,24 +76,24 @@ const SignUp = () => {
               tintColor={themeData.text1}
             />
             <View style={{flexDirection: 'row'}}>
-              <Text style={[globalStyles.textXL,{color: themeData.text1, alignSelf: 'center'}]}>
+              <TextXL style={{color: themeData.text1, alignSelf: 'center'}}>
                 {textData.signUpScreen.header1}
-              </Text>
+              </TextXL>
               <Image
                 source={require('@/assets/images/icons/logo.png')}
                 style={{ width: 40, height: 40, alignSelf: 'center' }}
                 tintColor={themeData.text1}
               />
-              <Text style={[globalStyles.textXL,{color: themeData.text1, alignSelf: 'center'}]}>
+              <TextXL style={[{color: themeData.text1, alignSelf: 'center'}]}>
                 {textData.signUpScreen.header2}
-              </Text>
+              </TextXL>
             </View>
             <FormField title={textData.signUpScreen.emailPlaceholderText} value={form.email} handleChangeText={(e)=>setForm({...form, email: e})} keyboardType="email-address" />
               <FormField title={textData.signUpScreen.usernamePlaceholderText} value={form.username} handleChangeText={(e)=>setForm({...form, username: e})} keyboardType="default" />
             <FormField title={textData.signUpScreen.passwordPlaceholderText} value={form.password} handleChangeText={(e)=>setForm({...form, password: e})} keyboardType="password" />
             <CustomButton text={textData.signUpScreen.button} handlePress={submitForm} isLoading={isSubmitting}/>
             <View>
-              <Text style={[globalStyles.textM,{color: themeData.text1}]}>{textData.signUpScreen.text1}<Link href={'/sign-in'} style={{color: themeData.secondary}}>{textData.signUpScreen.text2}</Link></Text>
+              <TextXL style={{color: themeData.text1}}>{textData.signUpScreen.text1}<Link href={'/sign-in'} style={{color: themeData.secondary}}>{textData.signUpScreen.text2}</Link></TextXL>
             </View>
           </View>
         </ScrollView>

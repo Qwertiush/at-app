@@ -1,9 +1,10 @@
 import CustomButton from '@/components/CustomButton'
 import TextM from '@/components/CustomPrymitives/Text/TextM'
+import TextXL from '@/components/CustomPrymitives/Text/TextXL'
 import { UserPrefsContext } from '@/contexts/UserPrefsContext'
 import { Link, router } from 'expo-router'
 import React, { useContext, useState } from 'react'
-import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native'
+import { Image, ImageBackground, KeyboardAvoidingView, ScrollView, View } from 'react-native'
 import FormField from '../../components/CustomPrymitives/FormField'
 import { loginUser } from '../../firebase/firebaseAuth'
 import globalStyles from '../Styles/global-styles'
@@ -53,9 +54,9 @@ const SignIn = () => {
               tintColor={themeData.text1}
             />
             <View style={{flexDirection: 'row'}}>
-              <Text style={[globalStyles.textXL,{color: themeData.text1, alignSelf: 'center'}]}>
+              <TextXL style={{color: themeData.text1, alignSelf: 'center'}}>
                 {textData.signInScreen.header}
-              </Text>
+              </TextXL>
               <Image
                 source={require('@/assets/images/icons/logo.png')}
                 style={{ width: 40, height: 40, alignSelf: 'center' }}
@@ -73,7 +74,7 @@ const SignIn = () => {
             <FormField title={textData.signInScreen.passwordPlaceholderText} value={form.password} handleChangeText={(e)=>setForm({...form, password: e})} keyboardType="password" />
             <CustomButton text={textData.signInScreen.button} handlePress={submitForm} isLoading={isSubmitting}/>
             <View>
-              <Text style={[globalStyles.textM,{color: themeData.text1}]}>{textData.signInScreen.text1}<Link href={'/sign-up'} style={{color: themeData.secondary}}>{textData.signInScreen.text2}</Link></Text>
+              <TextM style={{color: themeData.text1, textAlign: 'center', marginTop: 20}}>{textData.signInScreen.text1}<Link href={'/sign-up'} style={{color: themeData.secondary}}>{textData.signInScreen.text2}</Link></TextM>
             </View>
           </View>
         </ScrollView>
