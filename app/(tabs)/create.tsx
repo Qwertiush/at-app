@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
-import { addRecipe } from '../../firebase/firebaseDB';
+import { addRecipe, uploadImageToCloudinary } from '../../firebase/firebaseDB';
 import globalStyles from '../Styles/global-styles';
 
 type FormState = {
@@ -25,7 +25,7 @@ type FormState = {
 const Create = () => {
   const {user, loadingUser} = useAuth();
   const {textData, themeData} = useContext(UserPrefsContext);
-  const {showPopup} = usePopup();
+  const {showPopup, hidePopup} = usePopup();
 
   const [form, setForm] = useState<FormState>({
     title: '',
@@ -87,9 +87,34 @@ const Create = () => {
     });
   }
 
+  const handlePicturesUploading = async () => {
+    try {
+      const uploaded = await Promise.all(
+        pictures.map(async (pic) => {
+          const picUrl = await uploadImageToCloudinary(pic.uri);
+          console.log('Picture uploaded:', picUrl);
+          return picUrl;
+        })
+      );
+      return uploaded;
+    } catch (error) {
+      console.error('Error uploading pictures:', error);
+      throw error;
+    }
+  };
+
+
   const SubmitForm = async () => {
     try {
+      showPopup({
+          title: 'no need',
+          content: 'for that',
+          clear: true,
+          childForPopUp: <View style={{ width: '100%', height: 200, justifyContent: 'center', alignItems: 'center' }}><LoadingComponent/></View>
+      });
+
       if (!user?.uid) {
+        hidePopup();
         showPopup({
           title: textData.notLoggedInPopup.title,
           content: textData.notLoggedInPopup.content,
@@ -100,6 +125,7 @@ const Create = () => {
       const { title, description, ingredientsInput, stepsInput } = form;
 
       if (!title.trim() || !description.trim()) {
+        hidePopup();
         showPopup({
           title: textData.addingRecipeError1Popup.title,
           content: textData.addingRecipeError1Popup.content,
@@ -107,6 +133,7 @@ const Create = () => {
         return;
       }
 
+      const uploadedPics = await handlePicturesUploading();
       const newRecipe = {
         title: title.trim(),
         searchIndex: generateSearchIndex(
@@ -128,8 +155,7 @@ const Create = () => {
           .map(s => s.trim())
           .filter(s => s.length > 0),
         upVotes: 0,
-        /*TODO uplad pic to cloud, get href, and then picturesHrefs will be sent*/
-        pictures: pictures.map((pic)=>pic.uri),
+        pictures: uploadedPics,
       };
 
       const id = await addRecipe(newRecipe);
@@ -138,6 +164,8 @@ const Create = () => {
           content: textData.addinngRecipeSuccessPopup.content,
       });
       setForm({ title: '', description: '', ingredientsInput: '', stepsInput: '' });
+      setPictures([]);
+      hidePopup();
     } catch (error: any) {
       console.error('Error while saving recipe:', error);
       showPopup({

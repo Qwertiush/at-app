@@ -522,24 +522,74 @@ export const addComment = async (comment: Omit<RecipeComment, 'id' | 'createdAt'
     throw e;
   }
 }
-//TODO
+//TODO adding/removing pictures for recipe
 export async function uploadImageToCloudinary(imageUri: string) {
+  // 2️⃣ Pobierz podpis z backendu
+  const signRes = await fetch("http://192.168.1.19:3000/pictures/uploadSign");
+  const { timestamp, signature, apiKey, cloudName, uploadPreset } = await signRes.json();
+
+  // 3️⃣ Przygotuj FormData
   const data = new FormData();
   data.append("file", {
     uri: imageUri,
     type: "image/jpeg",
     name: "upload.jpg",
   } as any);
-  data.append("upload_preset", "unsigned_preset"); // ← nazwa z Cloudinary
+  data.append("api_key", apiKey);
+  data.append("timestamp", timestamp.toString());
+  data.append("signature", signature);
+  data.append("upload_preset", uploadPreset);
 
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${'asd'}/image/upload`, {
+  // 4️⃣ Wyślij do Cloudinary
+  const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
     method: "POST",
     body: data,
   });
 
-  const file = await res.json();
+  const file = await cloudRes.json();
   console.log("Cloudinary URL:", file.secure_url);
-  return file.secure_url; // link do zapisania w Firestore
+  return file.secure_url;
+}
+
+const getPublicId = (imageUrl: string) => {
+  const regex = /\/upload\/v\d+\/(.+)\.[a-zA-Z0-9]+$/;
+  const match = imageUrl.match(regex);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return '404';
+};
+
+export async function removeImageFromCloudinary(imageUrl: string){
+  try{
+    const publicId = getPublicId(imageUrl);
+    if(publicId === '404') return;
+
+    console.log("Public ID to delete:", publicId);
+
+    const signRes = await fetch(`http://192.168.1.19:3000/pictures/deleteSign?public_id=${encodeURIComponent(publicId)}`);
+    const { timestamp, signature, apiKey, cloudName, public_id } = await signRes.json();
+
+    const formData = new FormData();
+    formData.append("public_id", public_id);
+    formData.append("api_key", apiKey);
+    formData.append("timestamp", timestamp.toString());
+    formData.append("signature", signature);
+
+    const cloudRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result = await cloudRes.json();
+    console.log("Cloudinary delete result:", result);
+  } catch (error) {
+    console.error("Error removing image from Cloudinary:", error);
+    throw error;
+  }
 }
 
 export default createUserProfile;

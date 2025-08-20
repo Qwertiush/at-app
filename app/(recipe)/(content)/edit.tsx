@@ -3,14 +3,16 @@ import ContentContainer from '@/components/ContentContainer';
 import CustomIconButton from '@/components/CustomIconButton';
 import CustomImage from '@/components/CustomPrymitives/CustomImage';
 import FormField from '@/components/CustomPrymitives/FormField';
-import TextM from '@/components/CustomPrymitives/Text/TextM';
 import TextXXL from '@/components/CustomPrymitives/Text/TextXXL';
 import GalleryPreview from '@/components/GalleryPreview';
+import LoadingComponent from '@/components/LoadingComponent';
+import PickImageComponent from '@/components/PickImageComponent';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import { editRecipe } from '@/firebase/firebaseDB';
+import { editRecipe, removeImageFromCloudinary, uploadImageToCloudinary } from '@/firebase/firebaseDB';
 import { useAuth } from '@/hooks/useAuth';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
@@ -21,12 +23,12 @@ type FormState = {
   ingredientsInput: string;
   stepsInput: string;
 };
-
+//TODO removing/adding pictures with cloudinary
 const Edit = () => {
   const { user, loadingUser } = useAuth();
   const { recipe, userRecipeContext, recipeId } = useContext(RecipeContext);
   const { textData, themeData } = useContext(UserPrefsContext);
-  const { showPopup } = usePopup();
+  const { showPopup, hidePopup } = usePopup();
   const [ form, setForm ] = useState<FormState>({
       title: recipe?.title as string,
       description: recipe?.description as string,
@@ -34,27 +36,22 @@ const Edit = () => {
       stepsInput: recipe?.steps.join(',') as string,
     });
   const [pictures, setPictures] = useState<string[]>(recipe?.pictures as string[]);
-  const [picPath, setPicPath] = useState<string>('');
 
-  const handleAddingPhotoToPreview = () => {
-    if(!picPath.trim()){
-      showPopup({
-        title: "href can't be empty",
-        content: "",
-      });
-      return;
-    }
-    //Limit to 4 picures
-    if(pictures.length>=4){
-      showPopup({
-        title: "can't add more than 4 pics",
-        content: "",
-      });
+  const [picsToUpload, setPicsToUpload] = useState<string[]>([]);
+  const [picsToRemove, setPicsToRemove] = useState<string[]>([]);
+
+  const handleAddingPhotoToPreview = (result: ImagePicker.ImagePickerResult) => {
+    if (!result || result.canceled) {
+      showPopup({ title: "Nie wybrano zdjęcia", content: "" });
       return;
     }
 
-    setPictures(prev => [...prev, picPath as string]);
-    setPicPath('');
+    if (pictures.length + picsToUpload.length >= 4) {
+      showPopup({ title: "Nie można dodać więcej niż 4 zdjęcia", content: "" });
+      return;
+    }
+
+    setPicsToUpload(prev => [...prev, result.assets[0].uri]);
   }
 
   const handleRemovingPhotoFromPreview = (id: number) => {
@@ -63,11 +60,30 @@ const Edit = () => {
       content: 'Do you really want to remove this pic?',
       onConfirm: (decison) => {
         if(decison){
+          setPicsToRemove(prev => [...prev, pictures[id]]);
           setPictures(prev => prev.filter((_, i) => i !== id));
         }
       }
     });
   }
+
+  const handleRemovingUploadingPhoto2Cloud = async () => {
+    try {
+      await Promise.all(picsToRemove.map(pic => removeImageFromCloudinary(pic)));
+
+      const uploadedUrls = await Promise.all(
+        picsToUpload.map(pic => uploadImageToCloudinary(pic))
+      );
+
+      return uploadedUrls;
+    } catch (error) {
+      console.error("Error while uploading pics", error);
+      return [];
+    }
+  };
+
+
+
 
   const handleEditingRecipe = () => {
     showPopup({
@@ -97,7 +113,15 @@ const Edit = () => {
 
   const submitForm = async () => {
     try {
+          showPopup({
+            title: 'no need',
+            content: 'for that',
+            clear: true,
+            childForPopUp: <View style={{ width: '100%', height: 200, justifyContent: 'center', alignItems: 'center' }}><LoadingComponent/></View>
+          });
+
           if (!user?.uid) {
+            hidePopup();
             showPopup({
               title: textData.notLoggedInPopup.title,
               content: textData.notLoggedInPopup.content,
@@ -108,13 +132,15 @@ const Edit = () => {
           const { title, description, ingredientsInput, stepsInput } = form;
     
           if (!title.trim() || !description.trim()) {
+            hidePopup();
             showPopup({
               title: textData.addingRecipeError1Popup.title,
               content: textData.addingRecipeError1Popup.content,
             });
             return;
           }
-    
+          
+          const uploadedUrls = await handleRemovingUploadingPhoto2Cloud();
           const newRecipe = {
             title: title.trim(),
             searchIndex: generateSearchIndex(
@@ -134,17 +160,18 @@ const Edit = () => {
               .split(',')
               .map(s => s.trim())
               .filter(s => s.length > 0),
-            pictures: pictures,
+            pictures: [...pictures, ...uploadedUrls],
           };
           if(!recipeId) return;
 
           const id = await editRecipe(newRecipe,recipeId);
+          hidePopup();
           showPopup({
               title: textData.edittingRecipeSuccessPopup.title,
               content: textData.edittingRecipeSuccessPopup.content,
           });
+          hidePopup();
           router.replace('/content')
-          
         } catch (error: any) {
           console.error('Error while saving recipe:', error);
           showPopup({
@@ -162,6 +189,7 @@ const Edit = () => {
         contentContainerStyle={{paddingBottom: 20}}
         keyboardShouldPersistTaps="handled"
       >
+        <CustomIconButton iconSource={require('@/assets/images/icons/arrow.png')} style={{ marginTop: 10, marginBottom: 0}} handlePress={ () => router.replace('/content') }/>
         <View style={[{flexDirection: 'column', alignItems: 'center'}]}>
           <TextXXL>{textData.editRecipeScreen.header}</TextXXL>
           <CustomImage
@@ -170,12 +198,8 @@ const Edit = () => {
           />
         </View>
 
-        {/*TODO Implement choosing photo from gallery*/}
-        <TextM style={{alignSelf: 'center', marginTop: 10}}>Add photos</TextM>
-        <FormField title='Enter href for photo...' value={picPath as string} handleChangeText={setPicPath}/>
-        <CustomIconButton iconSource={require('@/assets/images/icons/create.png')} handlePress={handleAddingPhotoToPreview}/>
-        <GalleryPreview pictures={pictures} onRemovePicture={handleRemovingPhotoFromPreview}/>
-        {/*------------------------------------------*/}
+        <PickImageComponent setPhoto={handleAddingPhotoToPreview}/>
+        <GalleryPreview pictures={[...pictures, ...picsToUpload]} onRemovePicture={handleRemovingPhotoFromPreview}/>
 
         <FormField
           title={textData.createScreen.titlePlaceholderText}

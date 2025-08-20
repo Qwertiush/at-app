@@ -13,7 +13,7 @@ import { formatDate } from '@/components/RecipeCard';
 import { usePopup } from '@/contexts/PopUpContext';
 import { RecipeContext } from '@/contexts/RecipeContext';
 import { UserPrefsContext } from '@/contexts/UserPrefsContext';
-import { addReaction, checkIfAddedReaction, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds } from '@/firebase/firebaseDB';
+import { addReaction, checkIfAddedReaction, deleteReactionById, deleteRecipeById, getReactionIdByRecipeAndUserIds, removeImageFromCloudinary } from '@/firebase/firebaseDB';
 import { useAuth } from '@/hooks/useAuth';
 import { Reaction } from '@/models/Reaction';
 import { router } from 'expo-router';
@@ -86,8 +86,23 @@ const Content = () => {
     });
   }
 
+  const handlePicturesRemoving = async (pictures: string[]) => {
+    try {
+      const removed = await Promise.all(
+        pictures.map(async (pic) => {
+          console.log('Picture 2 remove:', pic);
+          const picUrl = await removeImageFromCloudinary(pic);
+        })
+      );
+    } catch (error) {
+      console.error('Error removing pictures:', error);
+      throw error;
+    }
+  };
+
   const deleteRecipe = async () => {
     try{
+      handlePicturesRemoving(recipe?.pictures as string[]);
       if(recipeId && user){
         await deleteRecipeById(recipeId, user.uid);
         showPopup({
