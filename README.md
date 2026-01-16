@@ -35,7 +35,13 @@ Mobile application that allows users to share their recipes with each other.
 
 ## 📸 Screenshots
 (Screenshots coming soon)
-
+![Home Screen](screenshots/1.jpg)
+![Home Screen](screenshots/2.jpg)
+![Home Screen](screenshots/3.jpg)
+![Home Screen](screenshots/4.jpg)
+![Home Screen](screenshots/5.jpg)
+![Home Screen](screenshots/6.jpg)
+![Home Screen](screenshots/7.jpg)
 ---
 
 # How to run application 👋
