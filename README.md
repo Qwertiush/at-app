@@ -34,7 +34,6 @@ Mobile application that allows users to share their recipes with each other.
 - Firestore stores only image URLs returned from Cloudinary.
 
 ## 📸 Screenshots
-(Screenshots coming soon)
 ![Home Screen](screenshots/1.jpg)
 ![Home Screen](screenshots/2.jpg)
 ![Home Screen](screenshots/3.jpg)
