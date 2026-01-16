@@ -12,6 +12,8 @@ Mobile application that allows users to share their recipes with each other.
   - Profile picture
   - Language selection
   - Theme selection
+- Cloudinary (image storage)
+- Custom backend API for media handling
 - Application remembers logged-in user on device
 - Random recipe selection
 
@@ -23,6 +25,13 @@ Mobile application that allows users to share their recipes with each other.
 - Expo Router / React Navigation
 - Firebase Authentication
 - Firebase Firestore
+
+## 🏗️ Architecture Overview
+- Application uses Firebase Authentication for user management.
+- Firestore is used as the main database for application data.
+- Images are stored in Cloudinary to reduce Firebase storage costs.
+- A custom backend API handles communication between the mobile app and Cloudinary.
+- Firestore stores only image URLs returned from Cloudinary.
 
 ## 📸 Screenshots
 (Screenshots coming soon)
@@ -48,6 +57,6 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```
 
 # You can run the app on:
--Android emulator
--iOS simulator
--Expo Go
+- Android emulator
+- iOS simulator
+- Expo Go
