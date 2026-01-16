@@ -1,4 +1,44 @@
-# Welcome to your Expo app 👋
+# AT-App
+
+Mobile application that allows users to share their recipes with each other.
+
+## 🚀 Features
+- User authentication (login / logout)
+- Browsing recipes and user profiles
+- Adding, editing, and removing owned recipes
+- Upvote system for recipes and users
+- Comments under recipes
+- Application preferences stored in database:
+  - Profile picture
+  - Language selection
+  - Theme selection
+- Cloudinary (image storage)
+- Custom backend API for media handling
+- Application remembers logged-in user on device
+- Random recipe selection
+
+## 🛠️ Tech Stack
+- React Native
+- Expo
+- TypeScript
+- REST API
+- Expo Router / React Navigation
+- Firebase Authentication
+- Firebase Firestore
+
+## 🏗️ Architecture Overview
+- Application uses Firebase Authentication for user management.
+- Firestore is used as the main database for application data.
+- Images are stored in Cloudinary to reduce Firebase storage costs.
+- A custom backend API handles communication between the mobile app and Cloudinary.
+- Firestore stores only image URLs returned from Cloudinary.
+
+## 📸 Screenshots
+(Screenshots coming soon)
+
+---
+
+# How to run application 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -16,35 +56,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# You can run the app on:
+- Android emulator
+- iOS simulator
+- Expo Go
