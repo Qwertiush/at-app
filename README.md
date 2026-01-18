@@ -1,46 +1,68 @@
 # AT-App
 
-Mobile application that allows users to share their recipes with each other.
+Mobile application that allows users to share and discover recipes.
+
+---
 
 ## 🚀 Features
+### User & Profiles
 - User authentication (login / logout)
+- User profiles with preferences (profile picture, language, theme)
+
+### Recipes
 - Browsing recipes and user profiles
-- Adding, editing, and removing owned recipes
+- Creating, editing, and deleting own recipes
+- Random recipe selection
+
+### Social
 - Upvote system for recipes and users
 - Comments under recipes
-- Application preferences stored in database:
-  - Profile picture
-  - Language selection
-  - Theme selection
-- Cloudinary (image storage)
+
+### Media & Data
+- Image upload with Cloudinary
 - Custom backend API for media handling
-- Application remembers logged-in user on device
-- Random recipe selection
+- Persistent login on device
+
+---
 
 ## 🛠️ Tech Stack
 - React Native
 - Expo
 - TypeScript
 - REST API
-- Expo Router / React Navigation
+- Expo Router
 - Firebase Authentication
 - Firebase Firestore
+- Cloudinary
+
+---
 
 ## 🏗️ Architecture Overview
-- Application uses Firebase Authentication for user management.
-- Firestore is used as the main database for application data.
-- Images are stored in Cloudinary to reduce Firebase storage costs.
-- A custom backend API handles communication between the mobile app and Cloudinary.
-- Firestore stores only image URLs returned from Cloudinary.
+- Firebase Authentication for user management
+- Firestore as the main database
+- Cloudinary for image storage
+- Custom backend API for secure media uploads
+- Firestore stores only image URLs returned from Cloudinary
+
+---
+
+## 🧠 Technical Implementation
+- Authentication and authorization flow
+- Firestore data modeling for users, recipes, comments, and votes
+- Custom backend API for Cloudinary integration
+- Optimized media handling and storage costs
+- Navigation with Expo Router
+- State management with React hooks
+
+---
 
 ## 📸 Screenshots
 <img src="screenshots/1.jpg" width="300" />
 <img src="screenshots/2.jpg" width="300" />
 <img src="screenshots/3.jpg" width="300" />
 <img src="screenshots/4.jpg" width="300" />
-<img src="screenshots/5.jpg" width="300" />
-<img src="screenshots/6.jpg" width="300" />
-<img src="screenshots/7.jpg" width="300" />
+
+More screenshots available in the `/screenshots` directory.
 ---
 
 # How to run application 👋
