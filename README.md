@@ -59,16 +59,16 @@ Mobile application that allows users to share and discover recipes.
 ## 📸 Screenshots
 <p align="center">
   <a href="screenshots/1.jpg">
-    <img src="screenshots/1.jpg" width="220" />
+    <img src="screenshots/1.jpg" width="300" />
   </a>
   <a href="screenshots/2.jpg">
-    <img src="screenshots/2.jpg" width="220" />
+    <img src="screenshots/2.jpg" width="300" />
   </a>
   <a href="screenshots/3.jpg">
-    <img src="screenshots/3.jpg" width="220" />
+    <img src="screenshots/3.jpg" width="300" />
   </a>
   <a href="screenshots/4.jpg">
-    <img src="screenshots/3.jpg" width="220" />
+    <img src="screenshots/3.jpg" width="300" />
   </a>
 </p>
 
